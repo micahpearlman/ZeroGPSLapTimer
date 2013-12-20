@@ -11,18 +11,17 @@
 		FAADF3F51864C31200F301B7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF3F41864C31200F301B7 /* CoreGraphics.framework */; };
 		FAADF3F71864C31200F301B7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF3F61864C31200F301B7 /* UIKit.framework */; };
 		FAADF3FD1864C31200F301B7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FAADF3FB1864C31200F301B7 /* InfoPlist.strings */; };
-		FAADF3FF1864C31200F301B7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF3FE1864C31200F301B7 /* main.m */; };
-		FAADF4031864C31200F301B7 /* ZOAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4021864C31200F301B7 /* ZOAppDelegate.m */; };
 		FAADF4061864C31200F301B7 /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAADF4041864C31200F301B7 /* Main_iPhone.storyboard */; };
 		FAADF4091864C31200F301B7 /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAADF4071864C31200F301B7 /* Main_iPad.storyboard */; };
-		FAADF40C1864C31200F301B7 /* ZOFirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF40B1864C31200F301B7 /* ZOFirstViewController.m */; };
-		FAADF40F1864C31200F301B7 /* ZOSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF40E1864C31200F301B7 /* ZOSecondViewController.m */; };
 		FAADF4111864C31200F301B7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAADF4101864C31200F301B7 /* Images.xcassets */; };
 		FAADF4181864C31200F301B7 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF4171864C31200F301B7 /* XCTest.framework */; };
 		FAADF4191864C31200F301B7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF3F21864C31200F301B7 /* Foundation.framework */; };
 		FAADF41A1864C31200F301B7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF3F61864C31200F301B7 /* UIKit.framework */; };
-		FAADF4221864C31200F301B7 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = FAADF4201864C31200F301B7 /* InfoPlist.strings */; };
-		FAADF4241864C31200F301B7 /* ZeroGPSLapTimerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4231864C31200F301B7 /* ZeroGPSLapTimerTests.m */; };
+		FAADF42E1864C81A00F301B7 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF42D1864C81A00F301B7 /* MapKit.framework */; };
+		FAADF4381864D38C00F301B7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4301864D38C00F301B7 /* main.m */; };
+		FAADF4391864D38C00F301B7 /* ZOMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4331864D38C00F301B7 /* ZOMapViewController.m */; };
+		FAADF43A1864D38C00F301B7 /* ZOSecondViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4351864D38C00F301B7 /* ZOSecondViewController.m */; };
+		FAADF43B1864D38C00F301B7 /* ZOAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4371864D38C00F301B7 /* ZOAppDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,22 +41,20 @@
 		FAADF3F61864C31200F301B7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		FAADF3FA1864C31200F301B7 /* ZeroGPSLapTimer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ZeroGPSLapTimer-Info.plist"; sourceTree = "<group>"; };
 		FAADF3FC1864C31200F301B7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		FAADF3FE1864C31200F301B7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		FAADF4001864C31200F301B7 /* ZeroGPSLapTimer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ZeroGPSLapTimer-Prefix.pch"; sourceTree = "<group>"; };
-		FAADF4011864C31200F301B7 /* ZOAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOAppDelegate.h; sourceTree = "<group>"; };
-		FAADF4021864C31200F301B7 /* ZOAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOAppDelegate.m; sourceTree = "<group>"; };
 		FAADF4051864C31200F301B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
 		FAADF4081864C31200F301B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
-		FAADF40A1864C31200F301B7 /* ZOFirstViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOFirstViewController.h; sourceTree = "<group>"; };
-		FAADF40B1864C31200F301B7 /* ZOFirstViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOFirstViewController.m; sourceTree = "<group>"; };
-		FAADF40D1864C31200F301B7 /* ZOSecondViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOSecondViewController.h; sourceTree = "<group>"; };
-		FAADF40E1864C31200F301B7 /* ZOSecondViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOSecondViewController.m; sourceTree = "<group>"; };
 		FAADF4101864C31200F301B7 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		FAADF4161864C31200F301B7 /* ZeroGPSLapTimerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ZeroGPSLapTimerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAADF4171864C31200F301B7 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		FAADF41F1864C31200F301B7 /* ZeroGPSLapTimerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ZeroGPSLapTimerTests-Info.plist"; sourceTree = "<group>"; };
-		FAADF4211864C31200F301B7 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		FAADF4231864C31200F301B7 /* ZeroGPSLapTimerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZeroGPSLapTimerTests.m; sourceTree = "<group>"; };
+		FAADF42D1864C81A00F301B7 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		FAADF4301864D38C00F301B7 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		FAADF4321864D38C00F301B7 /* ZOMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOMapViewController.h; sourceTree = "<group>"; };
+		FAADF4331864D38C00F301B7 /* ZOMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOMapViewController.m; sourceTree = "<group>"; };
+		FAADF4341864D38C00F301B7 /* ZOSecondViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOSecondViewController.h; sourceTree = "<group>"; };
+		FAADF4351864D38C00F301B7 /* ZOSecondViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOSecondViewController.m; sourceTree = "<group>"; };
+		FAADF4361864D38C00F301B7 /* ZOAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOAppDelegate.h; sourceTree = "<group>"; };
+		FAADF4371864D38C00F301B7 /* ZOAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOAppDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,6 +62,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAADF42E1864C81A00F301B7 /* MapKit.framework in Frameworks */,
 				FAADF3F51864C31200F301B7 /* CoreGraphics.framework in Frameworks */,
 				FAADF3F71864C31200F301B7 /* UIKit.framework in Frameworks */,
 				FAADF3F31864C31200F301B7 /* Foundation.framework in Frameworks */,
@@ -88,7 +86,6 @@
 			isa = PBXGroup;
 			children = (
 				FAADF3F81864C31200F301B7 /* ZeroGPSLapTimer */,
-				FAADF41D1864C31200F301B7 /* ZeroGPSLapTimerTests */,
 				FAADF3F11864C31200F301B7 /* Frameworks */,
 				FAADF3F01864C31200F301B7 /* Products */,
 			);
@@ -106,6 +103,7 @@
 		FAADF3F11864C31200F301B7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FAADF42D1864C81A00F301B7 /* MapKit.framework */,
 				FAADF3F21864C31200F301B7 /* Foundation.framework */,
 				FAADF3F41864C31200F301B7 /* CoreGraphics.framework */,
 				FAADF3F61864C31200F301B7 /* UIKit.framework */,
@@ -117,15 +115,8 @@
 		FAADF3F81864C31200F301B7 /* ZeroGPSLapTimer */ = {
 			isa = PBXGroup;
 			children = (
-				FAADF4011864C31200F301B7 /* ZOAppDelegate.h */,
-				FAADF4021864C31200F301B7 /* ZOAppDelegate.m */,
-				FAADF4041864C31200F301B7 /* Main_iPhone.storyboard */,
-				FAADF4071864C31200F301B7 /* Main_iPad.storyboard */,
-				FAADF40A1864C31200F301B7 /* ZOFirstViewController.h */,
-				FAADF40B1864C31200F301B7 /* ZOFirstViewController.m */,
-				FAADF40D1864C31200F301B7 /* ZOSecondViewController.h */,
-				FAADF40E1864C31200F301B7 /* ZOSecondViewController.m */,
-				FAADF4101864C31200F301B7 /* Images.xcassets */,
+				FAADF42F1864D38C00F301B7 /* src */,
+				FAADF43C1864D3C100F301B7 /* ui */,
 				FAADF3F91864C31200F301B7 /* Supporting Files */,
 			);
 			path = ZeroGPSLapTimer;
@@ -136,28 +127,41 @@
 			children = (
 				FAADF3FA1864C31200F301B7 /* ZeroGPSLapTimer-Info.plist */,
 				FAADF3FB1864C31200F301B7 /* InfoPlist.strings */,
-				FAADF3FE1864C31200F301B7 /* main.m */,
 				FAADF4001864C31200F301B7 /* ZeroGPSLapTimer-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		FAADF41D1864C31200F301B7 /* ZeroGPSLapTimerTests */ = {
+		FAADF42F1864D38C00F301B7 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				FAADF4231864C31200F301B7 /* ZeroGPSLapTimerTests.m */,
-				FAADF41E1864C31200F301B7 /* Supporting Files */,
+				FAADF4301864D38C00F301B7 /* main.m */,
+				FAADF4311864D38C00F301B7 /* view-controllers */,
+				FAADF4361864D38C00F301B7 /* ZOAppDelegate.h */,
+				FAADF4371864D38C00F301B7 /* ZOAppDelegate.m */,
 			);
-			path = ZeroGPSLapTimerTests;
+			path = src;
 			sourceTree = "<group>";
 		};
-		FAADF41E1864C31200F301B7 /* Supporting Files */ = {
+		FAADF4311864D38C00F301B7 /* view-controllers */ = {
 			isa = PBXGroup;
 			children = (
-				FAADF41F1864C31200F301B7 /* ZeroGPSLapTimerTests-Info.plist */,
-				FAADF4201864C31200F301B7 /* InfoPlist.strings */,
+				FAADF4321864D38C00F301B7 /* ZOMapViewController.h */,
+				FAADF4331864D38C00F301B7 /* ZOMapViewController.m */,
+				FAADF4341864D38C00F301B7 /* ZOSecondViewController.h */,
+				FAADF4351864D38C00F301B7 /* ZOSecondViewController.m */,
 			);
-			name = "Supporting Files";
+			path = "view-controllers";
+			sourceTree = "<group>";
+		};
+		FAADF43C1864D3C100F301B7 /* ui */ = {
+			isa = PBXGroup;
+			children = (
+				FAADF4041864C31200F301B7 /* Main_iPhone.storyboard */,
+				FAADF4071864C31200F301B7 /* Main_iPad.storyboard */,
+				FAADF4101864C31200F301B7 /* Images.xcassets */,
+			);
+			name = ui;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -248,7 +252,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAADF4221864C31200F301B7 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -259,10 +262,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAADF40C1864C31200F301B7 /* ZOFirstViewController.m in Sources */,
-				FAADF3FF1864C31200F301B7 /* main.m in Sources */,
-				FAADF4031864C31200F301B7 /* ZOAppDelegate.m in Sources */,
-				FAADF40F1864C31200F301B7 /* ZOSecondViewController.m in Sources */,
+				FAADF4391864D38C00F301B7 /* ZOMapViewController.m in Sources */,
+				FAADF4381864D38C00F301B7 /* main.m in Sources */,
+				FAADF43B1864D38C00F301B7 /* ZOAppDelegate.m in Sources */,
+				FAADF43A1864D38C00F301B7 /* ZOSecondViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -270,7 +273,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAADF4241864C31200F301B7 /* ZeroGPSLapTimerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -307,14 +309,6 @@
 				FAADF4081864C31200F301B7 /* Base */,
 			);
 			name = Main_iPad.storyboard;
-			sourceTree = "<group>";
-		};
-		FAADF4201864C31200F301B7 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				FAADF4211864C31200F301B7 /* en */,
-			);
-			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
