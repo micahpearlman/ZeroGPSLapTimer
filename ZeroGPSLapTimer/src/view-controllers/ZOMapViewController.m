@@ -7,6 +7,7 @@
 //
 
 #import "ZOMapViewController.h"
+#import "ZOGPSExternalVenus.h"
 #import <CoreLocation/CoreLocation.h>
 
 @interface ZOMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate> {
@@ -16,6 +17,8 @@
 	MKPolyline*				_crumbPath;
 	MKPolylineRenderer*		_crumbView;
 	NSMutableArray*			_locations;	// CLLocation
+	
+	ZOGPS*					_gps;
 }
 
 @property (nonatomic,retain) MKPolyline* crumbPath;
@@ -41,7 +44,9 @@
 	[_locationManager startUpdatingLocation];
 	
 	
-	
+	// init gps
+	_gps = [ZOGPSExternalVenus instance];
+	[_gps connect];
 }
 
 - (void)didReceiveMemoryWarning
