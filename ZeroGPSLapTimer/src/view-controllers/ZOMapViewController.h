@@ -12,4 +12,5 @@
 @interface ZOMapViewController : UIViewController 
 
 @property (nonatomic,retain) IBOutlet MKMapView* mapView;
+@property (nonatomic,retain) IBOutlet UILabel* currentCoordinateLabel;
 @end
