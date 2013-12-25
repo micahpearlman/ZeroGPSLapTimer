@@ -222,19 +222,41 @@
 
 
 - (void) updateLoop:(NSTimer*)timer {
-	[self read];
-	NSString* mystring = @"hey there from iphone";
-	[self write:[mystring dataUsingEncoding:NSUTF8StringEncoding]];
+//	[self read];
+//	NSString* mystring = @"hey there from iphone";
+//	[self write:[mystring dataUsingEncoding:NSUTF8StringEncoding]];
 	
 	
 }
 
+
+///### not this is the final part of the initialization
 - (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error {
-		for ( CBCharacteristic* characteristic in service.characteristics ) {
-			NSLog(@"Characteristic %@", characteristic);
-			[peripheral setNotifyValue:YES forCharacteristic:characteristic];
-		}
-	//todo periodically read
+//		for ( CBCharacteristic* characteristic in service.characteristics ) {
+//			NSLog(@"Characteristic %@", characteristic);
+//			[peripheral setNotifyValue:YES forCharacteristic:characteristic];
+//		}
+
+	
+	// enable read notifications
+	CBUUID *uuid_service = [CBUUID UUIDWithString:@RBL_SERVICE_UUID];
+    CBUUID *uuid_char = [CBUUID UUIDWithString:@RBL_CHAR_TX_UUID];
+
+    
+    CBCharacteristic *characteristic = [self findCharacteristicFromUUID:uuid_char service:service];
+    
+    if (!characteristic)
+    {
+        NSLog(@"Could not find characteristic with UUID %@ on service with UUID %@ on peripheral with UUID %@",
+              [self CBUUIDToString:uuid_char],
+              [self CBUUIDToString:uuid_service],
+              peripheral.identifier.UUIDString);
+        
+        return;
+    }
+    
+    [peripheral setNotifyValue:YES forCharacteristic:characteristic];
+
 	
 	self.updateTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(updateLoop:) userInfo:nil repeats:YES];
 	
@@ -254,6 +276,7 @@
 	NSString *newString = [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding];
     NSLog(@"Receive -> %@",newString);
 }
+
 
 
 #pragma mark CBCentralManagerDelegate
