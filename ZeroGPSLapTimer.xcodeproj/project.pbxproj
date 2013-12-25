@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FA097506186A1C16005C9B05 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA097505186A1C16005C9B05 /* CoreBluetooth.framework */; };
+		FA097508186A37F4005C9B05 /* ZOVenusCommand.c in Sources */ = {isa = PBXBuildFile; fileRef = FA097507186A37F4005C9B05 /* ZOVenusCommand.c */; };
 		FAADF3F31864C31200F301B7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF3F21864C31200F301B7 /* Foundation.framework */; };
 		FAADF3F51864C31200F301B7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF3F41864C31200F301B7 /* CoreGraphics.framework */; };
 		FAADF3F71864C31200F301B7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF3F61864C31200F301B7 /* UIKit.framework */; };
@@ -40,6 +42,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		FA097505186A1C16005C9B05 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
+		FA097507186A37F4005C9B05 /* ZOVenusCommand.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ZOVenusCommand.c; sourceTree = "<group>"; };
+		FA097509186A3D5E005C9B05 /* ZOVenusCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOVenusCommand.h; sourceTree = "<group>"; };
 		FAADF3EF1864C31200F301B7 /* ZeroGPSLapTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZeroGPSLapTimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAADF3F21864C31200F301B7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		FAADF3F41864C31200F301B7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -78,6 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA097506186A1C16005C9B05 /* CoreBluetooth.framework in Frameworks */,
 				FAADF42E1864C81A00F301B7 /* MapKit.framework in Frameworks */,
 				FAADF3F51864C31200F301B7 /* CoreGraphics.framework in Frameworks */,
 				FAADF3F71864C31200F301B7 /* UIKit.framework in Frameworks */,
@@ -119,6 +125,7 @@
 		FAADF3F11864C31200F301B7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FA097505186A1C16005C9B05 /* CoreBluetooth.framework */,
 				FAADF42D1864C81A00F301B7 /* MapKit.framework */,
 				FAADF3F21864C31200F301B7 /* Foundation.framework */,
 				FAADF3F41864C31200F301B7 /* CoreGraphics.framework */,
@@ -211,6 +218,8 @@
 				FAADF44D18692EEA00F301B7 /* ZOGPS.m */,
 				FAADF4551869375500F301B7 /* ZOGPSExternalVenus.h */,
 				FAADF4561869375500F301B7 /* ZOGPSExternalVenus.m */,
+				FA097509186A3D5E005C9B05 /* ZOVenusCommand.h */,
+				FA097507186A37F4005C9B05 /* ZOVenusCommand.c */,
 			);
 			path = gps;
 			sourceTree = "<group>";
@@ -321,6 +330,7 @@
 				FAADF44E18692EEA00F301B7 /* ZOGPS.m in Sources */,
 				FAADF43B1864D38C00F301B7 /* ZOAppDelegate.m in Sources */,
 				FAADF4571869375500F301B7 /* ZOGPSExternalVenus.m in Sources */,
+				FA097508186A37F4005C9B05 /* ZOVenusCommand.c in Sources */,
 				FAADF43A1864D38C00F301B7 /* ZOSecondViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -531,6 +541,7 @@
 				FAADF4291864C31200F301B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		FAADF42A1864C31200F301B7 /* Build configuration list for PBXNativeTarget "ZeroGPSLapTimerTests" */ = {
 			isa = XCConfigurationList;
@@ -539,6 +550,7 @@
 				FAADF42C1864C31200F301B7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
