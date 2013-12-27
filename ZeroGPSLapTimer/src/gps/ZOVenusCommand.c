@@ -6,126 +6,194 @@
 //  Copyright (c) 2013 Micah Pearlman. All rights reserved.
 //
 
-
-// see: https://github.com/tomasznaumowicz/AvianGPS/blob/f59d568588414e5ccb5839b45507b644bfb63001/Avian/Drivers/Venus.c
 #include "ZOVenusCommand.h"
-#include <string.h>
 #include <stdlib.h>
-#include <arpa/inet.h>
+#include <string.h>
 
-#ifndef                VENUS_RMC_UPDATE_RATE
-/*
- * The RMC sentence contains date and time information received from the GPS system.
- * The frequency with which the RMC sentece is proviced by the GPS receiver depends on the system position rate.
- * The number provided here specifies the requency relative to the system position rate.
- *
- * Example:
- *         Setting the value to 200 means, the RMC sentence will be delivered every 200th time. Depending on the system position rate, e.g. when
- *         the system position rate is set to 10Hz, the RMC sentence will be delivered every 20 seconds
- *  and if the system position rate is set to 1Hz, the RMC sentence will be delivered every 200 seconds (3 minutes 20 seconds).
- */
-#define                VENUS_RMC_UPDATE_RATE                200
-#endif
+typedef enum {
+	kUnknown = 0 ,  // unknown
+	kCommandSent,	// command message has been sent via venusCommand_writeFunction
+	kSoS1,			// start of sequence 1 0xA0
+	kSoS2,			// start of sequence 2 0xA1
+	kPL1,			// payload length 1
+	kPL2,			// payload length 2
+	kMessagedID,	//
+	kData,			// Message data
+	kCS,			// Checksum
+	kEoS1,			// End of sequence 1 0x0D
+	kEoS2,			// End of sequence 2 0x0A
+	kCleanup		// final cleanup
+	
+} venusCommand_ResponseState;
+
+#define RESPONSE_BUFFER_SIZE	32
+#define ACK		0x83
+#define NACK	0x84
 
 typedef struct {
-	const uint8_t*	command;
-	uint16_t			length;
-} venus_command_t;
-
-#define UPDATE_TO_SRAM		0x00	// i.e., save just for this session (reboot will erase)
-#define UPDATE_TO_FLASH		0x01	// i.e., save permanent
-
-
-
-// command contents:
-const uint8_t venus_command_ConfigureMessageTypeNmea[]			=	{ 0x09, 0x01, UPDATE_TO_SRAM };
-const uint8_t venus_command_ConfigureMessageTypeBinary[]		=	{ 0x09, 0x02, UPDATE_TO_SRAM }; // not in flash
-const uint8_t venus_command_QuerySoftwareVersion[]				=	{ 0x02, UPDATE_TO_FLASH };
-const uint8_t venus_command_ConfigureSerialPort38400[]			=	{ 0x05, 0x00, 0x03, UPDATE_TO_FLASH };
-const uint8_t venus_command_ConfigureSerialPort115200[]			=	{ 0x05, 0x00, 0x05, UPDATE_TO_SRAM }; // not used - should be removed in final version
-const uint8_t venus_command_QueryNavigationMode[]				=	{ 0x3D };
-const uint8_t venus_command_QueryPositionUpdateRate[]			=	{ 0x10 };
-const uint8_t venus_command_ConfigureSystemPositionRate_10Hz[]	=	{ 0x0E, 10, UPDATE_TO_FLASH };
-const uint8_t venus_command_ConfigureSystemPositionRate_8Hz[]	=	{ 0x0E, 8, UPDATE_TO_FLASH };
-const uint8_t venus_command_ConfigureSystemPositionRate_5Hz[]	=	{ 0x0E, 5, UPDATE_TO_FLASH };
-const uint8_t venus_command_ConfigureSystemPositionRate_4Hz[]	=	{ 0x0E, 4, UPDATE_TO_FLASH };
-const uint8_t venus_command_ConfigureSystemPositionRate_2Hz[]	=	{ 0x0E, 2, UPDATE_TO_FLASH };
-const uint8_t venus_command_ConfigureSystemPositionRate_1Hz[]	=	{ 0x0E, 1, UPDATE_TO_FLASH };
-const uint8_t venus_command_ConfigureNavigatnionMessageInterval[] = { 0x11, 1, UPDATE_TO_SRAM }; // doesn't work, should be removed
-const uint8_t venus_command_ConfigureNavigatnionModeCar[]		=	{ 0x3C, 0x00, UPDATE_TO_FLASH };
-const uint8_t venus_command_ConfigureNavigatnionModePedestrian[] =	{ 0x3C, 0x01, UPDATE_TO_FLASH };
-const uint8_t venus_command_QueryWaasStatus[]					=	{ 0x38 };
-//m_id  GGA   GSA   GSV   GLL   RMC   VTG   ZDA   ATTR
-const uint8_t venus_command_ConfigureNMEAMessage[]				=	{ 0x08, 0x01, 0x00, 0x00, 0x00, VENUS_RMC_UPDATE_RATE, 0x00, 0x00, UPDATE_TO_FLASH };
-//m_id  GGA   GSA   GSV   GLL   RMC   VTG   ZDA   ATTR
-const uint8_t venus_command_ConfigureNMEAMessage_FullSet[]		=	{ 0x08, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, UPDATE_TO_FLASH };
-
-
-// storing commands in an array for furhter reuse
-// it's important that the order in the array and the enum fields don't change
-const venus_command_t venus_commands[] =
-{
-	{ venus_command_ConfigureMessageTypeBinary,					sizeof(venus_command_ConfigureMessageTypeBinary) },
-	{ venus_command_ConfigureMessageTypeNmea,					sizeof(venus_command_ConfigureMessageTypeNmea) },
-	{ venus_command_QuerySoftwareVersion,						sizeof(venus_command_QuerySoftwareVersion) },
-	{ venus_command_ConfigureSerialPort38400,					sizeof(venus_command_ConfigureSerialPort38400) },
-	{ venus_command_ConfigureSerialPort115200,					sizeof(venus_command_ConfigureSerialPort115200) },
-	{ venus_command_QueryNavigationMode,						sizeof(venus_command_QueryNavigationMode) },
-	{ venus_command_QueryPositionUpdateRate,					sizeof(venus_command_QueryPositionUpdateRate) },
-	{ venus_command_ConfigureSystemPositionRate_10Hz,			sizeof(venus_command_ConfigureSystemPositionRate_10Hz) },
-	{ venus_command_ConfigureSystemPositionRate_8Hz,			sizeof(venus_command_ConfigureSystemPositionRate_8Hz) },
-	{ venus_command_ConfigureSystemPositionRate_5Hz,			sizeof(venus_command_ConfigureSystemPositionRate_5Hz) },
-	{ venus_command_ConfigureSystemPositionRate_4Hz,			sizeof(venus_command_ConfigureSystemPositionRate_4Hz) },
-	{ venus_command_ConfigureSystemPositionRate_2Hz,			sizeof(venus_command_ConfigureSystemPositionRate_2Hz) },
-	{ venus_command_ConfigureSystemPositionRate_1Hz,			sizeof(venus_command_ConfigureSystemPositionRate_1Hz) },
-	{ venus_command_ConfigureNavigatnionMessageInterval,		sizeof(venus_command_ConfigureNavigatnionMessageInterval) },
-	{ venus_command_ConfigureNavigatnionModeCar,				sizeof(venus_command_ConfigureNavigatnionModeCar) },
-	{ venus_command_ConfigureNavigatnionModePedestrian,			sizeof(venus_command_ConfigureNavigatnionModePedestrian) },
-	{ venus_command_QueryWaasStatus,							sizeof(venus_command_QueryWaasStatus) },
-	{ venus_command_ConfigureNMEAMessage,						sizeof(venus_command_ConfigureNMEAMessage) },
-	{ venus_command_ConfigureNMEAMessage_FullSet,				sizeof(venus_command_ConfigureNMEAMessage_FullSet) }
-};
-
-void build_command( enum venus_command_type command, uint8_t** buffer, uint16_t* length ) {
-	/**
-	 * Command Format:
-	 *
-	 * [fixed]                                        [computed]                                        [ cmd                                        ]        [computed]                        [fixed]
-	 * Start Of Sequence (SOS)        Payload Length (2 bytes)        Message ID        Message Body        Checksum (1 byte)        End Of Sequence (EOS)
-	 * 0xA0 0xA1                                0x?? 0x??                                        0x??                0x??...                        0x??                                0x0D 0x0A
-	 */
+	venusCommand_writeFunction		write;
+	venusCommand_readFunction		read;
+	venusCommand_ResponseState		state;
+	venusCommand_responseCallBack	responseCallBack;
+	uint8_t							responseBuffer[RESPONSE_BUFFER_SIZE];
+	uint16_t						payloadLength;
+	uint16_t						payloadBytesRead;
+	uint8_t*						payloadData;
+	uint8_t							messageID;
 	
-	uint8_t startOfSequence[]		= { 0xA0, 0xA1 };
-	uint8_t endOfSequence[]			= { 0x0D, 0x0A };
+} venusCommand_ContextIMPL;
+
+venusCommand_Context venusCommand_createContext(venusCommand_writeFunction writeFunc, venusCommand_readFunction readFunc ) {
+	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)malloc( sizeof(venusCommand_ContextIMPL) );
+	memset( ctx, 0, sizeof(venusCommand_ContextIMPL) );
+	ctx->write = writeFunc;
+	ctx->read = readFunc;
 	
-				// SOS					// PL	// command length					// CS	// EOS
-	*length =	sizeof(startOfSequence) + 2		+ venus_commands[command].length	+ 1		+ sizeof(endOfSequence);
-	*buffer = (uint8_t*)malloc( *length );
+	return (venusCommand_Context)ctx;
 	
-	uint16_t idx = 0;
-	memcpy( *buffer + idx, startOfSequence, sizeof(startOfSequence) );
-	idx += sizeof(startOfSequence);
-	
-	// NOTE: is big endian
-	uint16_t network_length = htons( venus_commands[command].length );
-	memcpy( *buffer + idx, &network_length, sizeof(uint16_t) );
-	idx += sizeof(uint16_t);
-	
-	memcpy( *buffer + idx, venus_commands[command].command, venus_commands[command].length );
-	idx += venus_commands[command].length;
-	
-	
-	// calculate crc
+}
+
+void venusCommand_DestroyContext( venusCommand_Context ctx ) {
+	free( ctx );
+}
+
+static inline uint8_t venusCommand_calculateCheckSum( uint8_t* start, uint16_t length ) {
 	uint8_t cs = 0;
-	for( uint16_t len = venus_commands[command].length; len > 0; len-- ) {
-		cs ^= venus_commands[command].command[len];
+	
+	for( uint16_t i = 0; i < length; i++ )
+		cs ^= start[i];
+    
+	return cs;
+}
+
+
+void venusCommand_Update( venusCommand_Context _ctx ) {
+	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)_ctx;
+	// if in response state machine the read
+	size_t bytesRead = 0;
+	if ( ctx->state != kUnknown ) {
+		bytesRead = ctx->read( ctx->responseBuffer, RESPONSE_BUFFER_SIZE );
 	}
-	(*buffer)[idx] = cs;
-	idx+=1;
+	
+	if ( bytesRead ) {
+		uint8_t* buffer = ctx->responseBuffer;
+		uint8_t* bufferEnd = &ctx->responseBuffer[bytesRead];
+		while ( bytesRead ) {
+			switch ( ctx->state ) {
+				case kCommandSent:
+					ctx->state = kSoS1;
+					break;
+				case kSoS1:
+					buffer = memchr( buffer, 0xA0, bytesRead );
+					bytesRead = (bufferEnd - buffer) + 1;
+					ctx->state = kSoS2;
+					break;
+				case kSoS2:
+					buffer = memchr( buffer, 0xA0, bytesRead );
+					bytesRead = (bufferEnd - buffer) + 1;
+					ctx->state = kPL1;
+					break;
+				case kPL1:
+					ctx->payloadLength = buffer[0];
+					buffer++;
+					bytesRead = (bufferEnd - buffer) + 1;
+					ctx->state = kPL2;
+					break;
+				case kPL2:
+					ctx->payloadLength |= (((uint16_t)buffer[0]) << 8);	// NOTE: Venus is Big Endian
+					buffer++;
+					bytesRead = (bufferEnd - buffer) + 1;
+					ctx->state = kMessagedID;
+					break;
+				case kMessagedID:
+					ctx->messageID = buffer[0];
+					buffer++;
+					bytesRead = (bufferEnd - buffer) + 1;
+					ctx->payloadLength = ctx->payloadLength - 1;	// minus messageID
+					if ( ctx->messageID == ACK ) {
+						if ( ctx->responseCallBack ) {
+							(*ctx->responseCallBack)( kOK, 0, 0 );
+							ctx->state = kCleanup;	// done
+						}
+					} else if (ctx->messageID == NACK ) {
+						if ( ctx->responseCallBack ) {
+							(*ctx->responseCallBack)( kError, 0, 0 );
+							ctx->state = kCleanup;	// done
+						}
+						
+					} else {
+						ctx->payloadData = (uint8_t*)malloc( ctx->payloadLength );
+						ctx->payloadBytesRead = 0;
+						ctx->state = kData;
+					}
+					
+					break;
+				case kData:
+					memcpy( ctx->payloadData + ctx->payloadBytesRead, buffer, bytesRead );
+					ctx->payloadBytesRead += bytesRead;
+					buffer = buffer + bytesRead;
+					bytesRead = (bufferEnd - buffer) + 1;	// should be 0
+					if ( ctx->payloadBytesRead == ctx->payloadLength ) {	// check to see if more needs to be read in
+						// BUGBUG: should be doing Check Sum on the data before passing it to application
+						(*ctx->responseCallBack)( kError, ctx->payloadData, ctx->payloadLength );
+					}
+					break;
+				case kCleanup:	// quit
+					if ( ctx->payloadData ) {
+						free( ctx->payloadData );
+						ctx->payloadData = 0;
+					}
+					bytesRead = 0;
+					break;
+				default:
+					break;
+			}
+			
+		}
+	}
 	
 	
-	memcpy( *buffer + idx, startOfSequence, sizeof(endOfSequence) );
+}
 
-	
 
+
+void venusCommand_setBaudRate( venusCommand_Context _ctx, venusCommand_BaudRate baudRate, venusCommand_SaveTo saveTo, venusCommand_responseCallBack cb ) {
+	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)_ctx;
+	
+	const uint16_t payloadLength = 4;
+	const uint8_t* payloadLengthBytes = (uint8_t*)&payloadLength;
+	uint8_t command[] = { 0xA0, 0xA1,                            // [0, 1] Start of sequence
+		payloadLengthBytes[1], payloadLengthBytes[0],  // [2, 3] Payload length (note in Big Endian network order)
+		0x05,                                          // [4] Message ID
+		0x0,                                           // [5] COM port
+		baudRate,                                      // [6] baudRate
+		saveTo,                                        // [7] save to SRAM or Flash
+		0,                                             // [8] CS xor message body (calculated below)
+		0x0D, 0x0A };                                  // [9, 10] End of sequence
+	
+	command[ 4 + payloadLength ] = venusCommand_calculateCheckSum( &command[4], payloadLength );
+
+	ctx->responseCallBack = cb;
+	ctx->write( command, sizeof(command) );
+	ctx->state = kCommandSent;
+	
+}
+
+void venusCommand_getVersion( venusCommand_Context _ctx, venusCommand_responseCallBack cb ) {
+	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)_ctx;
+	const uint16_t payloadLength = 2;
+	const uint8_t* payloadLengthBytes = (uint8_t*)&payloadLength;
+	uint8_t command[] = { 0xA0, 0xA1,                                    // [0, 1] Start of sequence
+		payloadLengthBytes[1], payloadLengthBytes[0],  // [2, 3] Payload length (note in Big Endian network order)
+		0x02,                                          // [4] Message ID
+		0x0,                                           // [5] reserved
+		0,                                             // [6] CS xor message body (calculated below)
+		0x0D, 0x0A };                                  // [7, 8] End of sequence
+	
+	command[ 4 + payloadLength ] = venusCommand_calculateCheckSum( &command[4], payloadLength );
+	
+	ctx->responseCallBack = cb;
+	ctx->write( command, sizeof(command) );
+	ctx->state = kCommandSent;
+	
 }

@@ -9,33 +9,43 @@
 #ifndef ZeroGPSLapTimer_ZOVenusCommand_h
 #define ZeroGPSLapTimer_ZOVenusCommand_h
 
+// see: http://dlnmh9ip6v2uc.cloudfront.net/datasheets/Sensors/GPS/Venus/638/doc/Venus638FLPx_DS_v07.pdf
+
 #include <stdio.h>
 #include <stdint.h>
 
-// enum definition for easier command usage in the code
-enum venus_command_type {
-	ConfigureMessageTypeBinary			= 0,
-	ConfigureMessageTypeNmea			= 1,
-	QuerySoftwareVersion				= 2,
-	ConfigureSerialPort38400			= 3,
-	ConfigureSerialPort115200			= 4,
-	QueryNavigationMode					= 5,
-	QueryPositionUpdateRate				= 6,
-	ConfigureSystemPositionRate_10Hz	= 7,
-	ConfigureSystemPositionRate_8Hz		= 8,
-	ConfigureSystemPositionRate_5Hz		= 9,
-	ConfigureSystemPositionRate_4Hz		= 10,
-	ConfigureSystemPositionRate_2Hz		= 11,
-	ConfigureSystemPositionRate_1Hz		= 12,
-	ConfigureNavigatnionMessageInterval	= 13,
-	ConfigureNavigationModeCar			= 14,
-	ConfigureNavigationModePedestrian	= 15,
-	QueryWaasStatus						= 16,
-	ConfigureNMEAMessage				= 17,
-	ConfigureNMEAMessage_FullSet		= 18
-};
+typedef enum {
+	kSRAM    = 0,    // save to SRAM non permenanent
+	kFlash   = 1     // save to SRAM & FLash (permenanent)
+} venusCommand_SaveTo;
+
+typedef enum {
+	k4800_baud   = 0,
+	k9600_baud   = 1,
+	k19200_baud  = 2,
+	k38400_baud  = 3,
+	k57600_baud  = 4,
+	k115200_baud = 5
+} venusCommand_BaudRate;
+
+typedef enum {
+	kOK,
+	kError
+} venusCommand_Response;
 
 
-extern void build_command( enum venus_command_type command, uint8_t** buffer, uint16_t* length );
+typedef void* venusCommand_Context;
+
+typedef void (*venusCommand_writeFunction)(const uint8_t*, const uint16_t);
+typedef uint16_t (*venusCommand_readFunction)(uint8_t*, const uint16_t);
+typedef void (*venusCommand_responseCallBack)(venusCommand_Response, const uint8_t*, const uint16_t);
+
+extern venusCommand_Context venusCommand_createContext( venusCommand_writeFunction writeFunc, venusCommand_readFunction readFunc );
+extern void venusCommand_DestroyContext( venusCommand_Context ctx );
+extern void venusCommand_Update( venusCommand_Context ctx );
+
+extern void venusCommand_setBaudRate( venusCommand_Context ctx, venusCommand_BaudRate baudRate, venusCommand_SaveTo saveTo, venusCommand_responseCallBack cb );
+extern void venusCommand_getVersion( venusCommand_Context ctx, venusCommand_responseCallBack cb );
+
 
 #endif
