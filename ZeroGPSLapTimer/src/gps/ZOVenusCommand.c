@@ -31,10 +31,10 @@ typedef enum {
 #define NACK	0x84
 
 typedef struct {
-	venusCommand_writeFunction		write;
-	venusCommand_readFunction		read;
+	ZOVenusCommandWriteFunction		write;
+	ZOVenusCommandReadFunction		read;
 	venusCommand_ResponseState		state;
-	venusCommand_responseCallBack	responseCallBack;
+	ZOVenusCommandResponseCallBack	responseCallBack;
 	uint8_t							responseBuffer[RESPONSE_BUFFER_SIZE];
 	uint16_t						payloadLength;
 	uint16_t						payloadBytesRead;
@@ -43,17 +43,17 @@ typedef struct {
 	
 } venusCommand_ContextIMPL;
 
-venusCommand_Context venusCommand_createContext(venusCommand_writeFunction writeFunc, venusCommand_readFunction readFunc ) {
+ZOVenusCommandContext zoVenusCommandCreateContext(ZOVenusCommandWriteFunction writeFunc, ZOVenusCommandReadFunction readFunc ) {
 	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)malloc( sizeof(venusCommand_ContextIMPL) );
 	memset( ctx, 0, sizeof(venusCommand_ContextIMPL) );
 	ctx->write = writeFunc;
 	ctx->read = readFunc;
 	
-	return (venusCommand_Context)ctx;
+	return (ZOVenusCommandContext)ctx;
 	
 }
 
-void venusCommand_DestroyContext( venusCommand_Context ctx ) {
+void zoVenusCommandDestroyContext( ZOVenusCommandContext ctx ) {
 	free( ctx );
 }
 
@@ -67,7 +67,7 @@ static inline uint8_t venusCommand_calculateCheckSum( uint8_t* start, uint16_t l
 }
 
 
-void venusCommand_Update( venusCommand_Context _ctx ) {
+void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)_ctx;
 	// if in response state machine the read
 	size_t bytesRead = 0;
@@ -157,7 +157,7 @@ void venusCommand_Update( venusCommand_Context _ctx ) {
 
 
 
-void venusCommand_setBaudRate( venusCommand_Context _ctx, venusCommand_BaudRate baudRate, venusCommand_SaveTo saveTo, venusCommand_responseCallBack cb ) {
+void zoVenusCommandSetBaudRate( ZOVenusCommandContext _ctx, ZOVenusCommandBaudRate baudRate, ZOVenusCommandSaveTo saveTo, ZOVenusCommandResponseCallBack cb ) {
 	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)_ctx;
 	
 	const uint16_t payloadLength = 4;
@@ -179,7 +179,7 @@ void venusCommand_setBaudRate( venusCommand_Context _ctx, venusCommand_BaudRate 
 	
 }
 
-void venusCommand_getVersion( venusCommand_Context _ctx, venusCommand_responseCallBack cb ) {
+void zoVenusCommandGetVersion( ZOVenusCommandContext _ctx, ZOVenusCommandResponseCallBack cb ) {
 	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)_ctx;
 	const uint16_t payloadLength = 2;
 	const uint8_t* payloadLengthBytes = (uint8_t*)&payloadLength;
