@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		FA097506186A1C16005C9B05 /* CoreBluetooth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA097505186A1C16005C9B05 /* CoreBluetooth.framework */; };
 		FA097508186A37F4005C9B05 /* ZOVenusCommand.c in Sources */ = {isa = PBXBuildFile; fileRef = FA097507186A37F4005C9B05 /* ZOVenusCommand.c */; };
+		FA09750D186D52A2005C9B05 /* ZOCircularBuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = FA09750C186D52A2005C9B05 /* ZOCircularBuffer.c */; };
+		FAA68D581870B7BA007DD016 /* ZOBluetooth.m in Sources */ = {isa = PBXBuildFile; fileRef = FAA68D571870B7BA007DD016 /* ZOBluetooth.m */; };
 		FAADF3F31864C31200F301B7 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF3F21864C31200F301B7 /* Foundation.framework */; };
 		FAADF3F51864C31200F301B7 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF3F41864C31200F301B7 /* CoreGraphics.framework */; };
 		FAADF3F71864C31200F301B7 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAADF3F61864C31200F301B7 /* UIKit.framework */; };
@@ -45,6 +47,10 @@
 		FA097505186A1C16005C9B05 /* CoreBluetooth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreBluetooth.framework; path = System/Library/Frameworks/CoreBluetooth.framework; sourceTree = SDKROOT; };
 		FA097507186A37F4005C9B05 /* ZOVenusCommand.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ZOVenusCommand.c; sourceTree = "<group>"; };
 		FA097509186A3D5E005C9B05 /* ZOVenusCommand.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOVenusCommand.h; sourceTree = "<group>"; };
+		FA09750B186D5291005C9B05 /* ZOCircularBuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOCircularBuffer.h; sourceTree = "<group>"; };
+		FA09750C186D52A2005C9B05 /* ZOCircularBuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ZOCircularBuffer.c; sourceTree = "<group>"; };
+		FAA68D561870B7BA007DD016 /* ZOBluetooth.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOBluetooth.h; sourceTree = "<group>"; };
+		FAA68D571870B7BA007DD016 /* ZOBluetooth.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOBluetooth.m; sourceTree = "<group>"; };
 		FAADF3EF1864C31200F301B7 /* ZeroGPSLapTimer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ZeroGPSLapTimer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAADF3F21864C31200F301B7 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		FAADF3F41864C31200F301B7 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -104,6 +110,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FA09750A186D5247005C9B05 /* util */ = {
+			isa = PBXGroup;
+			children = (
+				FA09750B186D5291005C9B05 /* ZOCircularBuffer.h */,
+				FA09750C186D52A2005C9B05 /* ZOCircularBuffer.c */,
+			);
+			path = util;
+			sourceTree = "<group>";
+		};
+		FAA68D551870B78E007DD016 /* bluetooth */ = {
+			isa = PBXGroup;
+			children = (
+				FAA68D561870B7BA007DD016 /* ZOBluetooth.h */,
+				FAA68D571870B7BA007DD016 /* ZOBluetooth.m */,
+			);
+			path = bluetooth;
+			sourceTree = "<group>";
+		};
 		FAADF3E61864C31200F301B7 = {
 			isa = PBXGroup;
 			children = (
@@ -158,6 +182,8 @@
 		FAADF42F1864D38C00F301B7 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				FAA68D551870B78E007DD016 /* bluetooth */,
+				FA09750A186D5247005C9B05 /* util */,
 				FAADF44A18692C6800F301B7 /* gps */,
 				FAADF44418692BEA00F301B7 /* BLE */,
 				FAADF43D1864D46500F301B7 /* map-overlays */,
@@ -331,7 +357,9 @@
 				FAADF43B1864D38C00F301B7 /* ZOAppDelegate.m in Sources */,
 				FAADF4571869375500F301B7 /* ZOGPSExternalVenus.m in Sources */,
 				FA097508186A37F4005C9B05 /* ZOVenusCommand.c in Sources */,
+				FA09750D186D52A2005C9B05 /* ZOCircularBuffer.c in Sources */,
 				FAADF43A1864D38C00F301B7 /* ZOSecondViewController.m in Sources */,
+				FAA68D581870B7BA007DD016 /* ZOBluetooth.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

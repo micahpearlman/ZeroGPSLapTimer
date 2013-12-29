@@ -84,9 +84,9 @@ uint8_t venusCommand_calculateCheckSum( uint8_t* start, int16_t length ) {
 
 void venusCommand_setBaudRate( venusCommand_BaudRate baudRate, venusCommand_SaveTo saveTo ) {
   uint16_t payloadLength = 4;
-  //uint8_t* payloadLengthBytes = (uint8_t*)&payloadLength;
-  uint8_t command[] = { 0xA0, 0xA1,                                    // [0, 1] Start of sequence
-                (payloadLength & 0xff00) >> 8, payloadLength & 0x00ff,  // [2, 3] Payload length (note in Big Endian network order
+  uint8_t* payloadLengthBytes = (uint8_t*)&payloadLength;
+  uint8_t command[] = { 0xA0, 0xA1,                            // [0, 1] Start of sequence
+                payloadLengthBytes[1], payloadLengthBytes[0],  // [2, 3] Payload length (note in Big Endian network order)
                 0x05,                                          // [4] Message ID
                 0x0,                                           // [5] COM port
                 baudRate,                                      // [6] baudRate
@@ -103,7 +103,7 @@ void venusCommand_getVersion() {
   uint16_t payloadLength = 2;
   uint8_t* payloadLengthBytes = (uint8_t*)&payloadLength;
   uint8_t command[] = { 0xA0, 0xA1,                                    // [0, 1] Start of sequence
-                payloadLengthBytes[1], payloadLengthBytes[0],  // [2, 3] Payload length (note in Big Endian network order
+                payloadLengthBytes[1], payloadLengthBytes[0],  // [2, 3] Payload length (note in Big Endian network order)
                 0x02,                                          // [4] Message ID
                 0x0,                                           // [5] reserved
                 0,                                             // [6] CS xor message body (calculated below)
@@ -124,7 +124,7 @@ venusCommand_ResponseState state = kUnknown;
 void setup()
 {
   Serial.begin(9600);
-  gpsSerial.begin(9600);
+  gpsSerial.begin(57600);
   
 
   
