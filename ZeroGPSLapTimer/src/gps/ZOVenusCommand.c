@@ -70,45 +70,56 @@ static inline uint8_t venusCommand_calculateCheckSum( uint8_t* start, uint16_t l
 void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)_ctx;
 	// if in response state machine the read
-	size_t bytesRead = 0;
+	size_t bytesLeftToRead = 0;
 	if ( ctx->state != kUnknown ) {
-		bytesRead = ctx->read( ctx->responseBuffer, RESPONSE_BUFFER_SIZE );
+		bytesLeftToRead = ctx->read( ctx->responseBuffer, RESPONSE_BUFFER_SIZE );
 	}
 	
-	if ( bytesRead ) {
+	if ( bytesLeftToRead ) {
+		uint8_t* found = 0;
 		uint8_t* buffer = ctx->responseBuffer;
-		uint8_t* bufferEnd = &ctx->responseBuffer[bytesRead];
-		while ( bytesRead ) {
+		uint8_t* bufferEnd = &ctx->responseBuffer[bytesLeftToRead];
+		while ( bytesLeftToRead ) {
 			switch ( ctx->state ) {
 				case kCommandSent:
 					ctx->state = kSoS1;
 					break;
 				case kSoS1:
-					buffer = memchr( buffer, 0xA0, bytesRead );
-					bytesRead = (bufferEnd - buffer) + 1;
-					ctx->state = kSoS2;
+					found = memchr( buffer, 0xA0, bytesLeftToRead );
+					if ( found ) {
+						buffer = found + 1;
+						bytesLeftToRead = bufferEnd - buffer;
+						ctx->state = kSoS2;
+					} else {
+						bytesLeftToRead = 0;	// end while loop
+					}
 					break;
 				case kSoS2:
-					buffer = memchr( buffer, 0xA0, bytesRead );
-					bytesRead = (bufferEnd - buffer) + 1;
-					ctx->state = kPL1;
+					found = memchr( buffer, 0xA1, bytesLeftToRead );
+					if ( found ) {
+						buffer = found + 1;
+						bytesLeftToRead = bufferEnd - buffer;
+						ctx->state = kPL1;
+					} else {
+						bytesLeftToRead = 0; // end while loop
+					}
 					break;
 				case kPL1:
-					ctx->payloadLength = buffer[0];
+					ctx->payloadLength = (((uint16_t)buffer[0]) << 8);
 					buffer++;
-					bytesRead = (bufferEnd - buffer) + 1;
+					bytesLeftToRead = bufferEnd - buffer;
 					ctx->state = kPL2;
 					break;
 				case kPL2:
-					ctx->payloadLength |= (((uint16_t)buffer[0]) << 8);	// NOTE: Venus is Big Endian
+					ctx->payloadLength |= buffer[0];	// NOTE: Venus is Big Endian
 					buffer++;
-					bytesRead = (bufferEnd - buffer) + 1;
+					bytesLeftToRead = bufferEnd - buffer;
 					ctx->state = kMessagedID;
 					break;
 				case kMessagedID:
 					ctx->messageID = buffer[0];
 					buffer++;
-					bytesRead = (bufferEnd - buffer) + 1;
+					bytesLeftToRead = bufferEnd - buffer;
 					ctx->payloadLength = ctx->payloadLength - 1;	// minus messageID
 					if ( ctx->messageID == ACK ) {
 						if ( ctx->responseCallBack ) {
@@ -129,10 +140,10 @@ void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 					
 					break;
 				case kData:
-					memcpy( ctx->payloadData + ctx->payloadBytesRead, buffer, bytesRead );
-					ctx->payloadBytesRead += bytesRead;
-					buffer = buffer + bytesRead;
-					bytesRead = (bufferEnd - buffer) + 1;	// should be 0
+					memcpy( ctx->payloadData + ctx->payloadBytesRead, buffer, bytesLeftToRead );
+					ctx->payloadBytesRead += bytesLeftToRead;
+					buffer = buffer + bytesLeftToRead;
+					bytesLeftToRead = (bufferEnd - buffer) + 1;	// should be 0
 					if ( ctx->payloadBytesRead == ctx->payloadLength ) {	// check to see if more needs to be read in
 						// BUGBUG: should be doing Check Sum on the data before passing it to application
 						(*ctx->responseCallBack)( kError, ctx->payloadData, ctx->payloadLength );
@@ -143,7 +154,7 @@ void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 						free( ctx->payloadData );
 						ctx->payloadData = 0;
 					}
-					bytesRead = 0;
+					bytesLeftToRead = 0;
 					break;
 				default:
 					break;
