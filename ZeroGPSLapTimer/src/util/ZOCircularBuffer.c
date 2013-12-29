@@ -35,10 +35,12 @@ void zoCircularBufferWrite( ZOCircularBuffer _cb, const uint8_t* data, const uin
 	for ( int i = 0; i < length; i++ ) {
 		cb->data[cb->end] = data[i];
 		cb->end = (cb->end + 1) % cb->size;
-		if ( cb->end == cb->start ) {
-			cb->start = (cb->start + 1) % cb->size;	// buffer is full overwriting 
-		}
 		cb->count++;
+		if ( cb->end == cb->start ) {
+			cb->start = (cb->start + 1) % cb->size;	// buffer is full overwriting
+			cb->count = cb->size;
+		}
+		
 	}
 	
 }
