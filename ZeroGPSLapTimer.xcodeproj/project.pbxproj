@@ -28,7 +28,6 @@
 		FAADF43B1864D38C00F301B7 /* ZOAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4371864D38C00F301B7 /* ZOAppDelegate.m */; };
 		FAADF4421864D46500F301B7 /* CrumbPath.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF43F1864D46500F301B7 /* CrumbPath.m */; };
 		FAADF4431864D46500F301B7 /* CrumbPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4411864D46500F301B7 /* CrumbPathView.m */; };
-		FAADF44818692BEA00F301B7 /* BLE.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF44618692BEA00F301B7 /* BLE.m */; };
 		FAADF44E18692EEA00F301B7 /* ZOGPS.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF44D18692EEA00F301B7 /* ZOGPS.m */; };
 		FAADF4571869375500F301B7 /* ZOGPSExternalVenus.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4561869375500F301B7 /* ZOGPSExternalVenus.m */; };
 /* End PBXBuildFile section */
@@ -75,9 +74,6 @@
 		FAADF43F1864D46500F301B7 /* CrumbPath.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrumbPath.m; sourceTree = "<group>"; };
 		FAADF4401864D46500F301B7 /* CrumbPathView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CrumbPathView.h; sourceTree = "<group>"; };
 		FAADF4411864D46500F301B7 /* CrumbPathView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CrumbPathView.m; sourceTree = "<group>"; };
-		FAADF44518692BEA00F301B7 /* BLE.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLE.h; sourceTree = "<group>"; };
-		FAADF44618692BEA00F301B7 /* BLE.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLE.m; sourceTree = "<group>"; };
-		FAADF44718692BEA00F301B7 /* BLEDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLEDefines.h; sourceTree = "<group>"; };
 		FAADF44C18692EEA00F301B7 /* ZOGPS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOGPS.h; sourceTree = "<group>"; };
 		FAADF44D18692EEA00F301B7 /* ZOGPS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOGPS.m; sourceTree = "<group>"; };
 		FAADF4551869375500F301B7 /* ZOGPSExternalVenus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOGPSExternalVenus.h; sourceTree = "<group>"; };
@@ -185,7 +181,6 @@
 				FAA68D551870B78E007DD016 /* bluetooth */,
 				FA09750A186D5247005C9B05 /* util */,
 				FAADF44A18692C6800F301B7 /* gps */,
-				FAADF44418692BEA00F301B7 /* BLE */,
 				FAADF43D1864D46500F301B7 /* map-overlays */,
 				FAADF4301864D38C00F301B7 /* main.m */,
 				FAADF4311864D38C00F301B7 /* view-controllers */,
@@ -225,16 +220,6 @@
 				FAADF4411864D46500F301B7 /* CrumbPathView.m */,
 			);
 			path = "map-overlays";
-			sourceTree = "<group>";
-		};
-		FAADF44418692BEA00F301B7 /* BLE */ = {
-			isa = PBXGroup;
-			children = (
-				FAADF44518692BEA00F301B7 /* BLE.h */,
-				FAADF44618692BEA00F301B7 /* BLE.m */,
-				FAADF44718692BEA00F301B7 /* BLEDefines.h */,
-			);
-			path = BLE;
 			sourceTree = "<group>";
 		};
 		FAADF44A18692C6800F301B7 /* gps */ = {
@@ -352,7 +337,6 @@
 				FAADF4431864D46500F301B7 /* CrumbPathView.m in Sources */,
 				FAADF4381864D38C00F301B7 /* main.m in Sources */,
 				FAADF4421864D46500F301B7 /* CrumbPath.m in Sources */,
-				FAADF44818692BEA00F301B7 /* BLE.m in Sources */,
 				FAADF44E18692EEA00F301B7 /* ZOGPS.m in Sources */,
 				FAADF43B1864D38C00F301B7 /* ZOAppDelegate.m in Sources */,
 				FAADF4571869375500F301B7 /* ZOGPSExternalVenus.m in Sources */,
