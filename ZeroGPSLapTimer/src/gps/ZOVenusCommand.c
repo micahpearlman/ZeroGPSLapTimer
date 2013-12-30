@@ -40,6 +40,7 @@ typedef struct {
 	uint16_t						payloadBytesRead;
 	uint8_t*						payloadData;
 	uint8_t							messageID;
+	uint8_t							commandExpectsResponseAfterACK;
 	
 } venusCommand_ContextIMPL;
 
@@ -122,9 +123,12 @@ void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 					bytesLeftToRead = bufferEnd - buffer;
 					ctx->payloadLength = ctx->payloadLength - 1;	// minus messageID
 					if ( ctx->messageID == ACK ) {
-						if ( ctx->responseCallBack ) {
+						
+						if ( ctx->responseCallBack && ctx->commandExpectsResponseAfterACK == 0 ) { // just inform application we have an ack
 							(*ctx->responseCallBack)( kOK, 0, 0 );
 							ctx->state = kCleanup;	// done
+						} else if ( ctx->responseCallBack ) {	// expecting further response so start over looking for it in buffer
+							ctx->state = kSoS1;	//
 						}
 					} else if (ctx->messageID == NACK ) {
 						if ( ctx->responseCallBack ) {
@@ -140,11 +144,20 @@ void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 					
 					break;
 				case kData:
+					if ( ctx->payloadLength > bytesLeftToRead ) {	// if we need to read more data then in current buffer
+						ctx->state = kData;	// keep on reading
+					} else {	// more data in buffer then needed for reading all the data
+						bytesLeftToRead = ctx->payloadLength;
+						ctx->state = kCleanup;	// done.  TODO: do checksum...
+					}
+					
 					memcpy( ctx->payloadData + ctx->payloadBytesRead, buffer, bytesLeftToRead );
+					
 					ctx->payloadBytesRead += bytesLeftToRead;
 					buffer = buffer + bytesLeftToRead;
-					bytesLeftToRead = (bufferEnd - buffer) + 1;	// should be 0
-					if ( ctx->payloadBytesRead == ctx->payloadLength ) {	// check to see if more needs to be read in
+					bytesLeftToRead = bufferEnd - buffer;
+					
+					if ( ctx->state == kCleanup ) {	// all done notify the app
 						// BUGBUG: should be doing Check Sum on the data before passing it to application
 						(*ctx->responseCallBack)( kError, ctx->payloadData, ctx->payloadLength );
 					}
@@ -173,7 +186,7 @@ void zoVenusCommandSetBaudRate( ZOVenusCommandContext _ctx, ZOVenusCommandBaudRa
 	
 	const uint16_t payloadLength = 4;
 	const uint8_t* payloadLengthBytes = (uint8_t*)&payloadLength;
-	uint8_t command[] = { 0xA0, 0xA1,                            // [0, 1] Start of sequence
+	uint8_t command[] = { 0xA0, 0xA1,                  // [0, 1] Start of sequence
 		payloadLengthBytes[1], payloadLengthBytes[0],  // [2, 3] Payload length (note in Big Endian network order)
 		0x05,                                          // [4] Message ID
 		0x0,                                           // [5] COM port
@@ -187,6 +200,7 @@ void zoVenusCommandSetBaudRate( ZOVenusCommandContext _ctx, ZOVenusCommandBaudRa
 	ctx->responseCallBack = cb;
 	ctx->write( command, sizeof(command) );
 	ctx->state = kCommandSent;
+	ctx->commandExpectsResponseAfterACK = 0;
 	
 }
 
@@ -194,7 +208,7 @@ void zoVenusCommandGetVersion( ZOVenusCommandContext _ctx, ZOVenusCommandRespons
 	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)_ctx;
 	const uint16_t payloadLength = 2;
 	const uint8_t* payloadLengthBytes = (uint8_t*)&payloadLength;
-	uint8_t command[] = { 0xA0, 0xA1,                                    // [0, 1] Start of sequence
+	uint8_t command[] = { 0xA0, 0xA1,                  // [0, 1] Start of sequence
 		payloadLengthBytes[1], payloadLengthBytes[0],  // [2, 3] Payload length (note in Big Endian network order)
 		0x02,                                          // [4] Message ID
 		0x0,                                           // [5] reserved
@@ -206,5 +220,6 @@ void zoVenusCommandGetVersion( ZOVenusCommandContext _ctx, ZOVenusCommandRespons
 	ctx->responseCallBack = cb;
 	ctx->write( command, sizeof(command) );
 	ctx->state = kCommandSent;
+	ctx->commandExpectsResponseAfterACK = 1;
 	
 }
