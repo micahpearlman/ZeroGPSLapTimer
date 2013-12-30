@@ -17,6 +17,6 @@ extern ZOCircularBuffer zoCircularBufferInit( uint32_t sz );
 extern void zoCircularBufferDestroy( ZOCircularBuffer cb );
 extern void zoCircularBufferWrite( ZOCircularBuffer cb, const uint8_t* data, const uint32_t length );
 extern void zoCircularBufferRead( ZOCircularBuffer cb, uint8_t* buffer, const uint32_t length );
-extern uint32_t zoCircularBufferGetCount( ZOCircularBuffer cb );
+extern uint32_t zoCircularBufferGetSize( ZOCircularBuffer cb );
 
 #endif

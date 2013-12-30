@@ -34,7 +34,7 @@ void vc_writeFunction( const uint8_t* data, const uint16_t length ) {
 }
 uint16_t vc_readFunction( uint8_t* buffer, const uint16_t length ) {
 
-	uint32_t cbLength = zoCircularBufferGetCount( [ZOGPSExternalVenus instance].circularBuffer );
+	uint32_t cbLength = zoCircularBufferGetSize( [ZOGPSExternalVenus instance].circularBuffer );
 	uint16_t finalReadLength = length > cbLength ? cbLength : length;	// read either requested read length or the total length of whats in the circular buffer
 	zoCircularBufferRead( [ZOGPSExternalVenus instance].circularBuffer, buffer, finalReadLength );
 	return finalReadLength;
