@@ -9,11 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @class ZOGPS;
-@protocol ZOGPSDelegate
+@protocol ZOGPSDelegate <NSObject>
 @optional
--(void) gpsDidConnect:(ZOGPS*)gps;
--(void) gpsDidDisconnect:(ZOGPS*)gps;
--(void) gpsDidUpdate:(ZOGPS*)gps coordinates:(NSArray*)coordinates;
+-(void) zoGPS:(ZOGPS*)gps didUpdateLocations:(NSArray*)locations;
 @end
 
 @interface ZOGPS : NSObject 

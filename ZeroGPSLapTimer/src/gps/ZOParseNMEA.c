@@ -175,6 +175,7 @@ static uint8_t zoGetGPGGAFields( ZOParseNMEAContextIMPL* ctx ) {
 			break;
 		case 8:		// Horizontal dilution of position
 			if ( zoGetField( ctx ) ) {
+				result->horizontalPrecision = atof( ctx->fieldBuffer );
 				ctx->currentSentenceField++;
 			} else {
 				return 1;	// try later

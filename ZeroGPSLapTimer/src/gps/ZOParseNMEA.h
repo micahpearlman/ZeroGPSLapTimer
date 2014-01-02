@@ -46,6 +46,7 @@ typedef struct {
 	char				longitudeCardinal;	// E or W
 	uint8_t				quality;			// GPS quality indicator (0=invalid; 1=GPS fix; 2=Diff. GPS fix)
 	uint8_t				satellites;			// Number of satellites being used
+	float				horizontalPrecision;// Horizontal dilution of precision
 	float				altitude;
 } ZOParseNMEAResultGPGAA;
 

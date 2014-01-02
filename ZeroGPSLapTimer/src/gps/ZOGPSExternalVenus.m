@@ -11,7 +11,7 @@
 #include "ZOVenusCommand.h"
 #include "ZOCircularBuffer.h"
 #include "ZOParseNMEA.h"
-
+#import <CoreLocation/CoreLocation.h>
 
 
 
@@ -41,15 +41,29 @@ uint16_t vc_readFunction( uint8_t* buffer, const uint16_t length ) {
 	return finalReadLength;
 	
 }
-void vc_responseCallBack(ZOVenusCommandResponse response, const uint8_t* data, const uint16_t length ) {
+void vc_responseCallBack( ZOVenusCommandResponse response, const uint8_t* data, const uint16_t length ) {
 	NSLog(@"vc_responseCallBack");
 }
 
-void parseNMEACallback(ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
-	NSLog(@"parseNMEACallback");
+void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
+	//NSLog(@"parseNMEACallback");
 	if ( result->type == ZOParseNMEAResultType_GPGAA ) {
 		ZOParseNMEAResultGPGAA* GPGAA = (ZOParseNMEAResultGPGAA*)result;
-		NSLog( @"lattitude = %f longitude = %f altitude = %f", GPGAA->lattitude, GPGAA->longitude, GPGAA->altitude );
+		//NSLog( @"lattitude = %f longitude = %f altitude = %f", GPGAA->lattitude, GPGAA->longitude, GPGAA->altitude );
+		
+		if ( [[ZOGPSExternalVenus instance].delegate respondsToSelector:@selector(zoGPS:didUpdateLocations:)] ) {
+			CLLocationCoordinate2D coordinate;
+			coordinate.latitude = GPGAA->lattitude;
+			coordinate.longitude = GPGAA->longitude;
+			CLLocation* location = [[CLLocation alloc] initWithCoordinate:coordinate
+																 altitude:GPGAA->altitude
+													   horizontalAccuracy:GPGAA->horizontalPrecision
+														 verticalAccuracy:GPGAA->horizontalPrecision
+																timestamp:[NSDate date]];
+			NSArray* locationArray = [[NSArray alloc] initWithObjects:location, nil];
+			[[ZOGPSExternalVenus instance].delegate zoGPS:[ZOGPSExternalVenus instance] didUpdateLocations:locationArray];
+
+		}
 	}
 }
 

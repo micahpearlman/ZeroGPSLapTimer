@@ -10,7 +10,7 @@
 #import "ZOGPSExternalVenus.h"
 #import <CoreLocation/CoreLocation.h>
 
-@interface ZOMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate> {
+@interface ZOMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate, ZOGPSDelegate> {
 	MKMapView*				_mapView;
 	UILabel*				_currentCoordinateLabel;
 	CLLocationManager*		_locationManager;
@@ -37,15 +37,16 @@
     [super viewDidLoad];
 	
 	// setup location manager
-	_locationManager = [[CLLocationManager alloc] init];
-	[_locationManager setDelegate:self];
-	[_locationManager setDistanceFilter:kCLDistanceFilterNone];
-	[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
-	[_locationManager startUpdatingLocation];
+//	_locationManager = [[CLLocationManager alloc] init];
+//	[_locationManager setDelegate:self];
+//	[_locationManager setDistanceFilter:kCLDistanceFilterNone];
+//	[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
+//	[_locationManager startUpdatingLocation];
 	
 	
 	// init gps
 	_gps = [ZOGPSExternalVenus instance];
+	_gps.delegate = self;
 	[_gps connect];
 }
 
@@ -70,6 +71,49 @@
 #pragma mark Location Manager update
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 
+	if ( _locations == nil ) {
+		_locations = [[NSMutableArray alloc] init];
+		[_locations addObjectsFromArray:locations];
+	}
+	
+	CLLocation* lastLocation = [_locations lastObject];
+	CLLocation* currentLocation = [locations lastObject];
+	NSString* coordinateString = [NSString stringWithFormat:@"%f,%f [%f]", currentLocation.coordinate.latitude, currentLocation.coordinate.longitude, [lastLocation distanceFromLocation:currentLocation]];
+	[self.currentCoordinateLabel setText:coordinateString];
+	if ( [lastLocation distanceFromLocation:currentLocation] > 0 ) {
+		// fill in location array
+		NSInteger locationCount = [locations count];
+		// store the coordinate in
+		[_locations addObjectsFromArray:locations];
+		locationCount = [_locations count];
+		if ( locationCount > 1 ) {
+			
+			// create a new MKPolyLine from our total locations
+			
+			CLLocationCoordinate2D* coordinates = (CLLocationCoordinate2D*)malloc( locationCount * sizeof(CLLocationCoordinate2D) );
+			for ( int i = 0; i < locationCount; i++ ) {
+				CLLocation* location = [_locations objectAtIndex:i];
+				coordinates[i] = location.coordinate;
+			}
+			
+			
+			if ( _crumbPath ) {
+				[_mapView removeOverlay:_crumbPath];
+			}
+			
+			self.crumbPath = [MKPolyline polylineWithCoordinates:coordinates count:locationCount];
+			[_mapView addOverlay:self.crumbPath];
+			free( coordinates );
+			
+		}
+		
+	}
+	
+}
+
+#pragma mark GPS delegate
+
+-(void) zoGPS:(ZOGPS*)gps didUpdateLocations:(NSArray*)locations {
 	if ( _locations == nil ) {
 		_locations = [[NSMutableArray alloc] init];
 		[_locations addObjectsFromArray:locations];
