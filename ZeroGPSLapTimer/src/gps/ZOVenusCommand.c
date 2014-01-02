@@ -125,14 +125,14 @@ void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 					if ( ctx->messageID == ACK ) {
 						
 						if ( ctx->responseCallBack && ctx->commandExpectsResponseAfterACK == 0 ) { // just inform application we have an ack
-							(*ctx->responseCallBack)( kOK, 0, 0 );
+							(*ctx->responseCallBack)( ZOVenusCommandResponse_OK, 0, 0 );
 							ctx->state = kCleanup;	// done
 						} else if ( ctx->responseCallBack ) {	// expecting further response so start over looking for it in buffer
 							ctx->state = kSoS1;	//
 						}
 					} else if (ctx->messageID == NACK ) {
 						if ( ctx->responseCallBack ) {
-							(*ctx->responseCallBack)( kError, 0, 0 );
+							(*ctx->responseCallBack)( ZOVenusCommandResponse_Error, 0, 0 );
 							ctx->state = kCleanup;	// done
 						}
 						
@@ -159,7 +159,7 @@ void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 					
 					if ( ctx->state == kCleanup ) {	// all done notify the app
 						// BUGBUG: should be doing Check Sum on the data before passing it to application
-						(*ctx->responseCallBack)( kError, ctx->payloadData, ctx->payloadLength );
+						(*ctx->responseCallBack)( ZOVenusCommandResponse_Error, ctx->payloadData, ctx->payloadLength );
 					}
 					break;
 				case kCleanup:	// quit

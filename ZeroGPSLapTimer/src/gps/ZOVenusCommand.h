@@ -15,22 +15,22 @@
 #include <stdint.h>
 
 typedef enum {
-	kSRAM    = 0,    // save to SRAM non permenanent
-	kFlash   = 1     // save to SRAM & FLash (permenanent)
+	ZOVenusCommandSaveTo_SRAM    = 0,    // save to SRAM non permenanent
+	ZOVenusCommandSaveTo_Flash   = 1     // save to SRAM & FLash (permenanent)
 } ZOVenusCommandSaveTo;
 
 typedef enum {
-	k4800_baud   = 0,
-	k9600_baud   = 1,
-	k19200_baud  = 2,
-	k38400_baud  = 3,
-	k57600_baud  = 4,
-	k115200_baud = 5
+	ZOVenusCommandBaudRate_4800   = 0,
+	ZOVenusCommandBaudRate_9600   = 1,
+	ZOVenusCommandBaudRate_19200  = 2,
+	ZOVenusCommandBaudRate_38400  = 3,
+	ZOVenusCommandBaudRate_57600  = 4,
+	ZOVenusCommandBaudRate_115200 = 5
 } ZOVenusCommandBaudRate;
 
 typedef enum {
-	kOK,
-	kError
+	ZOVenusCommandResponse_OK,
+	ZOVenusCommandResponse_Error
 } ZOVenusCommandResponse;
 
 

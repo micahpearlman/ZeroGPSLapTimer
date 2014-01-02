@@ -15,8 +15,11 @@ typedef void* ZOCircularBuffer;
 
 extern ZOCircularBuffer zoCircularBufferInit( uint32_t sz );
 extern void zoCircularBufferDestroy( ZOCircularBuffer cb );
-extern void zoCircularBufferWrite( ZOCircularBuffer cb, const uint8_t* data, const uint32_t length );
-extern void zoCircularBufferRead( ZOCircularBuffer cb, uint8_t* buffer, const uint32_t length );
+extern void zoCircularBufferWrite( ZOCircularBuffer cb, const uint8_t* data, uint32_t* length );
+extern void zoCircularBufferRead( ZOCircularBuffer cb, uint8_t* buffer, uint32_t* length );
+extern void zoCircularBufferPeek( ZOCircularBuffer cb, uint8_t* buffer, uint32_t* length );
 extern uint32_t zoCircularBufferGetSize( ZOCircularBuffer cb );
-
+extern uint8_t zoCircularBufferFindChar( ZOCircularBuffer cb, char c );
+extern uint8_t zoCircularBufferFindString( ZOCircularBuffer cb, const char* str );
+extern uint8_t zoCircularBufferReadToCharacter( ZOCircularBuffer cb, uint8_t* buffer, uint32_t* length, char c  );
 #endif

@@ -10,7 +10,7 @@
 #import "ZOBluetooth.h"
 #include "ZOVenusCommand.h"
 #include "ZOCircularBuffer.h"
-
+#include "ZOParseNMEA.h"
 
 
 
@@ -20,6 +20,7 @@
 	ZOBluetooth*			_bluetooth;
 	ZOVenusCommandContext	_venusCmdCtx;
 	ZOCircularBuffer		_circularBuffer;
+	ZOParseNMEAContext		_nmeaParser;
 }
 
 @property (nonatomic) ZOCircularBuffer circularBuffer;
@@ -35,13 +36,21 @@ void vc_writeFunction( const uint8_t* data, const uint16_t length ) {
 uint16_t vc_readFunction( uint8_t* buffer, const uint16_t length ) {
 
 	uint32_t cbLength = zoCircularBufferGetSize( [ZOGPSExternalVenus instance].circularBuffer );
-	uint16_t finalReadLength = length > cbLength ? cbLength : length;	// read either requested read length or the total length of whats in the circular buffer
-	zoCircularBufferRead( [ZOGPSExternalVenus instance].circularBuffer, buffer, finalReadLength );
+	uint32_t finalReadLength = length > cbLength ? cbLength : length;	// read either requested read length or the total length of whats in the circular buffer
+	zoCircularBufferRead( [ZOGPSExternalVenus instance].circularBuffer, buffer, &finalReadLength );
 	return finalReadLength;
 	
 }
 void vc_responseCallBack(ZOVenusCommandResponse response, const uint8_t* data, const uint16_t length ) {
 	NSLog(@"vc_responseCallBack");
+}
+
+void parseNMEACallback(ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
+	NSLog(@"parseNMEACallback");
+	if ( result->type == ZOParseNMEAResultType_GPGAA ) {
+		ZOParseNMEAResultGPGAA* GPGAA = (ZOParseNMEAResultGPGAA*)result;
+		NSLog( @"lattitude = %f longitude = %f altitude = %f", GPGAA->lattitude, GPGAA->longitude, GPGAA->altitude );
+	}
 }
 
 
@@ -73,6 +82,9 @@ void vc_responseCallBack(ZOVenusCommandResponse response, const uint8_t* data, c
 		// setup venus command context
 		_venusCmdCtx = zoVenusCommandCreateContext( vc_writeFunction, vc_readFunction );
 		
+		// setup nmea parser
+		_nmeaParser = zoParseNMEACreateContext( _circularBuffer, ZOParseNMEAResultType_GPGAA, parseNMEACallback );
+		
 	}
 	return self;
 }
@@ -85,7 +97,7 @@ void vc_responseCallBack(ZOVenusCommandResponse response, const uint8_t* data, c
 #pragma mark ZOBLuetoothDelegate
 -(void) zoBluetoothDidConnect:(ZOBluetooth*)ble {
 	// test get version
-	zoVenusCommandGetVersion( _venusCmdCtx, vc_responseCallBack );
+	//zoVenusCommandGetVersion( _venusCmdCtx, vc_responseCallBack );
 }
 
 -(void) zoBluetoothDidDisconnect:(ZOBluetooth*)ble {
@@ -93,8 +105,11 @@ void vc_responseCallBack(ZOVenusCommandResponse response, const uint8_t* data, c
 }
 
 -(void) zoBluetoothDidReceiveData:(uint8_t*)data length:(uint32_t)length {
-	zoCircularBufferWrite( _circularBuffer, data, length );
-	zoVenusCommandUpdate( _venusCmdCtx );
+	uint32_t writeLength = length;
+	zoCircularBufferWrite( _circularBuffer, data, &writeLength );
+	assert( writeLength == length );	// BUGBUG: we have recieved more data then we can write, so we need to increase the size of the circular buffer
+	//zoVenusCommandUpdate( _venusCmdCtx );
+	zoParseNMEAUpdate( _nmeaParser );
 
 }
 
