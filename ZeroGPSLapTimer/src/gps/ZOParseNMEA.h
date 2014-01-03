@@ -37,6 +37,7 @@ typedef struct {
 //	*CC		: checksum for the sentence
 typedef struct {
 	ZOParseNMEAResult	header;
+	char				utcString[11];
 	uint32_t			hour;
 	uint32_t			minute;
 	uint32_t			seconds;

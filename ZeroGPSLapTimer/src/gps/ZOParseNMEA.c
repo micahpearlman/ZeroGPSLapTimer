@@ -109,6 +109,7 @@ static uint8_t zoGetGPGGAFields( ZOParseNMEAContextIMPL* ctx ) {
 	switch ( ctx->currentSentenceField ) {
 		case 1:		// UTC of Position
 			if ( zoGetField( ctx ) ) {
+				strcpy( result->utcString, ctx->fieldBuffer );
 				unsigned long utcTime = 0;
 				sscanf( ctx->fieldBuffer, "%ld", &utcTime );
 				unsigned long hour = utcTime/10000;

@@ -55,13 +55,28 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
 			CLLocationCoordinate2D coordinate;
 			coordinate.latitude = GPGAA->lattitude;
 			coordinate.longitude = GPGAA->longitude;
+			
+			// generate date from UTC date string
+			// see: http://stackoverflow.com/questions/15603730/time-formats-for-nsdate
+			NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+			[dateFormatter setDateFormat:@"HHmmss.SSS"];
+			[dateFormatter setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"UTC"]];
+			NSString* utcString = [NSString stringWithUTF8String:GPGAA->utcString];
+			NSError* error = nil;
+			NSDate* date = nil;
+			[dateFormatter getObjectValue:&date forString:utcString range:nil error:&error];
+
+			
+			//NSDate* date = [dateFormatter dateFromString:utcString];
+			
 			CLLocation* location = [[CLLocation alloc] initWithCoordinate:coordinate
 																 altitude:GPGAA->altitude
 													   horizontalAccuracy:GPGAA->horizontalPrecision
 														 verticalAccuracy:GPGAA->horizontalPrecision
-																timestamp:[NSDate date]];
+																timestamp:date];
 			NSArray* locationArray = [[NSArray alloc] initWithObjects:location, nil];
-			[[ZOGPSExternalVenus instance].delegate zoGPS:[ZOGPSExternalVenus instance] didUpdateLocations:locationArray];
+			[[ZOGPSExternalVenus instance].delegate zoGPS:[ZOGPSExternalVenus instance]
+									   didUpdateLocations:locationArray];
 
 		}
 	}
