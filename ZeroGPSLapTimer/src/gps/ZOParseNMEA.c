@@ -150,6 +150,9 @@ static uint8_t zoGetGPGGAFields( ZOParseNMEAContextIMPL* ctx ) {
 		case 5:		// E or W
 			if ( zoGetField( ctx ) ) {
 				result->longitudeCardinal = ctx->fieldBuffer[0];
+				if ( result->longitudeCardinal == 'W' ) {	// W is negative longitude
+					result->longitude = -result->longitude;
+				}
 				ctx->currentSentenceField++;
 			} else {
 				return 1;	// try later

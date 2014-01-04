@@ -1,0 +1,9 @@
+[submodule "thirdparty\\iOS-KML-Framework"]
+	path = thirdparty\\iOS-KML-Framework
+	url = https://github.com/FLCLjp/iOS-KML-Framework.git
+[submodule "thirdparty/KML-iOS"]
+	path = thirdparty/KML-iOS
+	url = https://github.com/FLCLjp/iOS-KML-Framework.git
+[submodule "thirdparty/kml-ios"]
+	path = thirdparty/kml-ios
+	url = https://github.com/micahpearlman/iOS-KML-Framework.git

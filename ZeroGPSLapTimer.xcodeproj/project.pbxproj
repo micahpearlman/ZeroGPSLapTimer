@@ -31,6 +31,7 @@
 		FAADF4431864D46500F301B7 /* CrumbPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4411864D46500F301B7 /* CrumbPathView.m */; };
 		FAADF44E18692EEA00F301B7 /* ZOGPS.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF44D18692EEA00F301B7 /* ZOGPS.m */; };
 		FAADF4571869375500F301B7 /* ZOGPSExternalVenus.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4561869375500F301B7 /* ZOGPSExternalVenus.m */; };
+		FABCD7B51877569100EFB248 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = FABCD7B41877569100EFB248 /* assets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,6 +82,8 @@
 		FAADF44D18692EEA00F301B7 /* ZOGPS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOGPS.m; sourceTree = "<group>"; };
 		FAADF4551869375500F301B7 /* ZOGPSExternalVenus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOGPSExternalVenus.h; sourceTree = "<group>"; };
 		FAADF4561869375500F301B7 /* ZOGPSExternalVenus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOGPSExternalVenus.m; sourceTree = "<group>"; };
+		FABCD7B2187744E200EFB248 /* libkml-ios.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "libkml-ios.a"; path = "thirdparty/kml-ios/build/Debug-iphoneos/libkml-ios.a"; sourceTree = "<group>"; };
+		FABCD7B41877569100EFB248 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,6 +151,7 @@
 		FAADF3F11864C31200F301B7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FABCD7B2187744E200EFB248 /* libkml-ios.a */,
 				FA097505186A1C16005C9B05 /* CoreBluetooth.framework */,
 				FAADF42D1864C81A00F301B7 /* MapKit.framework */,
 				FAADF3F21864C31200F301B7 /* Foundation.framework */,
@@ -161,6 +165,7 @@
 		FAADF3F81864C31200F301B7 /* ZeroGPSLapTimer */ = {
 			isa = PBXGroup;
 			children = (
+				FABCD7B41877569100EFB248 /* assets */,
 				FAADF42F1864D38C00F301B7 /* src */,
 				FAADF43C1864D3C100F301B7 /* ui */,
 				FAADF3F91864C31200F301B7 /* Supporting Files */,
@@ -317,6 +322,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FABCD7B51877569100EFB248 /* assets in Resources */,
 				FAADF4091864C31200F301B7 /* Main_iPad.storyboard in Resources */,
 				FAADF4111864C31200F301B7 /* Images.xcassets in Resources */,
 				FAADF4061864C31200F301B7 /* Main_iPhone.storyboard in Resources */,
@@ -475,12 +481,14 @@
 		FAADF4281864C31200F301B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ZeroGPSLapTimer/ZeroGPSLapTimer-Prefix.pch";
 				INFOPLIST_FILE = "ZeroGPSLapTimer/ZeroGPSLapTimer-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -488,12 +496,14 @@
 		FAADF4291864C31200F301B7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ZeroGPSLapTimer/ZeroGPSLapTimer-Prefix.pch";
 				INFOPLIST_FILE = "ZeroGPSLapTimer/ZeroGPSLapTimer-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

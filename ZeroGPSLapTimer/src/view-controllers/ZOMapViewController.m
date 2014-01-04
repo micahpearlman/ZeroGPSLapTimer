@@ -10,6 +10,7 @@
 #import "ZOGPSExternalVenus.h"
 #import <CoreLocation/CoreLocation.h>
 
+
 @interface ZOMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate, ZOGPSDelegate> {
 	MKMapView*				_mapView;
 	UILabel*				_currentCoordinateLabel;
@@ -18,11 +19,19 @@
 	MKPolylineRenderer*		_crumbView;
 	NSMutableArray*			_locations;	// CLLocation
 	
+	
 	ZOGPS*					_gps;
+	
+	NSDictionary*			_geoJSON;
+	MKPolyline*				_geoJSONPolyLine;
+	MKPolylineRenderer*		_geoJSONPolyLineView;
 }
 
 @property (nonatomic,retain) MKPolyline* crumbPath;
 @property (nonatomic,retain) MKPolylineRenderer* crumbView;
+
+@property (nonatomic,retain) MKPolyline* geoJSONPolyLine;
+@property (nonatomic,retain) MKPolylineRenderer* geoJSONPolyLineView;
 @end
 
 @implementation ZOMapViewController
@@ -31,6 +40,9 @@
 @synthesize currentCoordinateLabel	= _currentCoordinateLabel;
 @synthesize crumbPath				= _crumbPath;
 @synthesize crumbView				= _crumbView;
+@synthesize geoJSONPolyLine			= _geoJSONPolyLine;
+@synthesize geoJSONPolyLineView		= _geoJSONPolyLineView;
+
 
 - (void)viewDidLoad
 {
@@ -48,6 +60,36 @@
 	_gps = [ZOGPSExternalVenus instance];
 	_gps.delegate = self;
 	[_gps connect];
+	
+	// init geoJSON
+	NSString* geoJSONFilePath = [[NSBundle mainBundle] pathForResource:@"example-linestring" ofType:@"json" inDirectory:@"assets"];
+	NSData* geoJSONFileData = [NSData dataWithContentsOfFile:geoJSONFilePath];
+	NSError* error = nil;
+	_geoJSON = [NSJSONSerialization JSONObjectWithData:geoJSONFileData options:NSJSONReadingMutableContainers error:&error];
+	if ( error == nil ) {
+		for (NSDictionary* feature in [_geoJSON objectForKey:@"features"] ) {
+			NSDictionary* geometry = [feature objectForKey:@"geometry"];
+			NSString* type = [geometry objectForKey:@"type"];
+			if ( [type isEqualToString:@"LineString"] ) {
+				NSArray* coordinates = [geometry objectForKey:@"coordinates"];
+				CLLocationCoordinate2D* coordCArray = (CLLocationCoordinate2D*)malloc( [coordinates count] * sizeof(CLLocationCoordinate2D) );
+				for ( int i = 0; i < [coordinates count]; i++ ) {
+					NSArray* coord = [coordinates objectAtIndex:i];
+					NSNumber* longitude = [coord objectAtIndex:0];
+					NSNumber* lattitude = [coord objectAtIndex:1];
+					coordCArray[i].longitude = [longitude doubleValue];
+					coordCArray[i].latitude = [lattitude doubleValue];
+				}
+				
+				self.geoJSONPolyLine = [MKPolyline polylineWithCoordinates:coordCArray count:[coordinates count]];
+				[_mapView addOverlay:self.geoJSONPolyLine];
+				free( coordCArray );
+
+				
+			}
+		}
+	}
+	
 }
 
 - (void)didReceiveMemoryWarning
@@ -149,8 +191,12 @@
 			free( coordinates );
 			
 		}
-		
+
 	}
+	
+	// update map location
+	[_mapView setRegion:MKCoordinateRegionMake( ((CLLocation*)[locations lastObject]).coordinate, MKCoordinateSpanMake(0.0, 0.0) ) animated:YES];
+
 	
 }
 
