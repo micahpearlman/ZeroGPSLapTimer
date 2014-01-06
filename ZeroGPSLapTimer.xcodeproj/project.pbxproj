@@ -33,8 +33,8 @@
 		FABCD7B51877569100EFB248 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = FABCD7B41877569100EFB248 /* assets */; };
 		FABCD7B818788A5500EFB248 /* ZOTrackSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7B718788A5500EFB248 /* ZOTrackSelectViewController.m */; };
 		FABCD7BB1878B76700EFB248 /* ZOTrackEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7BA1878B76700EFB248 /* ZOTrackEditViewController.m */; };
-		FABCD7BE1879ECA900EFB248 /* ZOStartFinishLineAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7BD1879ECA900EFB248 /* ZOStartFinishLineAnnotation.m */; };
-		FABCD7C11879EE8F00EFB248 /* ZOStartFinishLineAnnotationView.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7C01879EE8F00EFB248 /* ZOStartFinishLineAnnotationView.m */; };
+		FABCD7BE1879ECA900EFB248 /* ZOStartFinishLineOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7BD1879ECA900EFB248 /* ZOStartFinishLineOverlay.m */; };
+		FABCD7C11879EE8F00EFB248 /* ZOStartFinishLineRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7C01879EE8F00EFB248 /* ZOStartFinishLineRenderer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -83,16 +83,16 @@
 		FAADF44D18692EEA00F301B7 /* ZOGPS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOGPS.m; sourceTree = "<group>"; };
 		FAADF4551869375500F301B7 /* ZOGPSExternalVenus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOGPSExternalVenus.h; sourceTree = "<group>"; };
 		FAADF4561869375500F301B7 /* ZOGPSExternalVenus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOGPSExternalVenus.m; sourceTree = "<group>"; };
-		FABCD7B2187744E200EFB248 /* libkml-ios.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = "libkml-ios.a"; path = "thirdparty/kml-ios/build/Debug-iphoneos/libkml-ios.a"; sourceTree = "<group>"; };
+		FABCD7B2187744E200EFB248 /* libkml-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libkml-ios.a"; path = "thirdparty/kml-ios/build/Debug-iphoneos/libkml-ios.a"; sourceTree = "<group>"; };
 		FABCD7B41877569100EFB248 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		FABCD7B618788A5500EFB248 /* ZOTrackSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOTrackSelectViewController.h; sourceTree = "<group>"; };
 		FABCD7B718788A5500EFB248 /* ZOTrackSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOTrackSelectViewController.m; sourceTree = "<group>"; };
 		FABCD7B91878B76700EFB248 /* ZOTrackEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOTrackEditViewController.h; sourceTree = "<group>"; };
 		FABCD7BA1878B76700EFB248 /* ZOTrackEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOTrackEditViewController.m; sourceTree = "<group>"; };
-		FABCD7BC1879ECA900EFB248 /* ZOStartFinishLineAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOStartFinishLineAnnotation.h; sourceTree = "<group>"; };
-		FABCD7BD1879ECA900EFB248 /* ZOStartFinishLineAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOStartFinishLineAnnotation.m; sourceTree = "<group>"; };
-		FABCD7BF1879EE8F00EFB248 /* ZOStartFinishLineAnnotationView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOStartFinishLineAnnotationView.h; sourceTree = "<group>"; };
-		FABCD7C01879EE8F00EFB248 /* ZOStartFinishLineAnnotationView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOStartFinishLineAnnotationView.m; sourceTree = "<group>"; };
+		FABCD7BC1879ECA900EFB248 /* ZOStartFinishLineOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOStartFinishLineOverlay.h; sourceTree = "<group>"; };
+		FABCD7BD1879ECA900EFB248 /* ZOStartFinishLineOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOStartFinishLineOverlay.m; sourceTree = "<group>"; };
+		FABCD7BF1879EE8F00EFB248 /* ZOStartFinishLineRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOStartFinishLineRenderer.h; sourceTree = "<group>"; };
+		FABCD7C01879EE8F00EFB248 /* ZOStartFinishLineRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOStartFinishLineRenderer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,10 +237,10 @@
 				FAADF43F1864D46500F301B7 /* CrumbPath.m */,
 				FAADF4401864D46500F301B7 /* CrumbPathView.h */,
 				FAADF4411864D46500F301B7 /* CrumbPathView.m */,
-				FABCD7BC1879ECA900EFB248 /* ZOStartFinishLineAnnotation.h */,
-				FABCD7BD1879ECA900EFB248 /* ZOStartFinishLineAnnotation.m */,
-				FABCD7BF1879EE8F00EFB248 /* ZOStartFinishLineAnnotationView.h */,
-				FABCD7C01879EE8F00EFB248 /* ZOStartFinishLineAnnotationView.m */,
+				FABCD7BC1879ECA900EFB248 /* ZOStartFinishLineOverlay.h */,
+				FABCD7BD1879ECA900EFB248 /* ZOStartFinishLineOverlay.m */,
+				FABCD7BF1879EE8F00EFB248 /* ZOStartFinishLineRenderer.h */,
+				FABCD7C01879EE8F00EFB248 /* ZOStartFinishLineRenderer.m */,
 			);
 			path = "map-overlays";
 			sourceTree = "<group>";
@@ -362,7 +362,7 @@
 				FAADF4391864D38C00F301B7 /* ZOMapViewController.m in Sources */,
 				FABCD7B818788A5500EFB248 /* ZOTrackSelectViewController.m in Sources */,
 				FAADF4431864D46500F301B7 /* CrumbPathView.m in Sources */,
-				FABCD7C11879EE8F00EFB248 /* ZOStartFinishLineAnnotationView.m in Sources */,
+				FABCD7C11879EE8F00EFB248 /* ZOStartFinishLineRenderer.m in Sources */,
 				FABCD7BB1878B76700EFB248 /* ZOTrackEditViewController.m in Sources */,
 				FAADF4381864D38C00F301B7 /* main.m in Sources */,
 				FAADF4421864D46500F301B7 /* CrumbPath.m in Sources */,
@@ -373,7 +373,7 @@
 				FA09750D186D52A2005C9B05 /* ZOCircularBuffer.c in Sources */,
 				FAA68D581870B7BA007DD016 /* ZOBluetooth.m in Sources */,
 				FAA68D5B18720778007DD016 /* ZOParseNMEA.c in Sources */,
-				FABCD7BE1879ECA900EFB248 /* ZOStartFinishLineAnnotation.m in Sources */,
+				FABCD7BE1879ECA900EFB248 /* ZOStartFinishLineOverlay.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -201,6 +201,7 @@
 }
 
 
+
 - (MKOverlayRenderer*)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
 //	if ( self.crumbView == nil ) {
 		self.crumbView = [[MKPolylineRenderer alloc] initWithOverlay:overlay];

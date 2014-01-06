@@ -7,6 +7,8 @@
 //
 
 #import "ZOTrackEditViewController.h"
+#import "ZOStartFinishLineOverlay.h"
+#import "ZOStartFinishLineRenderer.h"
 
 @interface ZOTrackEditViewController () <MKMapViewDelegate, CLLocationManagerDelegate> {
 	MKMapView*				_mapView;
@@ -45,6 +47,11 @@
 	[_locationManager setDistanceFilter:kCLDistanceFilterNone];
 	[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
 	[_locationManager startUpdatingLocation];
+	
+	// setup gesture recognizers
+	UITapGestureRecognizer* tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+																					action:@selector(mapViewTapped:)];
+	[_mapView addGestureRecognizer:tapRecognizer];
 
 }
 
@@ -52,6 +59,42 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+#pragma mark MapView gesture recognizer
+
+
+- (void)mapViewTapped:(UITapGestureRecognizer *)recognizer
+{
+    CGPoint pointTappedInMapView = [recognizer locationInView:_mapView];
+    CLLocationCoordinate2D geoCoordinatesTapped = [_mapView convertPoint:pointTappedInMapView toCoordinateFromView:_mapView];
+	
+    switch (recognizer.state) {
+        case UIGestureRecognizerStateBegan:
+			
+        case UIGestureRecognizerStateChanged:
+            /* equivalent to touchesMoved:withEvent: */
+			NSLog( @"mapViewTapped UIGestureRecognizerStateChanged" );
+            break;
+			
+        case UIGestureRecognizerStateEnded: {
+			NSLog( @"mapViewTapped UIGestureRecognizerStateEnded" );
+			ZOStartFinishLineOverlay* startFinishOverlay = [[ZOStartFinishLineOverlay alloc] initWithCoordinate:geoCoordinatesTapped];
+			[_mapView addOverlay:startFinishOverlay];
+			
+			
+			
+		} break;
+			
+        case UIGestureRecognizerStateCancelled:
+            /* equivalent to touchesCancelled:withEvent: */
+			NSLog( @"mapViewTapped UIGestureRecognizerStateCancelled" );
+            break;
+			
+        default:
+            break;
+    }
+}
+
 
 #pragma mark MapView Delegate
 
@@ -69,5 +112,13 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 }
 
+- (MKOverlayRenderer*)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
+	if ( [overlay class] == [ZOStartFinishLineOverlay class] ) {
+		ZOStartFinishLineAnnotationRenderer* startFinishRenderer = [[ZOStartFinishLineAnnotationRenderer alloc] initWithOverlay:overlay];
+		return startFinishRenderer;
+	}
+	
+	return nil;
+}
 
 @end

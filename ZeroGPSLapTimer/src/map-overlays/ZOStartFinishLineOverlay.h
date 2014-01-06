@@ -9,8 +9,12 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 
-@interface ZOStartFinishLineAnnotation : NSObject <MKAnnotation>
+@interface ZOStartFinishLineOverlay : NSObject <MKOverlay>
 
 @property (nonatomic, assign) CLLocationCoordinate2D coordinate;
+@property (nonatomic, assign) MKMapRect boundingMapRect;
+
+- (id) initWithCoordinate:(CLLocationCoordinate2D)coord;
+
 
 @end

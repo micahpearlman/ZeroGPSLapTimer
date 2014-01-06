@@ -114,6 +114,7 @@
                             <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="hybrid" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="00C-37-DGm">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <gestureRecognizers/>
                                 <connections>
                                     <outlet property="delegate" destination="wbZ-JI-JGu" id="dAr-hQ-WN5"/>
                                 </connections>
@@ -131,18 +132,9 @@
                     <navigationItem key="navigationItem" id="6gf-n4-brr"/>
                     <connections>
                         <outlet property="mapView" destination="00C-37-DGm" id="tG8-Em-TTm"/>
-                        <outlet property="searchDisplayController" destination="gxM-oc-5mb" id="Y6O-BQ-sxp"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EKO-GO-kKr" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <searchDisplayController id="gxM-oc-5mb">
-                    <connections>
-                        <outlet property="delegate" destination="wbZ-JI-JGu" id="IgZ-gh-4jm"/>
-                        <outlet property="searchContentsController" destination="wbZ-JI-JGu" id="wFF-nF-qbC"/>
-                        <outlet property="searchResultsDataSource" destination="wbZ-JI-JGu" id="Pff-qO-F5W"/>
-                        <outlet property="searchResultsDelegate" destination="wbZ-JI-JGu" id="p5K-Sn-kTl"/>
-                    </connections>
-                </searchDisplayController>
             </objects>
             <point key="canvasLocation" x="1531" y="679"/>
         </scene>
