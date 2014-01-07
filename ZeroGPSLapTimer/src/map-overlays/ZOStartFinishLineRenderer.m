@@ -39,7 +39,7 @@
 		_line = [UIBezierPath bezierPath];
 		[_line moveToPoint:ends[0]];
 		[_line addLineToPoint:ends[1]];
-		//[_line applyTransform:_transform];
+
 		
 		_transform = CGAffineTransformMakeTranslation( center.x, center.y );
 		
@@ -63,8 +63,6 @@
 	
 	ZOStartFinishLineOverlay* startFinishLineOverlay = (ZOStartFinishLineOverlay*)self.overlay;
 	
-
-	
 	UIGraphicsPushContext( context ); {
 		if ( startFinishLineOverlay.isSelected ) {
 			[[UIColor redColor] setFill];
@@ -73,10 +71,7 @@
 			[_circle stroke];
 		}
 
-		CGPoint center = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.coordinate )];
 		CGContextConcatCTM( context, _transform );
-		//CGContextTranslateCTM( context, center.x, center.y );
-		//[_line applyTransform:_transform];
 		[[UIColor greenColor] setStroke];
 		[_line setLineWidth:12];
 		[_line stroke];
@@ -92,6 +87,10 @@
 	[self setNeedsDisplay];
 }
 - (void)zoStartFinishLineOverlay:(ZOStartFinishLineOverlay*)startFinishOverlay movedTo:(CLLocationCoordinate2D)coordinate {
+	
+	CGPoint center = [self pointForMapPoint:MKMapPointForCoordinate( startFinishOverlay.coordinate )];
+	_transform = CGAffineTransformMakeTranslation( center.x, center.y );
+
 	[self setNeedsDisplay];
 }
 
