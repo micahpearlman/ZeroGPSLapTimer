@@ -200,7 +200,7 @@ typedef enum {
 	for ( MKAnnotationView* annotationView in views ) {
 		id<MKAnnotation> mp = [annotationView annotation];
 		if ( [mp class] == [MKUserLocation class]) {
-			MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance([mp coordinate], 10, 10);
+			MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance([mp coordinate], 0, 0);
 			[mapView setRegion:region animated:YES];
 		}
 	}

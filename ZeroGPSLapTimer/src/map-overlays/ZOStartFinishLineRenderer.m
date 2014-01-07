@@ -43,7 +43,10 @@
 		
 		_transform = CGAffineTransformMakeTranslation( center.x, center.y );
 		
-		_circle = [UIBezierPath bezierPathWithOvalInRect:[self rectForMapRect:startFinishLineOverlay.boundingMapRect]];
+		CGRect rect = [self rectForMapRect:startFinishLineOverlay.boundingMapRect];
+		rect.origin.x = rect.origin.x - center.x;
+		rect.origin.y = rect.origin.y - center.y;
+		_circle = [UIBezierPath bezierPathWithOvalInRect:rect];
 
 		
 	}
@@ -64,6 +67,7 @@
 	ZOStartFinishLineOverlay* startFinishLineOverlay = (ZOStartFinishLineOverlay*)self.overlay;
 	
 	UIGraphicsPushContext( context ); {
+		CGContextConcatCTM( context, _transform );
 		if ( startFinishLineOverlay.isSelected ) {
 			[[UIColor redColor] setFill];
 			[_circle setLineWidth:12];
@@ -71,7 +75,7 @@
 			[_circle stroke];
 		}
 
-		CGContextConcatCTM( context, _transform );
+		
 		[[UIColor greenColor] setStroke];
 		[_line setLineWidth:12];
 		[_line stroke];
