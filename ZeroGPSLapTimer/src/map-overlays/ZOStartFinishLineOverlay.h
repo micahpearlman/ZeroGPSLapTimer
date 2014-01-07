@@ -13,8 +13,11 @@
 
 @property (nonatomic, assign) CLLocationCoordinate2D coordinate;
 @property (nonatomic, assign) MKMapRect boundingMapRect;
+@property (nonatomic, readonly) CLLocationCoordinate2D* lineEnds;
 
 - (id) initWithCoordinate:(CLLocationCoordinate2D)coord;
+
+
 
 
 @end

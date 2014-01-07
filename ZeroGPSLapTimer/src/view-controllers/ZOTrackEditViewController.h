@@ -13,5 +13,6 @@
 
 @property (nonatomic,retain) IBOutlet MKMapView* mapView;
 
+- (IBAction) onStartFinishSelected:(id)sender;
 
 @end

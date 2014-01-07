@@ -10,9 +10,16 @@
 #import "ZOStartFinishLineOverlay.h"
 #import "ZOStartFinishLineRenderer.h"
 
+
+typedef enum {
+	ZOTrackEditViewControllerState_None,
+	ZOTrackEditViewControllerState_PlaceStartFinish
+} ZOTrackEditViewControllerState;
+
 @interface ZOTrackEditViewController () <MKMapViewDelegate, CLLocationManagerDelegate> {
-	MKMapView*				_mapView;
-	CLLocationManager*		_locationManager;
+	MKMapView*						_mapView;
+	CLLocationManager*				_locationManager;
+	ZOTrackEditViewControllerState	_state;
 }
 
 @end
@@ -34,6 +41,7 @@
 	self = [super initWithCoder:aDecoder];
 	if ( self ) {
 		self.hidesBottomBarWhenPushed = YES;
+		_state = ZOTrackEditViewControllerState_None;
 	}
 	return self;
 }
@@ -68,44 +76,53 @@
     CGPoint pointTappedInMapView = [recognizer locationInView:_mapView];
     CLLocationCoordinate2D geoCoordinatesTapped = [_mapView convertPoint:pointTappedInMapView toCoordinateFromView:_mapView];
 	
-    switch (recognizer.state) {
-        case UIGestureRecognizerStateBegan:
+	if ( recognizer.state != UIGestureRecognizerStateEnded ) {
+		return;
+	}
+	
+	if ( _state == ZOTrackEditViewControllerState_None ) {
+		// see if we are selecting one of our overlays
+		MKMapPoint mapPoint = MKMapPointForCoordinate( geoCoordinatesTapped );
+		for ( id<MKOverlay> overlay in _mapView.overlays ) {
+			//
+			MKMapRect mapRect = overlay.boundingMapRect;
 			
-        case UIGestureRecognizerStateChanged:
-            /* equivalent to touchesMoved:withEvent: */
-			NSLog( @"mapViewTapped UIGestureRecognizerStateChanged" );
-            break;
-			
-        case UIGestureRecognizerStateEnded: {
-			NSLog( @"mapViewTapped UIGestureRecognizerStateEnded" );
-			ZOStartFinishLineOverlay* startFinishOverlay = [[ZOStartFinishLineOverlay alloc] initWithCoordinate:geoCoordinatesTapped];
-			[_mapView addOverlay:startFinishOverlay];
-			
-			
-			
-		} break;
-			
-        case UIGestureRecognizerStateCancelled:
-            /* equivalent to touchesCancelled:withEvent: */
-			NSLog( @"mapViewTapped UIGestureRecognizerStateCancelled" );
-            break;
-			
-        default:
-            break;
-    }
+			// check if map point is inside the map rect
+//			BOOL isInside = YES;
+//			if ( mapPoint.x < MKMapRectGetMinX( mapRect ) || mapPoint.x > MKMapRectGetMaxX( mapRect )
+//				|| mapPoint.y < MKMapRectGetMinY( mapRect ) || mapPoint.y > MKMapRectGetMaxY( mapRect )) {
+//				isInside = NO;
+//			}
+			if ( MKMapRectContainsPoint( mapRect, mapPoint ) ) {
+				NSLog(@"touched overlay" );
+			}
+		}
+		
+	} else if ( _state == ZOTrackEditViewControllerState_PlaceStartFinish ) {
+		ZOStartFinishLineOverlay* startFinishOverlay = [[ZOStartFinishLineOverlay alloc] initWithCoordinate:geoCoordinatesTapped];
+		[_mapView addOverlay:startFinishOverlay];
+	}
+
 }
 
 
 #pragma mark MapView Delegate
 
 - (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
-	MKAnnotationView *annotationView = [views objectAtIndex:0];
+	for ( MKAnnotationView* annotationView in views ) {
+		id<MKAnnotation> mp = [annotationView annotation];
+		if ( [mp class] == [MKUserLocation class]) {
+			MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance([mp coordinate], 10, 10);
+			[mapView setRegion:region animated:YES];
+		}
+	}
 	
-    id<MKAnnotation> mp = [annotationView annotation];
 	
-    MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance([mp coordinate] ,25,25);
-    [mapView setRegion:region animated:YES];
-	
+}
+
+
+- (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
+	NSLog(@"didDeselectAnnotationView");
 }
 
 #pragma mark Location Manager update
@@ -114,11 +131,24 @@
 
 - (MKOverlayRenderer*)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
 	if ( [overlay class] == [ZOStartFinishLineOverlay class] ) {
-		ZOStartFinishLineAnnotationRenderer* startFinishRenderer = [[ZOStartFinishLineAnnotationRenderer alloc] initWithOverlay:overlay];
+		ZOStartFinishLineRenderer* startFinishRenderer = [[ZOStartFinishLineRenderer alloc] initWithOverlay:overlay];
 		return startFinishRenderer;
 	}
 	
 	return nil;
 }
 
+
+#pragma mark Actions
+
+- (IBAction) onStartFinishSelected:(id)sender {
+	UIButton* button = (UIButton*)sender;
+	button.selected = !button.selected;
+	
+	if ( button.selected == YES ) {
+		_state = ZOTrackEditViewControllerState_PlaceStartFinish;
+	} else {
+		_state = ZOTrackEditViewControllerState_None;
+	}
+}
 @end

@@ -8,6 +8,6 @@
 
 #import <MapKit/MapKit.h>
 
-@interface ZOStartFinishLineAnnotationRenderer : MKOverlayRenderer
+@interface ZOStartFinishLineRenderer : MKOverlayRenderer
 
 @end

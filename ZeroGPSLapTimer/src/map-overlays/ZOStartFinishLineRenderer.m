@@ -7,41 +7,24 @@
 //
 
 #import "ZOStartFinishLineRenderer.h"
+#import "ZOStartFinishLineOverlay.h"
 
-static const int kFinishLineInitialWidth = 10;
-
-CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D coordinate, CLLocationDistance offsetLatMeters, CLLocationDistance offsetLongMeters) {
-    MKMapPoint offsetPoint = MKMapPointForCoordinate(coordinate);
-	
-    CLLocationDistance metersPerPoint = MKMetersPerMapPointAtLatitude(coordinate.latitude);
-    double latPoints = offsetLatMeters / metersPerPoint;
-    offsetPoint.y += latPoints;
-    double longPoints = offsetLongMeters / metersPerPoint;
-    offsetPoint.x += longPoints;
-	
-    CLLocationCoordinate2D offsetCoordinate = MKCoordinateForMapPoint(offsetPoint);
-    return offsetCoordinate;
-}
-
-@interface ZOStartFinishLineAnnotationRenderer () {
+@interface ZOStartFinishLineRenderer () {
 	UIBezierPath*			_line;
-	CLLocationCoordinate2D	_lineEnds[2];
 }
 
 @end
 
-@implementation ZOStartFinishLineAnnotationRenderer
+@implementation ZOStartFinishLineRenderer
 
 - (id)initWithOverlay:(id<MKOverlay>)overlay {
 	self = [super initWithOverlay:overlay];
 	if ( self ) {
-		CLLocationCoordinate2D centerCoord = [overlay coordinate];
-		_lineEnds[0] = MKCoordinateOffsetFromCoordinate( centerCoord, -kFinishLineInitialWidth/2, 0 );
-		_lineEnds[1] = MKCoordinateOffsetFromCoordinate( centerCoord, +kFinishLineInitialWidth/2, 0 );
+		ZOStartFinishLineOverlay* startFinishLineOverlay = (ZOStartFinishLineOverlay*)overlay;
 		
 		CGPoint ends[2];
-		ends[0] = [self pointForMapPoint:MKMapPointForCoordinate( _lineEnds[0] )];
-		ends[1] = [self pointForMapPoint:MKMapPointForCoordinate( _lineEnds[1] )];
+		ends[0] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.lineEnds[0] )];
+		ends[1] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.lineEnds[1] )];
 		
 		_line = [UIBezierPath bezierPath];
 		[_line moveToPoint:ends[0]];
@@ -64,7 +47,7 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 	
 	UIGraphicsPushContext( context ); {
 		[[UIColor redColor] setStroke];
-		[_line setLineWidth:2];
+		[_line setLineWidth:12];
 		[_line stroke];
 	} UIGraphicsPopContext();
 	
