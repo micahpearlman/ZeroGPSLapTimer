@@ -93,7 +93,7 @@
                             <outlet property="rightBarButtonItem" destination="LUg-PQ-B4g" id="kDo-8e-tjT"/>
                         </connections>
                     </navigationItem>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PCO-BC-O5X" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -102,7 +102,7 @@
         <!--Track Edit View Controller-->
         <scene sceneID="6P0-Oz-Pub">
             <objects>
-                <viewController id="wbZ-JI-JGu" customClass="ZOTrackEditViewController" sceneMemberID="viewController">
+                <viewController hidesBottomBarWhenPushed="YES" id="wbZ-JI-JGu" customClass="ZOTrackEditViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="3Q8-EA-qll"/>
                         <viewControllerLayoutGuide type="bottom" id="PhU-25-Qqr"/>

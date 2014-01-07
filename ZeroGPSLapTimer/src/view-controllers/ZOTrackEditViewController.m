@@ -13,13 +13,15 @@
 
 typedef enum {
 	ZOTrackEditViewControllerState_None,
-	ZOTrackEditViewControllerState_PlaceStartFinish
+	ZOTrackEditViewControllerState_PlaceStartFinish,
+	ZOTrackEditViewController_Edit
 } ZOTrackEditViewControllerState;
 
-@interface ZOTrackEditViewController () <MKMapViewDelegate, CLLocationManagerDelegate> {
+@interface ZOTrackEditViewController () <MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate> {
 	MKMapView*						_mapView;
 	CLLocationManager*				_locationManager;
 	ZOTrackEditViewControllerState	_state;
+	ZOStartFinishLineOverlay*		_editOverlay;
 }
 
 @end
@@ -57,9 +59,36 @@ typedef enum {
 	[_locationManager startUpdatingLocation];
 	
 	// setup gesture recognizers
-	UITapGestureRecognizer* tapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+	UITapGestureRecognizer* singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
 																					action:@selector(mapViewTapped:)];
-	[_mapView addGestureRecognizer:tapRecognizer];
+	singleTapRecognizer.delegate = self;
+	singleTapRecognizer.numberOfTapsRequired = 1;
+	
+
+	UITapGestureRecognizer* doubleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
+																						  action:@selector(mapViewDoubleTapped:)];
+	doubleTapRecognizer.delegate = self;	// this allows
+	doubleTapRecognizer.numberOfTapsRequired = 2;
+	[singleTapRecognizer requireGestureRecognizerToFail:doubleTapRecognizer];
+
+
+	UILongPressGestureRecognizer* longPressRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self
+																									  action:@selector(mapViewLongPress:)];
+	longPressRecognizer.delegate = self;
+	
+	UIPanGestureRecognizer* panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self
+																						   action:@selector(mapViewPan:)];
+	panGestureRecognizer.delegate = self;
+	
+	
+	
+	[doubleTapRecognizer setDelaysTouchesBegan : YES];
+	[singleTapRecognizer setDelaysTouchesBegan : YES];
+	
+	[_mapView addGestureRecognizer:doubleTapRecognizer];
+	[_mapView addGestureRecognizer:singleTapRecognizer];
+	[_mapView addGestureRecognizer:longPressRecognizer];
+	[_mapView addGestureRecognizer:panGestureRecognizer];
 
 }
 
@@ -68,10 +97,14 @@ typedef enum {
     // Dispose of any resources that can be recreated.
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+}
+
 #pragma mark MapView gesture recognizer
 
 
-- (void)mapViewTapped:(UITapGestureRecognizer *)recognizer
+- (IBAction)mapViewTapped:(UITapGestureRecognizer *)recognizer
 {
     CGPoint pointTappedInMapView = [recognizer locationInView:_mapView];
     CLLocationCoordinate2D geoCoordinatesTapped = [_mapView convertPoint:pointTappedInMapView toCoordinateFromView:_mapView];
@@ -84,16 +117,8 @@ typedef enum {
 		// see if we are selecting one of our overlays
 		MKMapPoint mapPoint = MKMapPointForCoordinate( geoCoordinatesTapped );
 		for ( id<MKOverlay> overlay in _mapView.overlays ) {
-			//
-			MKMapRect mapRect = overlay.boundingMapRect;
 			
-			// check if map point is inside the map rect
-//			BOOL isInside = YES;
-//			if ( mapPoint.x < MKMapRectGetMinX( mapRect ) || mapPoint.x > MKMapRectGetMaxX( mapRect )
-//				|| mapPoint.y < MKMapRectGetMinY( mapRect ) || mapPoint.y > MKMapRectGetMaxY( mapRect )) {
-//				isInside = NO;
-//			}
-			if ( MKMapRectContainsPoint( mapRect, mapPoint ) ) {
+			if ( MKMapRectContainsPoint( overlay.boundingMapRect, mapPoint ) ) {
 				NSLog(@"touched overlay" );
 			}
 		}
@@ -103,6 +128,100 @@ typedef enum {
 		[_mapView addOverlay:startFinishOverlay];
 	}
 
+}
+
+- (IBAction)mapViewDoubleTapped:(UITapGestureRecognizer *)recognizer {
+    CGPoint pointTappedInMapView = [recognizer locationInView:_mapView];
+    CLLocationCoordinate2D geoCoordinatesTapped = [_mapView convertPoint:pointTappedInMapView toCoordinateFromView:_mapView];
+	
+	if ( recognizer.state != UIGestureRecognizerStateEnded ) {
+		return;
+	}
+	
+	// see if we are selecting one of our overlays
+	MKMapPoint mapPoint = MKMapPointForCoordinate( geoCoordinatesTapped );
+	for ( id<MKOverlay> overlay in _mapView.overlays ) {
+		
+		if ( MKMapRectContainsPoint( overlay.boundingMapRect, mapPoint ) ) {
+			NSLog(@"double touched overlay" );
+			[_mapView removeOverlay:overlay];
+			return;
+		}
+	}
+}
+
+- (IBAction)mapViewLongPress:(UITapGestureRecognizer *)recognizer {
+    CGPoint pointTappedInMapView = [recognizer locationInView:_mapView];
+    CLLocationCoordinate2D geoCoordinatesTapped = [_mapView convertPoint:pointTappedInMapView toCoordinateFromView:_mapView];
+	
+	if ( recognizer.state == UIGestureRecognizerStateBegan ) {
+		return;
+	}
+	
+	// see if we are selecting one of our overlays
+	MKMapPoint mapPoint = MKMapPointForCoordinate( geoCoordinatesTapped );
+	for ( id<MKOverlay> overlay in _mapView.overlays ) {
+		
+		if ( MKMapRectContainsPoint( overlay.boundingMapRect, mapPoint ) ) {
+			NSLog(@"mapViewLongPress  overlay" );
+			if ( [overlay class] == [ZOStartFinishLineOverlay class] ) {
+				ZOStartFinishLineOverlay* startFinishOverlay = (ZOStartFinishLineOverlay*)overlay;
+				startFinishOverlay.isSelected = !startFinishOverlay.isSelected;
+				
+				if ( _editOverlay == startFinishOverlay ) {
+					_editOverlay = nil;
+				}
+				
+				if ( _editOverlay ) {
+					_editOverlay.isSelected = NO;
+				}
+				_editOverlay = startFinishOverlay;
+			}
+			return;
+		}
+	}
+
+}
+
+- (IBAction)mapViewPan:(UITapGestureRecognizer *)recognizer {
+	CGPoint pointTappedInMapView = [recognizer locationInView:_mapView];
+    CLLocationCoordinate2D geoCoordinatesTapped = [_mapView convertPoint:pointTappedInMapView toCoordinateFromView:_mapView];
+	
+	// see if we are selecting one of our overlays
+	if ( recognizer.state == UIGestureRecognizerStateBegan && _editOverlay == nil ) {
+		MKMapPoint mapPoint = MKMapPointForCoordinate( geoCoordinatesTapped );
+		for ( id<MKOverlay> overlay in _mapView.overlays ) {
+			
+			if ( MKMapRectContainsPoint( overlay.boundingMapRect, mapPoint ) ) {
+				NSLog(@"mapViewLongPress  overlay" );
+				if ( [overlay class] == [ZOStartFinishLineOverlay class] ) {
+					ZOStartFinishLineOverlay* startFinishOverlay = (ZOStartFinishLineOverlay*)overlay;
+					startFinishOverlay.isSelected = !startFinishOverlay.isSelected;
+					
+					if ( _editOverlay == startFinishOverlay ) {
+						_editOverlay = nil;
+					}
+					
+					if ( _editOverlay ) {
+						_editOverlay.isSelected = NO;
+					}
+					_editOverlay = startFinishOverlay;
+				}
+				return;
+			}
+		}
+		
+	} else if ( recognizer.state == UIGestureRecognizerStateChanged && _editOverlay ) {
+		[_editOverlay setCoordinate:geoCoordinatesTapped];
+	}
+
+
+}
+
+
+#pragma mark UIGestureRecognizerDelegate
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+	return YES;
 }
 
 
@@ -116,8 +235,6 @@ typedef enum {
 			[mapView setRegion:region animated:YES];
 		}
 	}
-	
-	
 }
 
 
