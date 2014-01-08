@@ -13,10 +13,11 @@
 
 @interface ZOStartFinishLineOverlay : NSObject <MKOverlay>
 
-@property (nonatomic, assign) CLLocationCoordinate2D coordinate;
-@property (nonatomic, assign) MKMapRect boundingMapRect;
-@property (nonatomic, assign) BOOL isSelected;
+@property (nonatomic, assign)	CLLocationCoordinate2D coordinate;
+@property (nonatomic, assign)	MKMapRect boundingMapRect;
+@property (nonatomic, assign)	BOOL isSelected;
 @property (nonatomic, readonly) CLLocationCoordinate2D* lineEnds;
+@property (nonatomic, assign)	double angle;	// radians
 @property (nonatomic, assign) id<ZOStartFinishLineOverlayDelegate> delegate;
 
 - (id) initWithCoordinate:(CLLocationCoordinate2D)coord;
@@ -27,6 +28,7 @@
 
 - (void)zoStartFinishLineOverlay:(ZOStartFinishLineOverlay*)startFinishOverlay isSelected:(BOOL)isSelected;
 - (void)zoStartFinishLineOverlay:(ZOStartFinishLineOverlay*)startFinishOverlay movedTo:(CLLocationCoordinate2D)coordinate;
+- (void)zoStartFinishLineOverlay:(ZOStartFinishLineOverlay*)startFinishOverlay rotateTo:(double)angle;
 
 @end
 

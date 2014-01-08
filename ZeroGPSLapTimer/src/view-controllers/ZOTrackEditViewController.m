@@ -10,6 +10,7 @@
 #import "ZOStartFinishLineOverlay.h"
 #import "ZOStartFinishLineRenderer.h"
 
+#define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
 
 typedef enum {
 	ZOTrackEditViewControllerState_None,
@@ -22,7 +23,6 @@ typedef enum {
 	CLLocationManager*				_locationManager;
 	ZOTrackEditViewControllerState	_state;
 	ZOStartFinishLineOverlay*		_editOverlay;
-	UIPanGestureRecognizer*			_panGestureRecoginizer;
 }
 
 @end
@@ -74,18 +74,24 @@ typedef enum {
 
 
 	
-	_panGestureRecoginizer = [[UIPanGestureRecognizer alloc] initWithTarget:self
+	UIPanGestureRecognizer* panGestureRecoginizer = [[UIPanGestureRecognizer alloc] initWithTarget:self
 																	 action:@selector(mapViewPan:)];
-	_panGestureRecoginizer.delegate = self;
+	panGestureRecoginizer.delegate = self;
+	panGestureRecoginizer.maximumNumberOfTouches = 1;
+	panGestureRecoginizer.minimumNumberOfTouches = 1;
 	
+	UIRotationGestureRecognizer* rotateGestureRecognizer = [[UIRotationGestureRecognizer alloc] initWithTarget:self
+																										action:@selector(mapViewRotate:)];
+	rotateGestureRecognizer.delegate = self;
+
 	
-	
-	[doubleTapRecognizer setDelaysTouchesBegan : YES];
-	[singleTapRecognizer setDelaysTouchesBegan : YES];
-	
+//	[doubleTapRecognizer setDelaysTouchesBegan : YES];
+//	[singleTapRecognizer setDelaysTouchesBegan : YES];
+	[_mapView addGestureRecognizer:rotateGestureRecognizer];
 	[_mapView addGestureRecognizer:doubleTapRecognizer];
 	[_mapView addGestureRecognizer:singleTapRecognizer];
-	[_mapView addGestureRecognizer:_panGestureRecoginizer];
+	[_mapView addGestureRecognizer:panGestureRecoginizer];
+	
 
 }
 
@@ -94,8 +100,9 @@ typedef enum {
     // Dispose of any resources that can be recreated.
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return UIInterfaceOrientationIsLandscape(interfaceOrientation);
+
+- (BOOL)shouldAutorotate {
+	return YES;
 }
 
 #pragma mark MapView gesture recognizer
@@ -125,6 +132,7 @@ typedef enum {
 						_editOverlay = nil;
 						startFinishOverlay.isSelected = NO;
 						_mapView.scrollEnabled = YES;	// resume scrolling and panning
+						_mapView.rotateEnabled = YES;
 						_state = ZOTrackEditViewControllerState_None;
 					} else {
 						if ( _editOverlay ) {
@@ -133,6 +141,7 @@ typedef enum {
 						_editOverlay = startFinishOverlay;
 						_editOverlay.isSelected = YES;
 						_mapView.scrollEnabled = NO;	// stop view from panning and scrolling
+						_mapView.rotateEnabled = NO;
 						_state = ZOTrackEditViewController_Edit;
 					}
 				}
@@ -172,7 +181,6 @@ typedef enum {
 	static CGPoint originalPoint;
 	
 	CGPoint pointTappedInMapView = [recognizer locationInView:_mapView];
-//    CLLocationCoordinate2D geoCoordinatesTapped = [_mapView convertPoint:pointTappedInMapView toCoordinateFromView:_mapView];
 	
 	if ( recognizer.state == UIGestureRecognizerStateBegan && _editOverlay ) {
 		originalPoint = pointTappedInMapView;
@@ -180,11 +188,21 @@ typedef enum {
 		CGPoint translation = [recognizer translationInView:_mapView];
 		CGPoint newPoint = CGPointMake( originalPoint.x + translation.x, originalPoint.y + translation.y );
 		CLLocationCoordinate2D translationGeo = [_mapView convertPoint:newPoint toCoordinateFromView:_mapView];
-		[_editOverlay setCoordinate:translationGeo];
-//		NSLog(@"pan at: %f, %f", translationGeo.latitude, translationGeo.longitude );
+		MKMapPoint mapPoint = MKMapPointForCoordinate( translationGeo );
+		if ( MKMapRectContainsPoint( _editOverlay.boundingMapRect, mapPoint ) ) {
+			_mapView.scrollEnabled = NO;	// resume scrolling and panning
+			[_editOverlay setCoordinate:translationGeo];
+		} else {
+			_mapView.scrollEnabled = YES;	
+		}
 	}
+}
 
-
+- (IBAction)mapViewRotate:(UIRotationGestureRecognizer*)recognizer {
+	if ( _state == ZOTrackEditViewController_Edit && _editOverlay ) {
+//		NSLog(@"rotate: %f", RADIANS_TO_DEGREES( recognizer.rotation ) );
+		_editOverlay.angle = recognizer.rotation;
+	}
 }
 
 
@@ -200,8 +218,13 @@ typedef enum {
 	for ( MKAnnotationView* annotationView in views ) {
 		id<MKAnnotation> mp = [annotationView annotation];
 		if ( [mp class] == [MKUserLocation class]) {
-			MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance([mp coordinate], 0, 0);
-			[mapView setRegion:region animated:YES];
+			MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance([mp coordinate], 0.0001, 0.0001)];
+//			adjustedRegion.span.longitudeDelta  = 0.002;	// sets zoom
+//			adjustedRegion.span.latitudeDelta  = 0.002;		// sets zoom
+			[mapView setRegion:adjustedRegion animated:YES];
+//			MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance([mp coordinate], 0.01, 0.01);
+//			[mapView setRegion:region animated:YES];
+			
 		}
 	}
 }

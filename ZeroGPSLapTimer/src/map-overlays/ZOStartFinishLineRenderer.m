@@ -66,6 +66,16 @@
 	
 	ZOStartFinishLineOverlay* startFinishLineOverlay = (ZOStartFinishLineOverlay*)self.overlay;
 	
+	CGPoint ends[2];
+	CGPoint center = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.coordinate )];
+	ends[0] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.lineEnds[0] )];
+	ends[0].x = ends[0].x - center.x;
+	ends[0].y = ends[0].y - center.y;
+	ends[1] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.lineEnds[1] )];
+	ends[1].x = ends[1].x - center.x;
+	ends[1].y = ends[1].y - center.y;
+	
+	
 	UIGraphicsPushContext( context ); {
 		CGContextConcatCTM( context, _transform );
 		if ( startFinishLineOverlay.isSelected ) {
@@ -76,9 +86,15 @@
 		}
 
 		
-		[[UIColor greenColor] setStroke];
-		[_line setLineWidth:12];
-		[_line stroke];
+//		[[UIColor greenColor] setStroke];
+		CGContextBeginPath( context );
+		CGContextSetLineWidth( context, 12 );
+		CGContextSetStrokeColorWithColor( context, [UIColor greenColor].CGColor );
+		CGContextMoveToPoint( context, ends[0].x, ends[0].y );
+		CGContextAddLineToPoint( context, ends[1].x, ends[1].y );
+		CGContextStrokePath( context );
+//		[_line setLineWidth:12];
+//		[_line stroke];
 		
 	} UIGraphicsPopContext();
 	

@@ -8,6 +8,8 @@
 
 #import "ZOStartFinishLineOverlay.h"
 
+static inline double zoDegreesToRadians (double degrees) {return degrees * M_PI/180.0;}
+
 static const float kFinishLineInitialWidth = 15.0f;
 
 CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D coordinate, CLLocationDistance offsetLatMeters, CLLocationDistance offsetLongMeters) {
@@ -27,9 +29,9 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 @interface ZOStartFinishLineOverlay () {
 	CLLocationCoordinate2D	_coordinate;
 	MKMapRect				_boundingMapRect;
-	
 	CLLocationCoordinate2D	_lineEnds[2];
 	BOOL					_isSelected;
+	double					_angle;
 
 }
 
@@ -43,10 +45,12 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 @dynamic	lineEnds;
 @dynamic	isSelected;
 @dynamic	coordinate;
+@dynamic	angle;
 
 - (id) initWithCoordinate:(CLLocationCoordinate2D)coord {
 	self = [super init];
 	if ( self ) {
+		_angle = zoDegreesToRadians(0);
 		[self setCoordinate:coord];
 	}
 	
@@ -74,9 +78,13 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 
 - (void) setCoordinate:(CLLocationCoordinate2D)coordinate {
 	_coordinate = coordinate;
-
-	_lineEnds[0] = MKCoordinateOffsetFromCoordinate( _coordinate, -kFinishLineInitialWidth/2, 0 );
-	_lineEnds[1] = MKCoordinateOffsetFromCoordinate( _coordinate, +kFinishLineInitialWidth/2, 0 );
+	
+	CGPoint lineEnds[2] = { { -kFinishLineInitialWidth/2, 0}, { +kFinishLineInitialWidth/2, 0} };
+	CGAffineTransform rotationTransform = CGAffineTransformMakeRotation( -_angle );	// NOTE: negative angle!
+	lineEnds[0] = CGPointApplyAffineTransform( lineEnds[0], rotationTransform );
+	lineEnds[1] = CGPointApplyAffineTransform( lineEnds[1], rotationTransform );
+	_lineEnds[0] = MKCoordinateOffsetFromCoordinate( _coordinate, lineEnds[0].x, lineEnds[0].y );
+	_lineEnds[1] = MKCoordinateOffsetFromCoordinate( _coordinate, lineEnds[1].x, lineEnds[1].y );
 	
 	
 	MKMapPoint mapPointCenter = MKMapPointForCoordinate(_coordinate);
@@ -86,8 +94,17 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 	self.boundingMapRect = MKMapRectMake( upperLeftMapPoint.x, upperLeftMapPoint.y, mapPointRadius * 2, mapPointRadius * 2);
 
 	if ( [delegate respondsToSelector:@selector(zoStartFinishLineOverlay:movedTo:)] ) {
-		[delegate zoStartFinishLineOverlay:self movedTo:coordinate];
+		[delegate zoStartFinishLineOverlay:self movedTo:_coordinate];
 	}
+}
+
+- (double)angle {
+	return _angle;
+}
+
+- (void)setAngle:(double)angle {
+	_angle = angle;
+	self.coordinate = _coordinate;
 }
 
 @end
