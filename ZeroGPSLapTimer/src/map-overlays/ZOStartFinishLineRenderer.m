@@ -7,9 +7,10 @@
 //
 
 #import "ZOStartFinishLineRenderer.h"
-#import "ZOStartFinishLineOverlay.h"
+#import "ZOStartFinishLine.h"
+#import "ZOTrackObjectDelegate.h"
 
-@interface ZOStartFinishLineRenderer () <ZOStartFinishLineOverlayDelegate> {
+@interface ZOStartFinishLineRenderer () <ZOTrackObjectDelegate> {
 	UIBezierPath*			_line;
 	UIBezierPath*			_circle;
 	CGAffineTransform		_transform;
@@ -19,10 +20,12 @@
 
 @implementation ZOStartFinishLineRenderer
 
+@synthesize parent;
+
 - (id)initWithOverlay:(id<MKOverlay>)overlay {
 	self = [super initWithOverlay:overlay];
 	if ( self ) {
-		ZOStartFinishLineOverlay* startFinishLineOverlay = (ZOStartFinishLineOverlay*)overlay;
+		ZOStartFinishLine* startFinishLineOverlay = (ZOStartFinishLine*)overlay;
 
 		startFinishLineOverlay.delegate = self;
 		
@@ -64,7 +67,7 @@
 	   
 	[super drawMapRect:mapRect zoomScale:zoomScale inContext:context];
 	
-	ZOStartFinishLineOverlay* startFinishLineOverlay = (ZOStartFinishLineOverlay*)self.overlay;
+	ZOStartFinishLine* startFinishLineOverlay = (ZOStartFinishLine*)self.overlay;
 	
 	CGPoint ends[2];
 	CGPoint center = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.coordinate )];
@@ -85,32 +88,34 @@
 			[_circle stroke];
 		}
 
-		
-//		[[UIColor greenColor] setStroke];
 		CGContextBeginPath( context );
 		CGContextSetLineWidth( context, 12 );
 		CGContextSetStrokeColorWithColor( context, [UIColor greenColor].CGColor );
 		CGContextMoveToPoint( context, ends[0].x, ends[0].y );
 		CGContextAddLineToPoint( context, ends[1].x, ends[1].y );
 		CGContextStrokePath( context );
-//		[_line setLineWidth:12];
-//		[_line stroke];
 		
 	} UIGraphicsPopContext();
 	
 }
 
+- (void) setNeedsDisplay {
+	[super setNeedsDisplay];
+	
+	self.isDirty = YES;
+	[parent setNeedsDisplay];
+}
 
-#pragma mark ZOStartFinishLineOverlayDelegate
 
-- (void)zoStartFinishLineOverlay:(ZOStartFinishLineOverlay*)startFinishOverlay isSelected:(BOOL)isSelected {
+#pragma mark ZOTrackObjectDelegate
+
+
+- (void) zoTrackObject:(id<ZOTrackObject>) trackObject isSelected:(BOOL)isSelected {
 	[self setNeedsDisplay];
 }
-- (void)zoStartFinishLineOverlay:(ZOStartFinishLineOverlay*)startFinishOverlay movedTo:(CLLocationCoordinate2D)coordinate {
-	
-	CGPoint center = [self pointForMapPoint:MKMapPointForCoordinate( startFinishOverlay.coordinate )];
+- (void) zoTrackObject:(id<ZOTrackObject>) trackObject movedCoordinate:(CLLocationCoordinate2D)coord {
+	CGPoint center = [self pointForMapPoint:MKMapPointForCoordinate( trackObject.coordinate )];
 	_transform = CGAffineTransformMakeTranslation( center.x, center.y );
-
 	[self setNeedsDisplay];
 }
 

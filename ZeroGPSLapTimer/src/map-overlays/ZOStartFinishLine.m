@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Micah Pearlman. All rights reserved.
 //
 
-#import "ZOStartFinishLineOverlay.h"
+#import "ZOStartFinishLine.h"
 
 static inline double zoDegreesToRadians (double degrees) {return degrees * M_PI/180.0;}
 
@@ -26,7 +26,7 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 }
 
 
-@interface ZOStartFinishLineOverlay () {
+@interface ZOStartFinishLine () {
 	CLLocationCoordinate2D	_coordinate;
 	MKMapRect				_boundingMapRect;
 	CLLocationCoordinate2D	_lineEnds[2];
@@ -37,7 +37,7 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 
 @end
 
-@implementation ZOStartFinishLineOverlay
+@implementation ZOStartFinishLine
 
 
 @synthesize boundingMapRect		= _boundingMapRect;
@@ -45,16 +45,33 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 @dynamic	lineEnds;
 @dynamic	isSelected;
 @dynamic	coordinate;
-@dynamic	angle;
+@dynamic	rotate;
 
-- (id) initWithCoordinate:(CLLocationCoordinate2D)coord {
+- (id)initWithCoordinate:(CLLocationCoordinate2D)coord {
 	self = [super init];
 	if ( self ) {
-		_angle = zoDegreesToRadians(0);
+		_angle = 0;
 		[self setCoordinate:coord];
 	}
 	
 	return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+	self = [super init];
+	if ( self ) {
+		_angle = [aDecoder decodeDoubleForKey:@"angle"];
+		NSValue* coordinate = [aDecoder decodeObjectForKey:@"coordinate"];
+		[self setCoordinate:[coordinate MKCoordinateValue]];
+		
+	}
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)aCoder {
+	[aCoder encodeDouble:_angle forKey:@"angle"];
+	NSValue* coordinate = [NSValue valueWithMKCoordinate:_coordinate];
+	[aCoder encodeObject:coordinate forKey:@"coordinate"];
 }
 
 - (CLLocationCoordinate2D*)lineEnds {
@@ -67,8 +84,8 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 
 - (void) setIsSelected:(BOOL)isSelected {
 	_isSelected = isSelected;
-	if ( [delegate respondsToSelector:@selector(zoStartFinishLineOverlay:isSelected:)]) {
-		[delegate zoStartFinishLineOverlay:self isSelected:isSelected];
+	if ( [delegate respondsToSelector:@selector(zoTrackObject:isSelected:)]) {
+		[delegate zoTrackObject:self isSelected:isSelected];
 	}
 }
 
@@ -93,17 +110,17 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 	
 	self.boundingMapRect = MKMapRectMake( upperLeftMapPoint.x, upperLeftMapPoint.y, mapPointRadius * 2, mapPointRadius * 2);
 
-	if ( [delegate respondsToSelector:@selector(zoStartFinishLineOverlay:movedTo:)] ) {
-		[delegate zoStartFinishLineOverlay:self movedTo:_coordinate];
+	if ( [delegate respondsToSelector:@selector(zoTrackObject:movedCoordinate:)] ) {
+		[delegate zoTrackObject:self movedCoordinate:_coordinate];
 	}
 }
 
-- (double)angle {
+- (double)rotate {
 	return _angle;
 }
 
-- (void)setAngle:(double)angle {
-	_angle = angle;
+- (void)setRotate:(double)rotate {
+	_angle = rotate;
 	self.coordinate = _coordinate;
 }
 

@@ -1,16 +1,16 @@
 //
-//  ZOStartFinishLineAnnotationView.h
+//  ZOTrackObjectRenderer.h
 //  ZeroGPSLapTimer
 //
-//  Created by Micah Pearlman on 1/5/14.
+//  Created by Micah Pearlman on 1/9/14.
 //  Copyright (c) 2014 Micah Pearlman. All rights reserved.
 //
 
+#import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
-#import "ZOTrackObjectRenderer.h"
 
-@interface ZOStartFinishLineRenderer : MKOverlayRenderer <ZOTrackObjectRenderer>
-
+@protocol ZOTrackObjectRenderer <NSObject>
+@required
 @property (nonatomic, assign) MKOverlayRenderer* parent;
 @property (nonatomic, assign) BOOL isDirty;
 

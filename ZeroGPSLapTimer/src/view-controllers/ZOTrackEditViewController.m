@@ -7,22 +7,25 @@
 //
 
 #import "ZOTrackEditViewController.h"
-#import "ZOStartFinishLineOverlay.h"
+#import "ZOTrack.h"
+#import "ZOTrackRenderer.h"
+#import "ZOStartFinishLine.h"
 #import "ZOStartFinishLineRenderer.h"
 
 #define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
 
 typedef enum {
 	ZOTrackEditViewControllerState_None,
-	ZOTrackEditViewControllerState_PlaceStartFinish,
-	ZOTrackEditViewController_Edit
+	ZOTrackEditViewControllerState_EditTrackObject
 } ZOTrackEditViewControllerState;
 
 @interface ZOTrackEditViewController () <MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate> {
 	MKMapView*						_mapView;
 	CLLocationManager*				_locationManager;
 	ZOTrackEditViewControllerState	_state;
-	ZOStartFinishLineOverlay*		_editOverlay;
+	id<ZOTrackObject>				_editOverlay;
+	ZOTrack*						_track;
+	
 }
 
 @end
@@ -52,14 +55,14 @@ typedef enum {
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	// setup location manager
+	/// setup location manager
 	_locationManager = [[CLLocationManager alloc] init];
 	[_locationManager setDelegate:self];
 	[_locationManager setDistanceFilter:kCLDistanceFilterNone];
 	[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
 	[_locationManager startUpdatingLocation];
 	
-	// setup gesture recognizers
+	/// setup gesture recognizers
 	UITapGestureRecognizer* singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
 																					action:@selector(mapViewTapped:)];
 	singleTapRecognizer.delegate = self;
@@ -117,41 +120,47 @@ typedef enum {
 		return;
 	}
 	
-	if ( _state == ZOTrackEditViewControllerState_None || _state == ZOTrackEditViewController_Edit ) {
-		// see if we are selecting one of our overlays
-		MKMapPoint mapPoint = MKMapPointForCoordinate( geoCoordinatesTapped );
-		for ( id<MKOverlay> overlay in _mapView.overlays ) {
-			
-			if ( MKMapRectContainsPoint( overlay.boundingMapRect, mapPoint ) ) {
-				NSLog(@"touched overlay" );
-				if ( [overlay class] == [ZOStartFinishLineOverlay class] ) {
-					ZOStartFinishLineOverlay* startFinishOverlay = (ZOStartFinishLineOverlay*)overlay;
-					startFinishOverlay.isSelected = !startFinishOverlay.isSelected;
-					
-					if ( _editOverlay == startFinishOverlay ) {
-						_editOverlay = nil;
-						startFinishOverlay.isSelected = NO;
-						_mapView.scrollEnabled = YES;	// resume scrolling and panning
-						_mapView.rotateEnabled = YES;
-						_state = ZOTrackEditViewControllerState_None;
-					} else {
-						if ( _editOverlay ) {
-							_editOverlay.isSelected = NO;
-						}
-						_editOverlay = startFinishOverlay;
-						_editOverlay.isSelected = YES;
-						_mapView.scrollEnabled = NO;	// stop view from panning and scrolling
-						_mapView.rotateEnabled = NO;
-						_state = ZOTrackEditViewController_Edit;
-					}
-				}
-
-			}
+	if ( _state == ZOTrackEditViewControllerState_None || _state == ZOTrackEditViewControllerState_EditTrackObject ) {
+		NSArray* selectedTrackObjects = [_track trackObjectsAtCoordinate:geoCoordinatesTapped];
+		if ( [selectedTrackObjects count] > 1 ) {	// first object is always _track
+			id<ZOTrackObject> selectedTrackObject = [selectedTrackObjects lastObject];
+			selectedTrackObject.isSelected = YES;
+//			if ( ) { 
+//				
+//			}
 		}
 		
-	} else if ( _state == ZOTrackEditViewControllerState_PlaceStartFinish ) {
-		ZOStartFinishLineOverlay* startFinishOverlay = [[ZOStartFinishLineOverlay alloc] initWithCoordinate:geoCoordinatesTapped];
-		[_mapView addOverlay:startFinishOverlay];
+//		// see if we are selecting one of our overlays
+//		MKMapPoint mapPoint = MKMapPointForCoordinate( geoCoordinatesTapped );
+//		for ( id<MKOverlay> overlay in _mapView.overlays ) {
+//			
+//			if ( MKMapRectContainsPoint( overlay.boundingMapRect, mapPoint ) ) {
+//				NSLog(@"touched overlay" );
+//				if ( [overlay class] == [ZOStartFinishLine class] ) {
+//					ZOStartFinishLine* startFinishOverlay = (ZOStartFinishLine*)overlay;
+//					startFinishOverlay.isSelected = !startFinishOverlay.isSelected;
+//					
+//					if ( _editOverlay == startFinishOverlay ) {
+//						_editOverlay = nil;
+//						startFinishOverlay.isSelected = NO;
+//						_mapView.scrollEnabled = YES;	// resume scrolling and panning
+//						_mapView.rotateEnabled = YES;
+//						_state = ZOTrackEditViewControllerState_None;
+//					} else {
+//						if ( _editOverlay ) {
+//							_editOverlay.isSelected = NO;
+//						}
+//						_editOverlay = startFinishOverlay;
+//						_editOverlay.isSelected = YES;
+//						_mapView.scrollEnabled = NO;	// stop view from panning and scrolling
+//						_mapView.rotateEnabled = NO;
+//						_state = ZOTrackEditViewControllerState_EditTrackObject;
+//					}
+//				}
+//
+//			}
+//		}
+		
 	}
 
 }
@@ -193,15 +202,15 @@ typedef enum {
 			_mapView.scrollEnabled = NO;	// resume scrolling and panning
 			[_editOverlay setCoordinate:translationGeo];
 		} else {
-			_mapView.scrollEnabled = YES;	
+			_mapView.scrollEnabled = YES;
 		}
 	}
 }
 
 - (IBAction)mapViewRotate:(UIRotationGestureRecognizer*)recognizer {
-	if ( _state == ZOTrackEditViewController_Edit && _editOverlay ) {
+	if ( _state == ZOTrackEditViewControllerState_EditTrackObject && _editOverlay ) {
 //		NSLog(@"rotate: %f", RADIANS_TO_DEGREES( recognizer.rotation ) );
-		_editOverlay.angle = recognizer.rotation;
+		_editOverlay.rotate = recognizer.rotation;
 	}
 }
 
@@ -212,22 +221,36 @@ typedef enum {
 }
 
 
-#pragma mark MapView Delegate
+#pragma mark MKMapViewDelegate
 
 - (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
 	for ( MKAnnotationView* annotationView in views ) {
 		id<MKAnnotation> mp = [annotationView annotation];
 		if ( [mp class] == [MKUserLocation class]) {
-			MKCoordinateRegion adjustedRegion = [self.mapView regionThatFits:MKCoordinateRegionMakeWithDistance([mp coordinate], 0.0001, 0.0001)];
-//			adjustedRegion.span.longitudeDelta  = 0.002;	// sets zoom
-//			adjustedRegion.span.latitudeDelta  = 0.002;		// sets zoom
-			[mapView setRegion:adjustedRegion animated:YES];
-//			MKCoordinateRegion region = MKCoordinateRegionMakeWithDistance([mp coordinate], 0.01, 0.01);
-//			[mapView setRegion:region animated:YES];
+			MKCoordinateRegion adjustedRegion = MKCoordinateRegionMakeWithDistance([mp coordinate], 0.0001, 0.0001);
+			[mapView setRegion:adjustedRegion animated:NO];
+			// if no track created create a default track
+			if ( _track == nil ) {
+				_track = [[ZOTrack alloc] initWithCoordinate:[mp coordinate] boundingMapRect:_mapView.visibleMapRect];
+				[_mapView addOverlay:_track];
+			}
 			
 		}
 	}
 }
+
+- (MKOverlayRenderer*)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
+	if ( [overlay class] == [ZOStartFinishLine class] ) {
+		ZOStartFinishLineRenderer* startFinishRenderer = [[ZOStartFinishLineRenderer alloc] initWithOverlay:overlay];
+		return startFinishRenderer;
+	} else if ( [overlay class] == [ZOTrack class] ) {
+		ZOTrackRenderer* trackRenderer = [[ZOTrackRenderer alloc] initWithOverlay:overlay];
+		return trackRenderer;
+	}
+	
+	return nil;
+}
+
 
 
 - (void)mapView:(MKMapView *)mapView didDeselectAnnotationView:(MKAnnotationView *)view {
@@ -238,26 +261,14 @@ typedef enum {
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 }
 
-- (MKOverlayRenderer*)mapView:(MKMapView *)mapView rendererForOverlay:(id<MKOverlay>)overlay {
-	if ( [overlay class] == [ZOStartFinishLineOverlay class] ) {
-		ZOStartFinishLineRenderer* startFinishRenderer = [[ZOStartFinishLineRenderer alloc] initWithOverlay:overlay];
-		return startFinishRenderer;
-	}
-	
-	return nil;
-}
 
 
 #pragma mark Actions
 
 - (IBAction) onStartFinishSelected:(id)sender {
-	UIButton* button = (UIButton*)sender;
-	button.selected = !button.selected;
+
+	id<ZOTrackObject> startFinishLine = [_track addStartFinishLineAtCoordinate:[_mapView centerCoordinate]];
+	[_mapView addOverlay:startFinishLine];
 	
-	if ( button.selected == YES ) {
-		_state = ZOTrackEditViewControllerState_PlaceStartFinish;
-	} else {
-		_state = ZOTrackEditViewControllerState_None;
-	}
 }
 @end
