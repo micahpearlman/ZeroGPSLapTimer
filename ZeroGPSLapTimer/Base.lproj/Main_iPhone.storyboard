@@ -111,7 +111,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="hybrid" rotateEnabled="NO" pitchEnabled="NO" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="00C-37-DGm">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="hybrid" rotateEnabled="NO" pitchEnabled="NO" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="00C-37-DGm">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <gestureRecognizers/>
@@ -119,8 +119,8 @@
                                     <outlet property="delegate" destination="wbZ-JI-JGu" id="dAr-hQ-WN5"/>
                                 </connections>
                             </mapView>
-                            <view opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ajr-7m-nrv">
-                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                            <view opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ajr-7m-nrv">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hpe-us-ii0" userLabel="Finish Line">
@@ -140,6 +140,15 @@
                             </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="PhU-25-Qqr" firstAttribute="top" secondItem="00C-37-DGm" secondAttribute="bottom" id="2Sm-wC-n3h"/>
+                            <constraint firstItem="00C-37-DGm" firstAttribute="leading" secondItem="lsP-LH-hz5" secondAttribute="leading" id="6Gm-xi-IT3"/>
+                            <constraint firstItem="ajr-7m-nrv" firstAttribute="leading" secondItem="lsP-LH-hz5" secondAttribute="leading" id="6Zs-BU-9ie"/>
+                            <constraint firstAttribute="trailing" secondItem="ajr-7m-nrv" secondAttribute="trailing" id="XMz-TT-Cly"/>
+                            <constraint firstAttribute="bottom" secondItem="ajr-7m-nrv" secondAttribute="bottom" id="bxB-Tq-tNC"/>
+                            <constraint firstItem="00C-37-DGm" firstAttribute="top" secondItem="lsP-LH-hz5" secondAttribute="top" id="gzl-24-8Lo"/>
+                            <constraint firstAttribute="trailing" secondItem="00C-37-DGm" secondAttribute="trailing" id="tTw-BM-c6r"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="6gf-n4-brr"/>
                     <connections>

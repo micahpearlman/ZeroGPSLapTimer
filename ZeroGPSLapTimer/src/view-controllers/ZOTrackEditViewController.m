@@ -104,9 +104,6 @@ typedef enum {
 }
 
 
-- (BOOL)shouldAutorotate {
-	return YES;
-}
 
 #pragma mark MapView gesture recognizer
 - (void) gotoState:(ZOTrackEditViewControllerState)state {
@@ -114,13 +111,13 @@ typedef enum {
 		case ZOTrackEditViewControllerState_None:
 			_mapView.scrollEnabled = YES;	// resume scrolling and panning
 			_mapView.rotateEnabled = YES;
+			break;
 			
-			break;
 		case ZOTrackEditViewControllerState_EditTrackObject:
-			_mapView.scrollEnabled = NO;	// resume scrolling and panning
+			_mapView.scrollEnabled = NO;	// stop map scrolling and panning
 			_mapView.rotateEnabled = NO;
-
 			break;
+			
 		default:
 			break;
 	}
