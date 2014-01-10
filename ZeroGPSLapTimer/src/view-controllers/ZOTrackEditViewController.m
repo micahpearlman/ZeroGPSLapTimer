@@ -23,7 +23,7 @@ typedef enum {
 	MKMapView*						_mapView;
 	CLLocationManager*				_locationManager;
 	ZOTrackEditViewControllerState	_state;
-	id<ZOTrackObject>				_editOverlay;
+	id<ZOTrackObject>				_selectedTrackObject;
 	ZOTrack*						_track;
 	
 }
@@ -109,7 +109,36 @@ typedef enum {
 }
 
 #pragma mark MapView gesture recognizer
+- (void) gotoState:(ZOTrackEditViewControllerState)state {
+	switch ( state ) {
+		case ZOTrackEditViewControllerState_None:
+			_mapView.scrollEnabled = YES;	// resume scrolling and panning
+			_mapView.rotateEnabled = YES;
+			
+			break;
+		case ZOTrackEditViewControllerState_EditTrackObject:
+			_mapView.scrollEnabled = NO;	// resume scrolling and panning
+			_mapView.rotateEnabled = NO;
 
+			break;
+		default:
+			break;
+	}
+	_state = state;
+}
+
+- (void) selectTrackObject:(id<ZOTrackObject>)trackObject {
+	if ( trackObject == _selectedTrackObject ) {	// unselect
+		trackObject.isSelected = NO;
+		_selectedTrackObject = nil;
+		[self gotoState:ZOTrackEditViewControllerState_None];
+		return;
+	} else {
+		_selectedTrackObject = trackObject;
+		_selectedTrackObject.isSelected = YES;
+		[self gotoState:ZOTrackEditViewControllerState_EditTrackObject];
+	}
+}
 
 - (IBAction)mapViewTapped:(UITapGestureRecognizer *)recognizer
 {
@@ -122,44 +151,7 @@ typedef enum {
 	
 	if ( _state == ZOTrackEditViewControllerState_None || _state == ZOTrackEditViewControllerState_EditTrackObject ) {
 		NSArray* selectedTrackObjects = [_track trackObjectsAtCoordinate:geoCoordinatesTapped];
-		if ( [selectedTrackObjects count] > 1 ) {	// first object is always _track
-			id<ZOTrackObject> selectedTrackObject = [selectedTrackObjects lastObject];
-			selectedTrackObject.isSelected = YES;
-//			if ( ) { 
-//				
-//			}
-		}
-		
-//		// see if we are selecting one of our overlays
-//		MKMapPoint mapPoint = MKMapPointForCoordinate( geoCoordinatesTapped );
-//		for ( id<MKOverlay> overlay in _mapView.overlays ) {
-//			
-//			if ( MKMapRectContainsPoint( overlay.boundingMapRect, mapPoint ) ) {
-//				NSLog(@"touched overlay" );
-//				if ( [overlay class] == [ZOStartFinishLine class] ) {
-//					ZOStartFinishLine* startFinishOverlay = (ZOStartFinishLine*)overlay;
-//					startFinishOverlay.isSelected = !startFinishOverlay.isSelected;
-//					
-//					if ( _editOverlay == startFinishOverlay ) {
-//						_editOverlay = nil;
-//						startFinishOverlay.isSelected = NO;
-//						_mapView.scrollEnabled = YES;	// resume scrolling and panning
-//						_mapView.rotateEnabled = YES;
-//						_state = ZOTrackEditViewControllerState_None;
-//					} else {
-//						if ( _editOverlay ) {
-//							_editOverlay.isSelected = NO;
-//						}
-//						_editOverlay = startFinishOverlay;
-//						_editOverlay.isSelected = YES;
-//						_mapView.scrollEnabled = NO;	// stop view from panning and scrolling
-//						_mapView.rotateEnabled = NO;
-//						_state = ZOTrackEditViewControllerState_EditTrackObject;
-//					}
-//				}
-//
-//			}
-//		}
+		[self selectTrackObject:[selectedTrackObjects lastObject]];
 		
 	}
 
@@ -191,16 +183,16 @@ typedef enum {
 	
 	CGPoint pointTappedInMapView = [recognizer locationInView:_mapView];
 	
-	if ( recognizer.state == UIGestureRecognizerStateBegan && _editOverlay ) {
+	if ( recognizer.state == UIGestureRecognizerStateBegan && _selectedTrackObject ) {
 		originalPoint = pointTappedInMapView;
-	} else if ( recognizer.state == UIGestureRecognizerStateChanged && _editOverlay ) {
+	} else if ( recognizer.state == UIGestureRecognizerStateChanged && _selectedTrackObject ) {
 		CGPoint translation = [recognizer translationInView:_mapView];
 		CGPoint newPoint = CGPointMake( originalPoint.x + translation.x, originalPoint.y + translation.y );
 		CLLocationCoordinate2D translationGeo = [_mapView convertPoint:newPoint toCoordinateFromView:_mapView];
 		MKMapPoint mapPoint = MKMapPointForCoordinate( translationGeo );
-		if ( MKMapRectContainsPoint( _editOverlay.boundingMapRect, mapPoint ) ) {
+		if ( MKMapRectContainsPoint( _selectedTrackObject.boundingMapRect, mapPoint ) ) {
 			_mapView.scrollEnabled = NO;	// resume scrolling and panning
-			[_editOverlay setCoordinate:translationGeo];
+			[_selectedTrackObject setCoordinate:translationGeo];
 		} else {
 			_mapView.scrollEnabled = YES;
 		}
@@ -208,9 +200,9 @@ typedef enum {
 }
 
 - (IBAction)mapViewRotate:(UIRotationGestureRecognizer*)recognizer {
-	if ( _state == ZOTrackEditViewControllerState_EditTrackObject && _editOverlay ) {
+	if ( _state == ZOTrackEditViewControllerState_EditTrackObject && _selectedTrackObject ) {
 //		NSLog(@"rotate: %f", RADIANS_TO_DEGREES( recognizer.rotation ) );
-		_editOverlay.rotate = recognizer.rotation;
+		_selectedTrackObject.rotate = recognizer.rotation;
 	}
 }
 
