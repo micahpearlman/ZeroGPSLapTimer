@@ -10,11 +10,7 @@
 #import "ZOStartFinishLine.h"
 #import "ZOTrackObjectDelegate.h"
 
-@interface ZOStartFinishLineRenderer () <ZOTrackObjectDelegate> {
-	UIBezierPath*			_line;
-	UIBezierPath*			_circle;
-	CGAffineTransform		_transform;
-}
+@interface ZOStartFinishLineRenderer () <ZOTrackObjectDelegate>
 
 @end
 
@@ -28,28 +24,6 @@
 		ZOStartFinishLine* startFinishLineOverlay = (ZOStartFinishLine*)overlay;
 
 		startFinishLineOverlay.delegate = self;
-		
-		
-		CGPoint ends[2];
-		CGPoint center = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.coordinate )];
-		ends[0] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.lineEnds[0] )];
-		ends[0].x = ends[0].x - center.x;
-		ends[0].y = ends[0].y - center.y;
-		ends[1] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.lineEnds[1] )];
-		ends[1].x = ends[1].x - center.x;
-		ends[1].y = ends[1].y - center.y;
-		
-		_line = [UIBezierPath bezierPath];
-		[_line moveToPoint:ends[0]];
-		[_line addLineToPoint:ends[1]];
-
-		
-		_transform = CGAffineTransformMakeTranslation( center.x, center.y );
-		
-		CGRect rect = [self rectForMapRect:startFinishLineOverlay.boundingMapRect];
-		rect.origin.x = rect.origin.x - center.x;
-		rect.origin.y = rect.origin.y - center.y;
-		_circle = [UIBezierPath bezierPathWithOvalInRect:rect];
 
 		
 	}
@@ -70,22 +44,20 @@
 	ZOStartFinishLine* startFinishLineOverlay = (ZOStartFinishLine*)self.overlay;
 	
 	CGPoint ends[2];
-	CGPoint center = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.coordinate )];
 	ends[0] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.lineEnds[0] )];
-	ends[0].x = ends[0].x - center.x;
-	ends[0].y = ends[0].y - center.y;
 	ends[1] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.lineEnds[1] )];
-	ends[1].x = ends[1].x - center.x;
-	ends[1].y = ends[1].y - center.y;
-	
+	CGRect rect = [self rectForMapRect:startFinishLineOverlay.boundingMapRect];
+
 	
 	UIGraphicsPushContext( context ); {
-		CGContextConcatCTM( context, _transform );
 		if ( startFinishLineOverlay.isSelected ) {
-			[[UIColor redColor] setFill];
-			[_circle setLineWidth:12];
-			[_circle fillWithBlendMode:kCGBlendModeNormal alpha:0.5];
-			[_circle stroke];
+			CGContextSetLineWidth( context, 12 );
+			CGContextSetFillColorWithColor( context, [UIColor blueColor].CGColor );
+			CGContextSetStrokeColorWithColor( context, [UIColor blackColor].CGColor );
+			CGContextSetAlpha( context, 0.3 );
+			CGContextFillEllipseInRect( context, rect );
+			CGContextSetAlpha( context, 0.8 );
+			CGContextStrokeEllipseInRect( context, rect );
 		}
 
 		CGContextBeginPath( context );
@@ -114,8 +86,6 @@
 	[self setNeedsDisplay];
 }
 - (void) zoTrackObject:(id<ZOTrackObject>) trackObject movedCoordinate:(CLLocationCoordinate2D)coord {
-	CGPoint center = [self pointForMapPoint:MKMapPointForCoordinate( trackObject.coordinate )];
-	_transform = CGAffineTransformMakeTranslation( center.x, center.y );
 	[self setNeedsDisplay];
 }
 
