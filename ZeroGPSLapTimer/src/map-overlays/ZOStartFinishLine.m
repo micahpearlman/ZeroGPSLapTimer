@@ -7,6 +7,7 @@
 //
 
 #import "ZOStartFinishLine.h"
+#import "NSCoder+ZOTrackObject.h"
 
 static inline double zoDegreesToRadians (double degrees) {return degrees * M_PI/180.0;}
 
@@ -61,17 +62,14 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 	self = [super init];
 	if ( self ) {
 		_angle = [aDecoder decodeDoubleForKey:@"angle"];
-		NSValue* coordinate = [aDecoder decodeObjectForKey:@"coordinate"];
-		[self setCoordinate:[coordinate MKCoordinateValue]];
-		
+		self.coordinate = [aDecoder decodeCLLocationCoordinate2DForKey:@"coordinate"];
 	}
 	return self;
 }
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
 	[aCoder encodeDouble:_angle forKey:@"angle"];
-	NSValue* coordinate = [NSValue valueWithMKCoordinate:_coordinate];
-	[aCoder encodeObject:coordinate forKey:@"coordinate"];
+	[aCoder encodeCLLocationCoordinate2D:self.coordinate forKey:@"coordinate"];
 }
 
 - (CLLocationCoordinate2D*)lineEnds {

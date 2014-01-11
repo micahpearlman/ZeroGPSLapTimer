@@ -260,4 +260,20 @@ typedef enum {
 	[_mapView addOverlay:startFinishLine];
 	
 }
+
+- (IBAction)onSave:(id)sender {
+	NSLog(@"saving");
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+	NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+	
+	NSString* killmePath = [basePath stringByAppendingPathComponent:@"killme.sav"];
+//	NSMutableData* data = [NSMutableData data];
+//	NSKeyedArchiver* archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+//	[archiver encodeObject:_track forKey:@"track"];
+//	[archiver finishEncoding];
+//	NSURL* archiveURL = [NSURL fileURLWithPath:killmePath];
+//	BOOL result = [data writeToURL:archiveURL atomically:YES];
+	BOOL result = [NSKeyedArchiver archiveRootObject:_track toFile:killmePath];
+	
+}
 @end

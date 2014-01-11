@@ -135,6 +135,18 @@
                                             <action selector="onStartFinishSelected:" destination="wbZ-JI-JGu" eventType="touchUpInside" id="bwX-qJ-RVW"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ede-Wt-Aj9" userLabel="Save">
+                                        <rect key="frame" x="139" y="10" width="30" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="8"/>
+                                        <state key="normal" title="Save" image="save">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected" title="Start/Finish" image="checkered-flags-selected"/>
+                                        <connections>
+                                            <action selector="onSave:" destination="wbZ-JI-JGu" eventType="touchUpInside" id="xCe-Ma-Obp"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
@@ -181,6 +193,7 @@
         <image name="checkered-flags" width="73" height="30"/>
         <image name="checkered-flags-selected" width="73" height="30"/>
         <image name="first" width="48" height="20"/>
+        <image name="save" width="60" height="60"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

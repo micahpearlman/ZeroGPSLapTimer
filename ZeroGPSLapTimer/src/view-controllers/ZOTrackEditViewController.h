@@ -14,6 +14,6 @@
 @property (nonatomic,retain) IBOutlet MKMapView* mapView;
 
 - (IBAction)onStartFinishSelected:(id)sender;
-- (IBAction)mapViewTapped:(UITapGestureRecognizer *)recognizer;
-- (IBAction)mapViewDoubleTapped:(UITapGestureRecognizer *)recognizer;
+- (IBAction)onSave:(id)sender;
+
 @end

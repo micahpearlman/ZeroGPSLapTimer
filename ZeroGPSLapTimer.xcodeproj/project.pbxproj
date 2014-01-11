@@ -30,6 +30,7 @@
 		FAADF43B1864D38C00F301B7 /* ZOAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4371864D38C00F301B7 /* ZOAppDelegate.m */; };
 		FAADF44E18692EEA00F301B7 /* ZOGPS.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF44D18692EEA00F301B7 /* ZOGPS.m */; };
 		FAADF4571869375500F301B7 /* ZOGPSExternalVenus.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4561869375500F301B7 /* ZOGPSExternalVenus.m */; };
+		FAB03EF4188098E5007BD08D /* NSCoder+ZOTrackObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB03EF3188098E5007BD08D /* NSCoder+ZOTrackObject.m */; };
 		FABCD7B51877569100EFB248 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = FABCD7B41877569100EFB248 /* assets */; };
 		FABCD7B818788A5500EFB248 /* ZOTrackSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7B718788A5500EFB248 /* ZOTrackSelectViewController.m */; };
 		FABCD7BB1878B76700EFB248 /* ZOTrackEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7BA1878B76700EFB248 /* ZOTrackEditViewController.m */; };
@@ -86,6 +87,8 @@
 		FAADF44D18692EEA00F301B7 /* ZOGPS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOGPS.m; sourceTree = "<group>"; };
 		FAADF4551869375500F301B7 /* ZOGPSExternalVenus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOGPSExternalVenus.h; sourceTree = "<group>"; };
 		FAADF4561869375500F301B7 /* ZOGPSExternalVenus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOGPSExternalVenus.m; sourceTree = "<group>"; };
+		FAB03EF2188098E5007BD08D /* NSCoder+ZOTrackObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSCoder+ZOTrackObject.h"; sourceTree = "<group>"; };
+		FAB03EF3188098E5007BD08D /* NSCoder+ZOTrackObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSCoder+ZOTrackObject.m"; sourceTree = "<group>"; };
 		FABCD7B2187744E200EFB248 /* libkml-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libkml-ios.a"; path = "thirdparty/kml-ios/build/Debug-iphoneos/libkml-ios.a"; sourceTree = "<group>"; };
 		FABCD7B41877569100EFB248 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		FABCD7B618788A5500EFB248 /* ZOTrackSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOTrackSelectViewController.h; sourceTree = "<group>"; };
@@ -255,6 +258,8 @@
 				FA18871B187F36BA00B388D6 /* ZOTrack.m */,
 				FA18871E187F89F200B388D6 /* ZOTrackRenderer.h */,
 				FA18871F187F89F200B388D6 /* ZOTrackRenderer.m */,
+				FAB03EF2188098E5007BD08D /* NSCoder+ZOTrackObject.h */,
+				FAB03EF3188098E5007BD08D /* NSCoder+ZOTrackObject.m */,
 			);
 			path = "map-overlays";
 			sourceTree = "<group>";
@@ -373,6 +378,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAB03EF4188098E5007BD08D /* NSCoder+ZOTrackObject.m in Sources */,
 				FAADF4391864D38C00F301B7 /* ZOMapViewController.m in Sources */,
 				FABCD7B818788A5500EFB248 /* ZOTrackSelectViewController.m in Sources */,
 				FABCD7C11879EE8F00EFB248 /* ZOStartFinishLineRenderer.m in Sources */,

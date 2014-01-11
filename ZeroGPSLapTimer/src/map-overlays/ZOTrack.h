@@ -17,6 +17,7 @@
 @property (nonatomic, readonly)	NSArray* trackObjects;
 @property (nonatomic, assign)	BOOL isSelected;
 @property (nonatomic, assign)	id<ZOTrackObjectDelegate> delegate;
+@property (nonatomic, copy)		NSString* name;
 
 - (id) initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)boundingMapRect;
 - (void) addTrackObject:(id<ZOTrackObject>)trackObject;

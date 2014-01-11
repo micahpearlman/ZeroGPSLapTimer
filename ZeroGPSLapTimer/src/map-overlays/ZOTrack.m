@@ -8,20 +8,23 @@
 
 #import "ZOTrack.h"
 #import "ZOStartFinishLine.h"
+#import "NSCoder+ZOTrackObject.h"
 
 @interface ZOTrack () {
-	NSMutableArray*		_trackObjects;	// id<ZOTrackObjectProtocol>
+	NSMutableArray*				_trackObjects;	// id<ZOTrackObjectProtocol>
+	CLLocationCoordinate2D		_coordinate;
 }
 
 @end
 
 @implementation ZOTrack
 
-@synthesize coordinate;
+@synthesize coordinate = _coordinate;
 @synthesize boundingMapRect;
 @synthesize trackObjects = _trackObjects;
 @synthesize isSelected;
 @synthesize delegate;
+@synthesize name;
 
 - (id)initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)mapRect {
 	self = [super init];
@@ -42,6 +45,11 @@
 }
 
 - (void) encodeWithCoder:(NSCoder *)aCoder {
+	
+	[aCoder encodeObject:self.name forKey:@"name"];
+	[aCoder encodeCLLocationCoordinate2D:self.coordinate forKey:@"coordinate"];
+	[aCoder encodeMKMapRect:self.boundingMapRect forKey:@"boundingMapRect"];
+	[aCoder encodeObject:_trackObjects forKey:@"trackObjects"];
 	
 }
 
