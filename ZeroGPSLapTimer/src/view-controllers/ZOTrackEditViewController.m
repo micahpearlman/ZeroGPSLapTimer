@@ -11,6 +11,7 @@
 #import "ZOTrackRenderer.h"
 #import "ZOStartFinishLine.h"
 #import "ZOStartFinishLineRenderer.h"
+#import "ZOTrackCollection.h"
 
 #define RADIANS_TO_DEGREES(radians) ((radians) * (180.0 / M_PI))
 
@@ -19,7 +20,7 @@ typedef enum {
 	ZOTrackEditViewControllerState_EditTrackObject
 } ZOTrackEditViewControllerState;
 
-@interface ZOTrackEditViewController () <MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate> {
+@interface ZOTrackEditViewController () <MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate, UIAlertViewDelegate> {
 	MKMapView*						_mapView;
 	CLLocationManager*				_locationManager;
 	ZOTrackEditViewControllerState	_state;
@@ -262,18 +263,32 @@ typedef enum {
 }
 
 - (IBAction)onSave:(id)sender {
-	NSLog(@"saving");
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-	NSString *basePath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
+	// get track name
+	UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Track Name" message:@"Enter Track Name:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+	alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+	[alertView show];
+}
+
+#pragma mark UIAlertViewDelegate
+- (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 	
-	NSString* killmePath = [basePath stringByAppendingPathComponent:@"killme.sav"];
-//	NSMutableData* data = [NSMutableData data];
-//	NSKeyedArchiver* archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
-//	[archiver encodeObject:_track forKey:@"track"];
-//	[archiver finishEncoding];
-//	NSURL* archiveURL = [NSURL fileURLWithPath:killmePath];
-//	BOOL result = [data writeToURL:archiveURL atomically:YES];
-	BOOL result = [NSKeyedArchiver archiveRootObject:_track toFile:killmePath];
+	if ( buttonIndex == 0 ) {
+		return;	// cancel pressed
+	}
+	
+	UITextField* textField = [alertView textFieldAtIndex:0];
+	_track.name = textField.text;
+	
+	NSDictionary* track = [[ZOTrackCollection instance] addTrack:_track.name];
+	BOOL result = [NSKeyedArchiver archiveRootObject:_track toFile:[track objectForKey:@"configuration-path"]];
+	
+	
+	[self.navigationController popViewControllerAnimated:YES];
 	
 }
+
+- (void) alertViewCancel:(UIAlertView *)alertView {
+	
+}
+
 @end

@@ -8,6 +8,7 @@
 
 #import "ZOTrackSelectViewController.h"
 #import "ZOMapViewController.h"
+#import "ZOTrackCollection.h"
 
 @interface ZOTrackSelectViewController ()
 
@@ -17,8 +18,7 @@
 
 
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
+- (id)initWithStyle:(UITableViewStyle)style {
     self = [super initWithStyle:style];
     if (self) {
         // Custom initialization
@@ -28,7 +28,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+	
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -43,11 +43,15 @@
 	[self.navigationController setHidesBottomBarWhenPushed:YES];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void) viewWillAppear:(BOOL)animated {
+	[self.tableView reloadData];
+}
+
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 
 #pragma mark - Table view data source
 
@@ -59,7 +63,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return 1;
+    return [[ZOTrackCollection instance].tracks count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -68,7 +72,9 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
-	[cell.textLabel setText:@"[Add A Track]"];
+	NSArray* tracks = [[ZOTrackCollection instance] tracks];
+	NSDictionary* track = [tracks objectAtIndex:[indexPath row]];
+	[cell.textLabel setText:[track objectForKey:@"name"]];
     
     return cell;
 }

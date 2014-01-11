@@ -55,8 +55,8 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="CZ4-MO-1fc" kind="relationship" relationship="viewControllers" id="SUk-Ux-ee1"/>
                         <segue destination="7oD-yo-KI7" kind="relationship" relationship="viewControllers" id="WRJ-8D-GKL"/>
+                        <segue destination="CZ4-MO-1fc" kind="relationship" relationship="viewControllers" id="SUk-Ux-ee1"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FNP-y4-bzi" sceneMemberID="firstResponder"/>
@@ -136,7 +136,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ede-Wt-Aj9" userLabel="Save">
-                                        <rect key="frame" x="139" y="10" width="30" height="30"/>
+                                        <rect key="frame" x="270" y="10" width="30" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="8"/>
                                         <state key="normal" title="Save" image="save">
@@ -171,11 +171,11 @@
             </objects>
             <point key="canvasLocation" x="1531" y="679"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Navigation Controller - Tracks-->
         <scene sceneID="XHA-4h-fAA">
             <objects>
                 <navigationController definesPresentationContext="YES" id="7oD-yo-KI7" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" systemItem="favorites" id="DmO-8G-Izh"/>
+                    <tabBarItem key="tabBarItem" title="Tracks" image="first" id="DmO-8G-Izh"/>
                     <navigationItem key="navigationItem" id="9Ut-nF-qlP"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Qff-vh-y6A">
                         <autoresizingMask key="autoresizingMask"/>
