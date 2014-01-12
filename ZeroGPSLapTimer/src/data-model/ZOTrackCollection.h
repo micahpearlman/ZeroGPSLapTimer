@@ -15,7 +15,8 @@
 + (ZOTrackCollection*)instance;
 
 - (NSDictionary*) addTrack:(NSString*)name;
-- (void) deleteTrack:(NSString*)name;
-- (NSDictionary*) findTrack:(NSString*)name;
+- (void) removeTrackNamed:(NSString*)name;
+- (void) removeTrack:(NSDictionary*)track;
+- (NSDictionary*) findTrackNamed:(NSString*)name;
 
 @end

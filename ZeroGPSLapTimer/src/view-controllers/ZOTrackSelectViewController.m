@@ -31,15 +31,10 @@
 	
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    //self.navigationItem.rightBarButtonItem = self.editButtonItem;
-//	UIBarButtonItem* addTrackButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(onAddTrack:)];
-//	
-//	self.navigationItem.rightBarButtonItem = addTrackButton;
+
 	
-	[self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"Cell"];
-	
+	self.navigationItem.rightBarButtonItem = self.editButtonItem;
+		
 	[self.navigationController setHidesBottomBarWhenPushed:YES];
 }
 
@@ -63,47 +58,65 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return [[ZOTrackCollection instance].tracks count];
+    return [[ZOTrackCollection instance].tracks count] + 1;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-    
-    // Configure the cell...
-	NSArray* tracks = [[ZOTrackCollection instance] tracks];
-	NSDictionary* track = [tracks objectAtIndex:[indexPath row]];
-	[cell.textLabel setText:[track objectForKey:@"name"]];
-    
-    return cell;
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+	
+	NSInteger idx = [indexPath row];
+	if ( idx == [[ZOTrackCollection instance].tracks count] ) {
+		static NSString *CellIdentifier = @"new-track-cell";
+		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+		[cell.textLabel setText:@"[Add New Track]"];
+		return cell;
+	} else {
+		static NSString *CellIdentifier = @"track-cell";
+		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+
+		NSArray* tracks = [[ZOTrackCollection instance] tracks];
+		NSDictionary* track = [tracks objectAtIndex:idx];
+		[cell.textLabel setText:[track objectForKey:@"name"]];
+		return cell;
+	}
+		// Configure the cell...
+	
+    return nil;
 }
 
-/*
+
 // Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
+	NSInteger idx = [indexPath row];
+	if ( idx == [[ZOTrackCollection instance].tracks count] ) {
+		return NO;	// can't add add track button
+	}
     return YES;
 }
-*/
+
 
 
 // Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
+		
+		NSArray* tracks = [[ZOTrackCollection instance] tracks];
+		NSDictionary* track = [tracks objectAtIndex:[indexPath row]];
+		[[ZOTrackCollection instance] removeTrack:track];
+
         // Delete the row from the data source
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
+    }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
 
+
+
 // see: http://stackoverflow.com/questions/6427817/tableviewcontroller-editingstyle-and-insertion
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return UITableViewCellEditingStyleInsert;
+	return UITableViewCellEditingStyleDelete;
 }
 
 

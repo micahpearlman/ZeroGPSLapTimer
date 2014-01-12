@@ -55,7 +55,7 @@
 }
 
 - (NSDictionary*) addTrack:(NSString*)name {
-	NSDictionary* track = [self findTrack:name];
+	NSDictionary* track = [self findTrackNamed:name];
 	
 	if ( track == nil ) {
 		NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -76,12 +76,17 @@
 	return track;
 }
 
-- (void) deleteTrack:(NSString*)name {
-	NSDictionary* track = [self findTrack:name];
+- (void) removeTrackNamed:(NSString*)name {
+	NSDictionary* track = [self findTrackNamed:name];
+	[self removeTrack:track];
+}
+
+- (void) removeTrack:(NSDictionary*)track {
 	[_tracks removeObject:track];
 	[self save];
 }
-- (NSDictionary*) findTrack:(NSString*)name {
+
+- (NSDictionary*) findTrackNamed:(NSString*)name {
 	for ( NSDictionary* track in _tracks ) {
 		if ( [name isEqualToString:[track objectForKey:@"name"]]) {
 			return track;
