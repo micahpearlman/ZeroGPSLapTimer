@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ZOTrack.h"
 
 @interface ZOTrackCollection : NSObject
 
@@ -14,9 +15,11 @@
 
 + (ZOTrackCollection*)instance;
 
-- (NSDictionary*) addTrack:(NSString*)name;
+- (NSDictionary*) addTrackNamed:(NSString*)name;
 - (void) removeTrackNamed:(NSString*)name;
 - (void) removeTrack:(NSDictionary*)track;
 - (NSDictionary*) findTrackNamed:(NSString*)name;
+- (void ) archiveTrack:(ZOTrack*)track;
+- (ZOTrack*) unarchiveTrackFromTrackInfo:(NSDictionary*)trackInfo;
 
 @end

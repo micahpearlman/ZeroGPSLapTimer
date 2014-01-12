@@ -25,6 +25,7 @@
 @synthesize isSelected;
 @synthesize delegate;
 @synthesize name;
+@synthesize trackInfo;
 
 - (id)initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)mapRect {
 	self = [super init];
@@ -39,7 +40,10 @@
 - (id) initWithCoder:(NSCoder *)aDecoder {
 	self = [super init];
 	if ( self ) {
-		
+		self.name = [aDecoder decodeObjectForKey:@"name"];
+		self.coordinate = [aDecoder decodeCLLocationCoordinate2DForKey:@"coordinate"];
+		self.boundingMapRect = [aDecoder decodeMKMapRectForKey:@"boundingMapRect"];
+		_trackObjects = [aDecoder decodeObjectForKey:@"trackObjects"];
 	}
 	return self;
 }

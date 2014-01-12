@@ -9,6 +9,7 @@
 #import "ZOTrackSelectViewController.h"
 #import "ZOMapViewController.h"
 #import "ZOTrackCollection.h"
+#import "ZOTrackEditViewController.h"
 
 @interface ZOTrackSelectViewController ()
 
@@ -107,9 +108,6 @@
         // Delete the row from the data source
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
 }
 
 
@@ -142,16 +140,17 @@
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
+	if ( [[segue identifier] isEqualToString:@"edit-track"] ) {
+		NSIndexPath* selectedIndexPath = [self.tableView indexPathForSelectedRow];
+		NSArray* tracks = [[ZOTrackCollection instance] tracks];
+		NSDictionary* trackInfo = [tracks objectAtIndex:[selectedIndexPath row]];
+		ZOTrackEditViewController* trackEdit = [segue destinationViewController];
+		trackEdit.trackEditInfo = trackInfo;
+	}
     // Pass the selected object to the new view controller.
 }
 
 
 
-- (IBAction) onAddTrack:(id)sender {
-	
-	//[self.tableView setEditing:YES animated:YES];
-//	ZOMapViewController* trackMapEditor =
-//	[self.navigationController pushViewController:<#(UIViewController *)#> animated:<#(BOOL)#>]
-}
 
 @end

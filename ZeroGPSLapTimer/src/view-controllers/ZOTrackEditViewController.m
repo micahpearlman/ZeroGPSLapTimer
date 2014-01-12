@@ -7,7 +7,6 @@
 //
 
 #import "ZOTrackEditViewController.h"
-#import "ZOTrack.h"
 #import "ZOTrackRenderer.h"
 #import "ZOStartFinishLine.h"
 #import "ZOStartFinishLineRenderer.h"
@@ -26,7 +25,7 @@ typedef enum {
 	ZOTrackEditViewControllerState	_state;
 	id<ZOTrackObject>				_selectedTrackObject;
 	ZOTrack*						_track;
-	
+	NSDictionary*					_trackEditInfo;
 }
 
 @end
@@ -34,6 +33,7 @@ typedef enum {
 @implementation ZOTrackEditViewController
 
 @synthesize mapView					= _mapView;
+@synthesize trackEditInfo			= _trackEditInfo;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -57,11 +57,19 @@ typedef enum {
     [super viewDidLoad];
 	
 	/// setup location manager
-	_locationManager = [[CLLocationManager alloc] init];
-	[_locationManager setDelegate:self];
-	[_locationManager setDistanceFilter:kCLDistanceFilterNone];
-	[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
-	[_locationManager startUpdatingLocation];
+	if ( self.trackEditInfo ) {
+		_track = [[ZOTrackCollection instance] unarchiveTrackFromTrackInfo:self.trackEditInfo];
+		[self.mapView addOverlay:_track];
+		[self.mapView addOverlays:_track.trackObjects];
+	} else {
+		// creating a new track so start off where the user is
+		// TODO: add search
+		_locationManager = [[CLLocationManager alloc] init];
+		[_locationManager setDelegate:self];
+		[_locationManager setDistanceFilter:kCLDistanceFilterNone];
+		[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
+		[_locationManager startUpdatingLocation];
+	}
 	
 	/// setup gesture recognizers
 	UITapGestureRecognizer* singleTapRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self
@@ -95,6 +103,8 @@ typedef enum {
 	[_mapView addGestureRecognizer:doubleTapRecognizer];
 	[_mapView addGestureRecognizer:singleTapRecognizer];
 	[_mapView addGestureRecognizer:panGestureRecoginizer];
+	
+	
 	
 
 }
@@ -279,8 +289,8 @@ typedef enum {
 	UITextField* textField = [alertView textFieldAtIndex:0];
 	_track.name = textField.text;
 	
-	NSDictionary* track = [[ZOTrackCollection instance] addTrack:_track.name];
-	BOOL result = [NSKeyedArchiver archiveRootObject:_track toFile:[track objectForKey:@"configuration-path"]];
+	_track.trackInfo = [[ZOTrackCollection instance] addTrackNamed:_track.name];
+	[[ZOTrackCollection instance] archiveTrack:_track];
 	
 	
 	[self.navigationController popViewControllerAnimated:YES];

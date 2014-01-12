@@ -54,24 +54,25 @@
 	[_tracks writeToFile:[self path] atomically:YES];
 }
 
-- (NSDictionary*) addTrack:(NSString*)name {
+- (NSDictionary*) addTrackNamed:(NSString*)name {
 	NSDictionary* track = [self findTrackNamed:name];
 	
 	if ( track == nil ) {
 		NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 		NSString* documentDirectoryPath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-		NSString* trackConfigurationPath = [documentDirectoryPath stringByAppendingPathComponent:[name stringByAppendingString:@".cfg"]];
+		NSString* trackArchivePath = [documentDirectoryPath stringByAppendingPathComponent:[name stringByAppendingString:@".cfg"]];
 
-		track = @{	@"name" : name,
-					@"configuration-path" : trackConfigurationPath,
+		track = @{	@"type" : @"track",
+					@"name" : name,
+					@"archive-path" : trackArchivePath,
 					@"sessions" : [[NSArray alloc] init]
 					};
 		
 		[_tracks addObject:track];
+		
+		[self save];
 
 	}
-	
-	[self save];
 
 	return track;
 }
@@ -93,6 +94,14 @@
 		}
 	}
 	return nil;
+}
+
+- (void ) archiveTrack:(ZOTrack*)track {
+	[NSKeyedArchiver archiveRootObject:track toFile:[track.trackInfo objectForKey:@"archive-path"]];
+}
+
+- (ZOTrack*) unarchiveTrackFromTrackInfo:(NSDictionary*)trackInfo {
+	return (ZOTrack*)[NSKeyedUnarchiver unarchiveObjectWithFile:[trackInfo objectForKey:@"archive-path"]];
 }
 
 @end

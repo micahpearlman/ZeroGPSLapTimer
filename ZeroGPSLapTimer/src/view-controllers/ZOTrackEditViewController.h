@@ -8,10 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "ZOTrack.h"
 
 @interface ZOTrackEditViewController : UIViewController
 
 @property (nonatomic,retain) IBOutlet MKMapView* mapView;
+@property (nonatomic,retain) NSDictionary* trackEditInfo;
 
 - (IBAction)onStartFinishSelected:(id)sender;
 - (IBAction)onSave:(id)sender;

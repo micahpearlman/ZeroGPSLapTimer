@@ -72,22 +72,17 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="track-cell" textLabel="DK8-rZ-xf0" style="IBUITableViewCellStyleDefault" id="9qR-iC-uj6">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="track-cell" id="9qR-iC-uj6">
                                 <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9qR-iC-uj6" id="gYG-yy-4S3">
-                                    <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="253" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="DK8-rZ-xf0">
-                                            <rect key="frame" x="15" y="0.0" width="270" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="wbZ-JI-JGu" kind="push" identifier="edit-track" id="RKu-dE-wTw"/>
+                                    <segue destination="uaQ-dy-RI6" kind="push" trigger="accessoryAction" id="s5R-Jj-Mn0"/>
+                                </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="new-track-cell" id="EXN-kO-2hK">
                                 <rect key="frame" x="0.0" y="130" width="320" height="44"/>
@@ -97,7 +92,7 @@
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
-                                    <segue destination="wbZ-JI-JGu" kind="push" identifier="map-edit" id="NzX-lL-vpZ"/>
+                                    <segue destination="wbZ-JI-JGu" kind="push" identifier="new-track" id="NzX-lL-vpZ"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -108,7 +103,36 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PCO-BC-O5X" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1124" y="712"/>
+            <point key="canvasLocation" x="1072" y="312"/>
+        </scene>
+        <!--Track Session View Controller-->
+        <scene sceneID="TYq-gI-nYq">
+            <objects>
+                <tableViewController id="uaQ-dy-RI6" customClass="ZOTrackSessionViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="p6h-gv-oDB">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="5RI-DE-bor">
+                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5RI-DE-bor" id="atC-lM-nKg">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="uaQ-dy-RI6" id="Lz7-4K-1lk"/>
+                            <outlet property="delegate" destination="uaQ-dy-RI6" id="sRm-Kt-es6"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="JaP-IS-PLm"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="HWz-55-JUT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1524" y="54"/>
         </scene>
         <!--Track Edit View Controller-->
         <scene sceneID="6P0-Oz-Pub">
@@ -211,4 +235,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="RKu-dE-wTw"/>
+    </inferredMetricsTieBreakers>
 </document>
