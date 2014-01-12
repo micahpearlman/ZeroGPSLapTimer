@@ -11,7 +11,6 @@
 #import "ZOTrackObjectDelegate.h"
 #import "ZOStartFinishLine.h"
 #import "ZOStartFinishLineRenderer.h"
-#import "ZOTrackObjectRenderer.h"
 
 @interface ZOTrackRenderer () <ZOTrackObjectDelegate> {
 }

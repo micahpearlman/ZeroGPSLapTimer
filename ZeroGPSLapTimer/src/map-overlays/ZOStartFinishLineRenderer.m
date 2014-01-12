@@ -16,7 +16,6 @@
 
 @implementation ZOStartFinishLineRenderer
 
-@synthesize parent;
 
 - (id)initWithOverlay:(id<MKOverlay>)overlay {
 	self = [super initWithOverlay:overlay];
@@ -71,12 +70,6 @@
 	
 }
 
-- (void) setNeedsDisplay {
-	[super setNeedsDisplay];
-	
-	self.isDirty = YES;
-	[parent setNeedsDisplay];
-}
 
 
 #pragma mark ZOTrackObjectDelegate

@@ -7,11 +7,8 @@
 //
 
 #import <MapKit/MapKit.h>
-#import "ZOTrackObjectRenderer.h"
 
-@interface ZOStartFinishLineRenderer : MKOverlayRenderer <ZOTrackObjectRenderer>
+@interface ZOStartFinishLineRenderer : MKOverlayRenderer
 
-@property (nonatomic, assign) MKOverlayRenderer* parent;
-@property (nonatomic, assign) BOOL isDirty;
 
 @end
