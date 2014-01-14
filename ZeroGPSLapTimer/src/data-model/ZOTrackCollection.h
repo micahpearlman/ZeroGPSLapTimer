@@ -11,7 +11,9 @@
 
 @interface ZOTrackCollection : NSObject
 
-@property (nonatomic, retain) NSArray* tracks;
+@property (nonatomic, retain) NSArray* tracks;	// NSDictionary of trackInfo
+@property (nonatomic, retain) NSDictionary* currentTrackInfo;
+@property (nonatomic, retain) ZOTrack* currentTrack;
 
 + (ZOTrackCollection*)instance;
 
@@ -19,7 +21,9 @@
 - (void) removeTrackNamed:(NSString*)name;
 - (void) removeTrack:(NSDictionary*)track;
 - (NSDictionary*) findTrackNamed:(NSString*)name;
-- (void ) archiveTrack:(ZOTrack*)track;
+
+- (void) archiveTrack:(ZOTrack*)track;
 - (ZOTrack*) unarchiveTrackFromTrackInfo:(NSDictionary*)trackInfo;
+
 
 @end

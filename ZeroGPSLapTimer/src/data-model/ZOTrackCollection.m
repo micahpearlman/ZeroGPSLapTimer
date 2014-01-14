@@ -10,6 +10,7 @@
 
 @interface ZOTrackCollection () {
 	NSMutableArray* _tracks;
+	ZOTrack*		_currentTrack;
 }
 
 @end
@@ -17,6 +18,7 @@
 @implementation ZOTrackCollection
 
 @synthesize tracks = _tracks;
+@dynamic currentTrack;
 
 // singleton. see: http://www.galloway.me.uk/tutorials/singleton-classes/
 + (ZOTrackCollection*)instance {
@@ -60,12 +62,11 @@
 	if ( track == nil ) {
 		NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
 		NSString* documentDirectoryPath = ([paths count] > 0) ? [paths objectAtIndex:0] : nil;
-		NSString* trackArchivePath = [documentDirectoryPath stringByAppendingPathComponent:[name stringByAppendingString:@".cfg"]];
+		NSString* trackArchivePath = [documentDirectoryPath stringByAppendingPathComponent:[name stringByAppendingString:@".track"]];
 
 		track = @{	@"type" : @"track",
 					@"name" : name,
-					@"archive-path" : trackArchivePath,
-					@"sessions" : [[NSArray alloc] init]
+					@"archive-path" : trackArchivePath
 					};
 		
 		[_tracks addObject:track];
@@ -101,7 +102,21 @@
 }
 
 - (ZOTrack*) unarchiveTrackFromTrackInfo:(NSDictionary*)trackInfo {
-	return (ZOTrack*)[NSKeyedUnarchiver unarchiveObjectWithFile:[trackInfo objectForKey:@"archive-path"]];
+	ZOTrack* track = [(ZOTrack*)[NSKeyedUnarchiver unarchiveObjectWithFile:[trackInfo objectForKey:@"archive-path"]] mutableCopy];
+	track.trackInfo = trackInfo;
+	return track;
+}
+
+- (ZOTrack*) currentTrack {
+	if ( _currentTrack == nil && self.currentTrackInfo != nil ) {
+		// automatically unarchive the current track from the current track info
+		_currentTrack = [self unarchiveTrackFromTrackInfo:self.currentTrackInfo];
+	}
+	return _currentTrack;
+}
+
+-(void) setCurrentTrack:(ZOTrack *)currentTrack {
+	_currentTrack = currentTrack;
 }
 
 @end

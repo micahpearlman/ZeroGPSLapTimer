@@ -81,7 +81,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <segue destination="wbZ-JI-JGu" kind="push" identifier="edit-track" id="RKu-dE-wTw"/>
-                                    <segue destination="uaQ-dy-RI6" kind="push" trigger="accessoryAction" id="s5R-Jj-Mn0"/>
+                                    <segue destination="uaQ-dy-RI6" kind="push" identifier="track-sessions" trigger="accessoryAction" id="s5R-Jj-Mn0"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="new-track-cell" id="EXN-kO-2hK">
@@ -114,11 +114,22 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="5RI-DE-bor">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="new-session-cell" id="5RI-DE-bor">
                                 <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5RI-DE-bor" id="atC-lM-nKg">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="bEy-hP-sRe" kind="push" id="a90-O1-NGT"/>
+                                </connections>
+                            </tableViewCell>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="session-cell" id="d6b-S5-hwy">
+                                <rect key="frame" x="0.0" y="130" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="d6b-S5-hwy" id="WIu-Vl-cCO">
+                                    <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -133,6 +144,34 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HWz-55-JUT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1524" y="54"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="xf3-X4-72e">
+            <objects>
+                <viewController hidesBottomBarWhenPushed="YES" id="bEy-hP-sRe" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="T06-hF-iyw"/>
+                        <viewControllerLayoutGuide type="bottom" id="NTG-kj-lIO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="N8r-YT-BW8">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Go Faster!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uEO-l7-bLs">
+                                <rect key="frame" x="20" y="273" width="280" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="jHT-8L-Ls7"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="i3q-R1-64e" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1972" y="180"/>
         </scene>
         <!--Track Edit View Controller-->
         <scene sceneID="6P0-Oz-Pub">

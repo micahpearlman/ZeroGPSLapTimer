@@ -9,7 +9,6 @@
 #import "ZOTrackSelectViewController.h"
 #import "ZOMapViewController.h"
 #import "ZOTrackCollection.h"
-#import "ZOTrackEditViewController.h"
 
 @interface ZOTrackSelectViewController ()
 
@@ -65,7 +64,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	NSInteger idx = [indexPath row];
-	if ( idx == [[ZOTrackCollection instance].tracks count] ) {
+	if ( idx == [[ZOTrackCollection instance].tracks count] ) {	// new track
 		static NSString *CellIdentifier = @"new-track-cell";
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
 		[cell.textLabel setText:@"[Add New Track]"];
@@ -140,14 +139,12 @@
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
-	if ( [[segue identifier] isEqualToString:@"edit-track"] ) {
-		NSIndexPath* selectedIndexPath = [self.tableView indexPathForSelectedRow];
+	NSIndexPath* selectedIndexPath = [self.tableView indexPathForSelectedRow];
+	if ( [selectedIndexPath row] == [[ZOTrackCollection instance].tracks count] ) {	// new track
+		// we are creating a new track so make sure to null out selected track
 		NSArray* tracks = [[ZOTrackCollection instance] tracks];
-		NSDictionary* trackInfo = [tracks objectAtIndex:[selectedIndexPath row]];
-		ZOTrackEditViewController* trackEdit = [segue destinationViewController];
-		trackEdit.trackEditInfo = trackInfo;
+		[ZOTrackCollection instance].currentTrackInfo = [tracks objectAtIndex:[selectedIndexPath row]];
 	}
-    // Pass the selected object to the new view controller.
 }
 
 

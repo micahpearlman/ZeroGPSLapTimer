@@ -7,8 +7,11 @@
 //
 
 #import "ZOTrackSessionViewController.h"
+#import "ZOTrackCollection.h"
 
-@interface ZOTrackSessionViewController ()
+@interface ZOTrackSessionViewController () {
+	NSArray*		_sessions;
+}
 
 @end
 
@@ -23,47 +26,62 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
+	if ( [ZOTrackCollection instance].currentTrack == nil ) {
+		[ZOTrackCollection instance].currentTrack = [[ZOTrackCollection instance] unarchiveTrackFromTrackInfo:[ZOTrackCollection instance].currentTrackInfo];
+		
+	}
+	_sessions = [ZOTrackCollection instance].currentTrack.sessions;
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	NSString* name = [ZOTrackCollection instance].currentTrack.name;
+	self.navigationItem.title = [name stringByAppendingString:@" Sessions"];
 }
 
-- (void)didReceiveMemoryWarning
-{
+- (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-#warning Potentially incomplete method implementation.
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return [_sessions count] + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
     // Configure the cell...
+	NSInteger idx = [indexPath row];
+	if ( idx == [_sessions count] ) {	// new session
+		static NSString *CellIdentifier = @"new-session-cell";
+		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+		[cell.textLabel setText:@"[Start New Session]"];
+		return cell;
+
+
+	} else {
+		static NSString *CellIdentifier = @"session-cell";
+		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
+		[cell.textLabel setText:@"blah"];
+		return cell;
+		
+	}
     
-    return cell;
+    return nil;
 }
 
 /*

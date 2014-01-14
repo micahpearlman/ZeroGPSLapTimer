@@ -13,5 +13,6 @@
 @optional
 - (void) zoTrackObject:(id<ZOTrackObject>)trackObject isSelected:(BOOL)isSelected;
 - (void) zoTrackObject:(id<ZOTrackObject>)trackObject movedCoordinate:(CLLocationCoordinate2D)coord;
+- (void) zoTrackObject:(id<ZOTrackObject>)trackObject isDirty:(BOOL)isDirty;
 
 @end

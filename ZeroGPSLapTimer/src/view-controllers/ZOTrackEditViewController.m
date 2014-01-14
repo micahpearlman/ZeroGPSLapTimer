@@ -33,7 +33,6 @@ typedef enum {
 @implementation ZOTrackEditViewController
 
 @synthesize mapView					= _mapView;
-@synthesize trackEditInfo			= _trackEditInfo;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -57,8 +56,8 @@ typedef enum {
     [super viewDidLoad];
 	
 	/// setup location manager
-	if ( self.trackEditInfo ) {
-		_track = [[ZOTrackCollection instance] unarchiveTrackFromTrackInfo:self.trackEditInfo];
+	if ( [ZOTrackCollection instance].currentTrackInfo ) {
+		_track = [[ZOTrackCollection instance] unarchiveTrackFromTrackInfo:[ZOTrackCollection instance].currentTrackInfo];
 		[self.mapView addOverlay:_track];
 		[self.mapView addOverlays:_track.trackObjects];
 	} else {

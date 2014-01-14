@@ -38,6 +38,10 @@
 		FABCD7B818788A5500EFB248 /* ZOTrackSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7B718788A5500EFB248 /* ZOTrackSelectViewController.m */; };
 		FABCD7BB1878B76700EFB248 /* ZOTrackEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7BA1878B76700EFB248 /* ZOTrackEditViewController.m */; };
 		FABCD7C11879EE8F00EFB248 /* ZOStartFinishLineRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7C01879EE8F00EFB248 /* ZOStartFinishLineRenderer.m */; };
+		FACF91A91884D86000EDE2A2 /* ZOSessionMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91A81884D86000EDE2A2 /* ZOSessionMapViewController.m */; };
+		FACF91AC1884DB7C00EDE2A2 /* ZOSession.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91AB1884DB7C00EDE2A2 /* ZOSession.m */; };
+		FACF91AF1884E23400EDE2A2 /* ZOSessionRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91AE1884E23400EDE2A2 /* ZOSessionRenderer.m */; };
+		FACF91B21884E5DB00EDE2A2 /* ZOLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91B11884E5DB00EDE2A2 /* ZOLocation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -105,6 +109,14 @@
 		FABCD7BA1878B76700EFB248 /* ZOTrackEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOTrackEditViewController.m; sourceTree = "<group>"; };
 		FABCD7BF1879EE8F00EFB248 /* ZOStartFinishLineRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOStartFinishLineRenderer.h; sourceTree = "<group>"; };
 		FABCD7C01879EE8F00EFB248 /* ZOStartFinishLineRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOStartFinishLineRenderer.m; sourceTree = "<group>"; };
+		FACF91A71884D86000EDE2A2 /* ZOSessionMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOSessionMapViewController.h; sourceTree = "<group>"; };
+		FACF91A81884D86000EDE2A2 /* ZOSessionMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOSessionMapViewController.m; sourceTree = "<group>"; };
+		FACF91AA1884DB7C00EDE2A2 /* ZOSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOSession.h; sourceTree = "<group>"; };
+		FACF91AB1884DB7C00EDE2A2 /* ZOSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOSession.m; sourceTree = "<group>"; };
+		FACF91AD1884E23400EDE2A2 /* ZOSessionRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOSessionRenderer.h; sourceTree = "<group>"; };
+		FACF91AE1884E23400EDE2A2 /* ZOSessionRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOSessionRenderer.m; sourceTree = "<group>"; };
+		FACF91B01884E5DB00EDE2A2 /* ZOLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOLocation.h; sourceTree = "<group>"; };
+		FACF91B11884E5DB00EDE2A2 /* ZOLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOLocation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -239,6 +251,8 @@
 				FABCD7BA1878B76700EFB248 /* ZOTrackEditViewController.m */,
 				FAB03EF918823895007BD08D /* ZOTrackSessionViewController.h */,
 				FAB03EFA18823895007BD08D /* ZOTrackSessionViewController.m */,
+				FACF91A71884D86000EDE2A2 /* ZOSessionMapViewController.h */,
+				FACF91A81884D86000EDE2A2 /* ZOSessionMapViewController.m */,
 			);
 			path = "view-controllers";
 			sourceTree = "<group>";
@@ -261,6 +275,8 @@
 				FABCD7C01879EE8F00EFB248 /* ZOStartFinishLineRenderer.m */,
 				FA18871E187F89F200B388D6 /* ZOTrackRenderer.h */,
 				FA18871F187F89F200B388D6 /* ZOTrackRenderer.m */,
+				FACF91AD1884E23400EDE2A2 /* ZOSessionRenderer.h */,
+				FACF91AE1884E23400EDE2A2 /* ZOSessionRenderer.m */,
 			);
 			path = "map-overlays";
 			sourceTree = "<group>";
@@ -293,6 +309,10 @@
 				FAB03F03188242E8007BD08D /* ZOTrackObjectDelegate.h */,
 				FAB03EF61881F486007BD08D /* ZOTrackCollection.h */,
 				FAB03EF71881F486007BD08D /* ZOTrackCollection.m */,
+				FACF91AA1884DB7C00EDE2A2 /* ZOSession.h */,
+				FACF91AB1884DB7C00EDE2A2 /* ZOSession.m */,
+				FACF91B01884E5DB00EDE2A2 /* ZOLocation.h */,
+				FACF91B11884E5DB00EDE2A2 /* ZOLocation.m */,
 			);
 			path = "data-model";
 			sourceTree = "<group>";
@@ -405,11 +425,15 @@
 				FAADF4381864D38C00F301B7 /* main.m in Sources */,
 				FAADF44E18692EEA00F301B7 /* ZOGPS.m in Sources */,
 				FAADF43B1864D38C00F301B7 /* ZOAppDelegate.m in Sources */,
+				FACF91B21884E5DB00EDE2A2 /* ZOLocation.m in Sources */,
 				FAADF4571869375500F301B7 /* ZOGPSExternalVenus.m in Sources */,
 				FA097508186A37F4005C9B05 /* ZOVenusCommand.c in Sources */,
+				FACF91AC1884DB7C00EDE2A2 /* ZOSession.m in Sources */,
 				FA09750D186D52A2005C9B05 /* ZOCircularBuffer.c in Sources */,
+				FACF91A91884D86000EDE2A2 /* ZOSessionMapViewController.m in Sources */,
 				FAB03F06188242E8007BD08D /* ZOTrack.m in Sources */,
 				FAA68D581870B7BA007DD016 /* ZOBluetooth.m in Sources */,
+				FACF91AF1884E23400EDE2A2 /* ZOSessionRenderer.m in Sources */,
 				FAA68D5B18720778007DD016 /* ZOParseNMEA.c in Sources */,
 				FAB03F05188242E8007BD08D /* ZOStartFinishLine.m in Sources */,
 				FAB03EF81881F486007BD08D /* ZOTrackCollection.m in Sources */,
