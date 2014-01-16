@@ -6,16 +6,16 @@
 //  Copyright (c) 2014 Micah Pearlman. All rights reserved.
 //
 
-#import "ZOTrackSessionViewController.h"
+#import "ZOSessionSelectViewController.h"
 #import "ZOTrackCollection.h"
 
-@interface ZOTrackSessionViewController () {
+@interface ZOSessionSelectViewController () {
 	NSArray*		_sessionInfos;
 }
 
 @end
 
-@implementation ZOTrackSessionViewController
+@implementation ZOSessionSelectViewController
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
