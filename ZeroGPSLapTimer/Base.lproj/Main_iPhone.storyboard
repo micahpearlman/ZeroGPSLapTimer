@@ -73,7 +73,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="track-cell" id="9qR-iC-uj6">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9qR-iC-uj6" id="gYG-yy-4S3">
                                     <rect key="frame" x="0.0" y="0.0" width="253" height="43"/>
@@ -85,7 +85,7 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="new-track-cell" id="EXN-kO-2hK">
-                                <rect key="frame" x="0.0" y="66" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="130" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EXN-kO-2hK" id="Rdb-gO-vh0">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -115,7 +115,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="new-session-cell" id="5RI-DE-bor">
-                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="5RI-DE-bor" id="atC-lM-nKg">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -126,12 +126,15 @@
                                 </connections>
                             </tableViewCell>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="session-cell" id="d6b-S5-hwy">
-                                <rect key="frame" x="0.0" y="66" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="130" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="d6b-S5-hwy" id="WIu-Vl-cCO">
                                     <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="bEy-hP-sRe" kind="push" id="bko-Q7-wl5"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
@@ -164,29 +167,39 @@
                                     <outlet property="delegate" destination="bEy-hP-sRe" id="czB-4T-Kah"/>
                                 </connections>
                             </mapView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DsF-HB-vDZ">
-                                <rect key="frame" x="127" y="518" width="67" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="START">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="selected" title="STOP"/>
-                                <connections>
-                                    <action selector="toggleSessionUpdate:" destination="bEy-hP-sRe" eventType="touchUpInside" id="uhH-iT-OcN"/>
-                                </connections>
-                            </button>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.70000000000000018" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GSH-gw-J7u">
+                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem image="rewind" id="8Ei-rE-v8p" userLabel="rewind"/>
+                                    <barButtonItem image="play" id="0cW-hO-Nvm" userLabel="play"/>
+                                    <barButtonItem image="record" id="v7z-dR-vaG" userLabel="record">
+                                        <connections>
+                                            <action selector="toggleSessionRecord:" destination="bEy-hP-sRe" id="5D3-qD-usR"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem image="fast-forward" id="zEq-6T-YcY" userLabel="fast-forward"/>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="CyR-Ql-NYC" firstAttribute="top" secondItem="N8r-YT-BW8" secondAttribute="top" constant="20" id="B6K-2j-xSn"/>
-                            <constraint firstItem="CyR-Ql-NYC" firstAttribute="leading" secondItem="N8r-YT-BW8" secondAttribute="leading" id="Oco-rD-zSR"/>
-                            <constraint firstItem="NTG-kj-lIO" firstAttribute="top" secondItem="CyR-Ql-NYC" secondAttribute="bottom" id="VYD-ty-pCw"/>
-                            <constraint firstAttribute="trailing" secondItem="CyR-Ql-NYC" secondAttribute="trailing" id="fxe-I4-PKf"/>
+                            <constraint firstItem="GSH-gw-J7u" firstAttribute="leading" secondItem="CyR-Ql-NYC" secondAttribute="leading" id="8SB-Ax-9Ru"/>
+                            <constraint firstItem="CyR-Ql-NYC" firstAttribute="top" secondItem="N8r-YT-BW8" secondAttribute="top" constant="20" symbolic="YES" id="9cd-nZ-LNp"/>
+                            <constraint firstItem="GSH-gw-J7u" firstAttribute="bottom" secondItem="CyR-Ql-NYC" secondAttribute="bottom" id="Czx-YA-Ysw"/>
+                            <constraint firstItem="GSH-gw-J7u" firstAttribute="trailing" secondItem="CyR-Ql-NYC" secondAttribute="trailing" id="GBE-r1-ZBO"/>
+                            <constraint firstAttribute="bottom" secondItem="GSH-gw-J7u" secondAttribute="bottom" id="Qkp-Ql-xyt"/>
+                            <constraint firstAttribute="trailing" secondItem="GSH-gw-J7u" secondAttribute="trailing" id="aOk-iH-JSY"/>
+                            <constraint firstItem="CyR-Ql-NYC" firstAttribute="leading" secondItem="N8r-YT-BW8" secondAttribute="leading" id="cio-Eo-GHP"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="jHT-8L-Ls7"/>
                     <connections>
+                        <outlet property="fastForward" destination="zEq-6T-YcY" id="dHt-fS-LF5"/>
                         <outlet property="mapView" destination="CyR-Ql-NYC" id="Nuw-6e-rUa"/>
+                        <outlet property="play" destination="0cW-hO-Nvm" id="iME-kL-Fzd"/>
+                        <outlet property="record" destination="v7z-dR-vaG" id="F2W-lB-Nrq"/>
+                        <outlet property="rewind" destination="8Ei-rE-v8p" id="HkC-5q-bBM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="i3q-R1-64e" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -286,7 +299,11 @@
     <resources>
         <image name="checkered-flags" width="73" height="30"/>
         <image name="checkered-flags-selected" width="73" height="30"/>
+        <image name="fast-forward" width="35" height="35"/>
         <image name="first" width="48" height="20"/>
+        <image name="play" width="35" height="35"/>
+        <image name="record" width="35" height="35"/>
+        <image name="rewind" width="35" height="35"/>
         <image name="save" width="60" height="60"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
@@ -296,5 +313,6 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="RKu-dE-wTw"/>
+        <segue reference="bko-Q7-wl5"/>
     </inferredMetricsTieBreakers>
 </document>

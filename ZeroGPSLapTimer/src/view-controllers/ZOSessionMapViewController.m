@@ -15,12 +15,18 @@
 #import "MKMapView+ZoomLevel.h"
 #import <ZOLocation.h>
 
+typedef enum  {
+	ZOSessionMapViewController_None,
+	ZOSessionMapViewController_Recording
+} ZOSessionMapViewControllerState;
+
 @interface ZOSessionMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate> {
 	CLLocationManager*				_locationManager;
 	ZOTrack*						_track;
 	ZOSession*						_session;
 	NSDictionary*					_sessionInfo;
 	NSDictionary*					_trackEditInfo;
+	ZOSessionMapViewControllerState	_state;
 
 }
 
@@ -29,7 +35,7 @@
 @implementation ZOSessionMapViewController
 
 @synthesize mapView;
-@synthesize currentCoordinateLabel;
+
 
 
 - (id) initWithCoder:(NSCoder *)aDecoder {
@@ -43,6 +49,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+	
+	_state = ZOSessionMapViewController_None;
 	
 	/// setup location manager
 	_track = [ZOTrackCollection instance].currentTrack;
@@ -76,6 +84,29 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void) gotoState:(ZOSessionMapViewControllerState)state {
+	switch ( state ) {
+			
+		case ZOSessionMapViewController_None:
+			if ( _state == ZOSessionMapViewController_Recording ) {
+				self.record.image = [UIImage imageNamed:@"record"];
+				[_locationManager stopUpdatingLocation];
+				[self.mapView setUserTrackingMode:MKUserTrackingModeNone];
+				[_session archive];	// make sure to save session
+			}
+			break;
+			
+		case ZOSessionMapViewController_Recording:
+			self.record.image = [UIImage imageNamed:@"pause"];
+			[_locationManager startUpdatingLocation];
+			[self.mapView setUserTrackingMode:MKUserTrackingModeFollow];
+			break;
+		default:
+			break;
+	}
+	_state = state;
+}
+
 #pragma mark MKMapViewDelegate
 
 - (void)mapView:(MKMapView *)mapView_ didAddAnnotationViews:(NSArray *)views {
@@ -85,10 +116,10 @@
 //			MKCoordinateRegion adjustedRegion = MKCoordinateRegionMakeWithDistance([mp coordinate], 0.0001, 0.0001);
 //			[mapView_ setRegion:adjustedRegion animated:NO];
 			[mapView_ setCenterCoordinate:[mp coordinate] zoomLevel:20 animated:NO];
-			MKCoordinateRegion coordRegion = [mapView_ region];
-			coordRegion.span.latitudeDelta *= 0.1;
-			coordRegion.span.longitudeDelta *= 0.1;
-			[mapView_ setRegion:coordRegion];
+//			MKCoordinateRegion coordRegion = [mapView_ region];
+//			coordRegion.span.latitudeDelta *= 0.1;
+//			coordRegion.span.longitudeDelta *= 0.1;
+//			[mapView_ setRegion:coordRegion];
 		}
 	}
 }
@@ -127,18 +158,28 @@
 
 #pragma mark IBActions
 
-- (IBAction) toggleSessionUpdate:(id)sender {
-	UIButton* button = (UIButton*)sender;
-	button.selected = !button.selected;
-	if ( button.selected ) {
-		[_locationManager startUpdatingLocation];
+- (IBAction) toggleSessionRecord:(id)sender {
+	
+	if ( sender == self.record ) {
 		
-		[self.mapView setUserTrackingMode:MKUserTrackingModeFollow];
-	} else {
-		[_locationManager stopUpdatingLocation];
-		[_session archive];	// make sure to save session
+		if ( _state == ZOSessionMapViewController_None ) {
+			[self gotoState:ZOSessionMapViewController_Recording];
+		} else if ( _state == ZOSessionMapViewController_Recording ) {
+			[self gotoState:ZOSessionMapViewController_None];
+		}
 		
-		[self.mapView setUserTrackingMode:MKUserTrackingModeNone];
+//		self.record.selected = !self.record.selected;
+//		if ( self.record.selected ) {
+//			[_locationManager startUpdatingLocation];
+//			
+//			[self.mapView setUserTrackingMode:MKUserTrackingModeFollow];
+//		} else {
+//			[_locationManager stopUpdatingLocation];
+//			[_session archive];	// make sure to save session
+//			
+//			[self.mapView setUserTrackingMode:MKUserTrackingModeNone];
+//		}
+//
 	}
 }
 

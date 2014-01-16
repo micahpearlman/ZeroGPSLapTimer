@@ -12,7 +12,10 @@
 @interface ZOSessionMapViewController : UIViewController
 
 @property (nonatomic,retain) IBOutlet MKMapView* mapView;
-@property (nonatomic,retain) IBOutlet UILabel* currentCoordinateLabel;
+@property (nonatomic,retain) IBOutlet UIBarButtonItem* rewind;
+@property (nonatomic,retain) IBOutlet UIBarButtonItem* play;
+@property (nonatomic,retain) IBOutlet UIBarButtonItem* record;
+@property (nonatomic,retain) IBOutlet UIBarButtonItem* fastForward;
 
-- (IBAction) toggleSessionUpdate:(id)sender;
+- (IBAction) toggleSessionRecord:(id)sender;
 @end

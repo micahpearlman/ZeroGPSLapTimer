@@ -148,7 +148,7 @@
 		[ZOTrackCollection instance].currentTrack.currentSessionInfo = nil;
 	} else {
 
-		[ZOTrackCollection instance].currentTrackInfo = [_sessionInfos objectAtIndex:[selectedIndexPath row]];
+		[ZOTrackCollection instance].currentTrack.currentSessionInfo = [_sessionInfos objectAtIndex:[selectedIndexPath row]];
 		
 	}
 
