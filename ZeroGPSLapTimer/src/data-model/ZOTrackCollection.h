@@ -22,8 +22,6 @@
 - (void) removeTrack:(NSDictionary*)track;
 - (NSDictionary*) findTrackNamed:(NSString*)name;
 
-- (void) archiveTrack:(ZOTrack*)track;
-- (ZOTrack*) unarchiveTrackFromTrackInfo:(NSDictionary*)trackInfo;
 
 
 @end

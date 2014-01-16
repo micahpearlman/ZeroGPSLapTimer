@@ -23,6 +23,7 @@
 @synthesize isSelected;
 @synthesize delegate;
 @synthesize locations = _locations;
+@synthesize sessionInfo;
 
 - (id) init {
 	if ( self = [super init] ) {
@@ -30,6 +31,19 @@
 	}
 	return self;
 }
+
+- (id) initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)boundingMapRect_ sessionInfo:(NSDictionary*)sessionInfo_ {
+	
+	if ( self = [self init] ) {
+		self.coordinate = coord;
+		self.boundingMapRect = boundingMapRect_;
+		self.sessionInfo = sessionInfo_;
+	}
+	
+	return self;
+}
+
+
 
 - (id) initWithCoder:(NSCoder *)aDecoder {
 	self = [super init];
@@ -40,6 +54,8 @@
 	}
 	return self;
 }
+
+
 
 - (void) encodeWithCoder:(NSCoder *)aCoder {
 	
@@ -55,5 +71,31 @@
 		[self.delegate zoTrackObject:self isDirty:YES];
 	}
 }
+
++ (NSDictionary*) newSessionInfoAtDate:(NSDate*)date {
+	NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
+	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+	[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
+	NSString* timeString = [dateFormatter stringFromDate:date];
+	
+	NSDictionary* newSession = @{ @"type" : @"session",
+								  @"name" : timeString,
+								  @"archive-path" : [timeString stringByAppendingPathComponent:@".session"]};
+	return newSession;
+
+}
+
+#pragma mark Archiving
+
+- (void) archive {
+	[NSKeyedArchiver archiveRootObject:self toFile:[self.sessionInfo objectForKey:@"archive-path"]];
+}
+
++ (ZOSession*) unarchiveFromSessionInfo:(NSDictionary*)sessionInfo {
+	ZOSession* session = [(ZOSession*)[NSKeyedUnarchiver unarchiveObjectWithFile:[sessionInfo objectForKey:@"archive-path"]] mutableCopy];
+	session.sessionInfo = sessionInfo;
+	return session;	
+}
+
 
 @end

@@ -14,4 +14,5 @@
 @property (nonatomic,retain) IBOutlet MKMapView* mapView;
 @property (nonatomic,retain) IBOutlet UILabel* currentCoordinateLabel;
 
+- (IBAction) toggleSessionUpdate:(id)sender;
 @end

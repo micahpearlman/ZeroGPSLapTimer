@@ -10,7 +10,7 @@
 #import "ZOTrackCollection.h"
 
 @interface ZOTrackSessionViewController () {
-	NSArray*		_sessions;
+	NSArray*		_sessionInfos;
 }
 
 @end
@@ -29,11 +29,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-	if ( [ZOTrackCollection instance].currentTrack == nil ) {
-		[ZOTrackCollection instance].currentTrack = [[ZOTrackCollection instance] unarchiveTrackFromTrackInfo:[ZOTrackCollection instance].currentTrackInfo];
-		
-	}
-	_sessions = [ZOTrackCollection instance].currentTrack.sessions;
+	
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
  
@@ -41,6 +37,13 @@
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	NSString* name = [ZOTrackCollection instance].currentTrack.name;
 	self.navigationItem.title = [name stringByAppendingString:@" Sessions"];
+}
+
+- (void) viewWillAppear:(BOOL)animated  {
+	[super viewWillAppear:animated];
+	_sessionInfos = [ZOTrackCollection instance].currentTrack.sessionInfos;
+	[self.tableView reloadData];
+	
 }
 
 - (void)didReceiveMemoryWarning {
@@ -58,7 +61,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [_sessions count] + 1;
+    return [_sessionInfos count] + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -66,7 +69,7 @@
     
     // Configure the cell...
 	NSInteger idx = [indexPath row];
-	if ( idx == [_sessions count] ) {	// new session
+	if ( idx == [_sessionInfos count] ) {	// new session
 		static NSString *CellIdentifier = @"new-session-cell";
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
 		[cell.textLabel setText:@"[Start New Session]"];
@@ -76,7 +79,9 @@
 	} else {
 		static NSString *CellIdentifier = @"session-cell";
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
-		[cell.textLabel setText:@"blah"];
+		NSDictionary* sessionInfo = [_sessionInfos objectAtIndex:[indexPath row]];
+		[cell.textLabel setText:[sessionInfo objectForKey:@"name"]];
+
 		return cell;
 		
 	}
@@ -123,7 +128,7 @@
 }
 */
 
-/*
+
 #pragma mark - Navigation
 
 // In a story board-based application, you will often want to do a little preparation before navigation
@@ -131,8 +136,17 @@
 {
     // Get the new view controller using [segue destinationViewController].
     // Pass the selected object to the new view controller.
+	NSIndexPath* selectedIndexPath = [self.tableView indexPathForSelectedRow];
+	if ( [selectedIndexPath row] == [_sessionInfos count] ) {	// new session
+		// we are creating a new track so make sure to null out selected track
+		[ZOTrackCollection instance].currentTrack.currentSessionInfo = nil;
+	} else {
+
+		[ZOTrackCollection instance].currentTrackInfo = [_sessionInfos objectAtIndex:[selectedIndexPath row]];
+		
+	}
+
 }
 
- */
 
 @end

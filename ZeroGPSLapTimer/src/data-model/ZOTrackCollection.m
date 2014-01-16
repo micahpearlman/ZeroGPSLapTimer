@@ -97,20 +97,11 @@
 	return nil;
 }
 
-- (void ) archiveTrack:(ZOTrack*)track {
-	[NSKeyedArchiver archiveRootObject:track toFile:[track.trackInfo objectForKey:@"archive-path"]];
-}
-
-- (ZOTrack*) unarchiveTrackFromTrackInfo:(NSDictionary*)trackInfo {
-	ZOTrack* track = [(ZOTrack*)[NSKeyedUnarchiver unarchiveObjectWithFile:[trackInfo objectForKey:@"archive-path"]] mutableCopy];
-	track.trackInfo = trackInfo;
-	return track;
-}
 
 - (ZOTrack*) currentTrack {
 	if ( _currentTrack == nil && self.currentTrackInfo != nil ) {
 		// automatically unarchive the current track from the current track info
-		_currentTrack = [self unarchiveTrackFromTrackInfo:self.currentTrackInfo];
+		_currentTrack = [ZOTrack unarchiveFromTrackInfo:self.currentTrackInfo];
 	}
 	return _currentTrack;
 }

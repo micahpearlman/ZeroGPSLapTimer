@@ -13,7 +13,7 @@
 @interface ZOTrack () {
 	NSMutableArray*				_trackObjects;	// id<ZOTrackObjectProtocol>
 	CLLocationCoordinate2D		_coordinate;
-	NSMutableArray*				_sessions;
+	NSMutableArray*				_sessionInfos;
 	ZOSession*					_currentSession;
 }
 
@@ -28,13 +28,14 @@
 @synthesize delegate;
 @synthesize name;
 @synthesize trackInfo;
-@synthesize sessions = _sessions;
+@synthesize sessionInfos = _sessionInfos;
 @dynamic currentSession;
 
 - (id)initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)mapRect {
 	self = [super init];
 	if ( self ) {
 		_trackObjects = [[NSMutableArray alloc] init];
+		_sessionInfos = [[NSMutableArray alloc] init];
 		self.coordinate = coord;
 		self.boundingMapRect = mapRect;
 	}
@@ -48,7 +49,7 @@
 		self.coordinate = [aDecoder decodeCLLocationCoordinate2DForKey:@"coordinate"];
 		self.boundingMapRect = [aDecoder decodeMKMapRectForKey:@"boundingMapRect"];
 		_trackObjects = [aDecoder decodeObjectForKey:@"trackObjects"];
-		_sessions = [aDecoder decodeObjectForKey:@"sessions"];
+		_sessionInfos = [aDecoder decodeObjectForKey:@"sessions"];
 	}
 	return self;
 }
@@ -59,7 +60,7 @@
 	[aCoder encodeCLLocationCoordinate2D:self.coordinate forKey:@"coordinate"];
 	[aCoder encodeMKMapRect:self.boundingMapRect forKey:@"boundingMapRect"];
 	[aCoder encodeObject:_trackObjects forKey:@"trackObjects"];
-	[aCoder encodeObject:_sessions forKey:@"sessions"];
+	[aCoder encodeObject:_sessionInfos forKey:@"sessions"];
 	
 }
 
@@ -105,34 +106,48 @@
 
 #pragma mark Sessions
 
-- (NSDictionary*) addSessionAtDate:(NSDate*)time {
-	NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-	NSString* timeString = [dateFormatter stringFromDate:time];
+- (ZOSession*) addSessionAtDate:(NSDate*)time {
+
+	NSDictionary* newSessionInfo = [ZOSession newSessionInfoAtDate:time];
+	[_sessionInfos addObject:newSessionInfo];
 	
-	NSDictionary* newSession = @{ @"type" : @"session",
-								  @"name" : timeString,
-								  @"archive-path" : [timeString stringByAppendingPathComponent:@".session"]};
+	ZOSession* newSession = [[ZOSession alloc] initWithCoordinate:self.coordinate
+												  boundingMapRect:self.boundingMapRect
+													  sessionInfo:newSessionInfo];
+
+	// save to disk even though there is no real data
+	[newSession archive];
 	
-	[_sessions addObject:newSession];
+	// save track
+	[self archive];
 	
 	return newSession;
 }
 
-- (void) archiveSession:(ZOSession*)session {
-	[NSKeyedArchiver archiveRootObject:session toFile:[session.sessionInfo objectForKey:@"archive-path"]];
-}
-
-- (ZOSession*) unarchiveSessionFromSessionInfo:(NSDictionary*)sessionInfo {
-	ZOSession* session = [(ZOSession*)[NSKeyedUnarchiver unarchiveObjectWithFile:[sessionInfo objectForKey:@"archive-path"]] mutableCopy];
-	session.sessionInfo = sessionInfo;
-	return session;
-}
 
 - (ZOSession*) currentSession {
 	if ( self.currentSessionInfo && _currentSession == nil ) {
-		_currentSession = [self unarchiveSessionFromSessionInfo:self.currentSessionInfo];
+		_currentSession = [ZOSession unarchiveFromSessionInfo:self.currentSessionInfo];
 	}
 	return _currentSession;
 }
+
+- (void) setCurrentSession:(ZOSession *)currentSession {
+	_currentSession = currentSession;
+}
+
+#pragma mark Archiving
+
+- (void) archive {
+	[NSKeyedArchiver archiveRootObject:self toFile:[self.trackInfo objectForKey:@"archive-path"]];
+}
+
++ (ZOTrack*) unarchiveFromTrackInfo:(NSDictionary*)trackInfo {
+	ZOTrack* track = (ZOTrack*)[NSKeyedUnarchiver unarchiveObjectWithFile:[trackInfo objectForKey:@"archive-path"]];
+	track.trackInfo = trackInfo;
+	return track;
+
+}
+
 
 @end

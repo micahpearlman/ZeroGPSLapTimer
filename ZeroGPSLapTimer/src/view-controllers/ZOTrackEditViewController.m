@@ -57,7 +57,7 @@ typedef enum {
 	
 	/// setup location manager
 	if ( [ZOTrackCollection instance].currentTrackInfo ) {
-		_track = [[ZOTrackCollection instance] unarchiveTrackFromTrackInfo:[ZOTrackCollection instance].currentTrackInfo];
+		_track = [ZOTrack unarchiveFromTrackInfo:[ZOTrackCollection instance].currentTrackInfo];
 		[self.mapView addOverlay:_track];
 		[self.mapView addOverlays:_track.trackObjects];
 	} else {
@@ -289,7 +289,7 @@ typedef enum {
 	_track.name = textField.text;
 	
 	_track.trackInfo = [[ZOTrackCollection instance] addTrackNamed:_track.name];
-	[[ZOTrackCollection instance] archiveTrack:_track];
+	[_track archive];
 	
 	
 	[self.navigationController popViewControllerAnimated:YES];

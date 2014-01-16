@@ -10,6 +10,7 @@
 #import "ZOTrackObject.h"
 #import "ZOTrackObjectDelegate.h"
 
+
 @interface ZOSession : NSObject <ZOTrackObject>
 
 @property (nonatomic, assign)	CLLocationCoordinate2D coordinate;
@@ -19,5 +20,13 @@
 @property (nonatomic, retain)	NSArray* locations;
 @property (nonatomic, retain)	NSDictionary* sessionInfo;
 
+- (id) initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)boundingMapRect sessionInfo:(NSDictionary*)sessionInfo;
+
 - (void) addLocations:(NSArray*)locations;	// ZOLocations!
+
+- (void) archive;
++ (ZOSession*) unarchiveFromSessionInfo:(NSDictionary*)sessionInfo;
+
++ (NSDictionary*) newSessionInfoAtDate:(NSDate*)date;
+
 @end

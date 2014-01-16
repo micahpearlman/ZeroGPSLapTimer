@@ -17,7 +17,7 @@
 @property (nonatomic, assign)	CLLocationCoordinate2D coordinate;
 @property (nonatomic, assign)	MKMapRect boundingMapRect;
 @property (nonatomic, readonly)	NSArray* trackObjects;
-@property (nonatomic, retain)	NSArray* sessions;		// NSDictionary of session infos
+@property (nonatomic, retain)	NSArray* sessionInfos;		// NSDictionary of session infos
 @property (nonatomic, assign)	BOOL isSelected;
 @property (nonatomic, assign)	id<ZOTrackObjectDelegate> delegate;
 @property (nonatomic, copy)		NSString* name;
@@ -35,9 +35,11 @@
 
 
 /// sessions
-- (NSDictionary*) addSessionAtDate:(NSDate*)time;
-- (void) archiveSession:(ZOSession*)session;
-- (ZOSession*) unarchiveSessionFromSessionInfo:(NSDictionary*)sessionInfo;
+- (ZOSession*) addSessionAtDate:(NSDate*)time;
+
+/// archiving
+- (void) archive;
++ (ZOTrack*) unarchiveFromTrackInfo:(NSDictionary*)trackInfo;
 
 
 @end

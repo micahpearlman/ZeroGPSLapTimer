@@ -18,6 +18,7 @@
 	CLLocationManager*				_locationManager;
 	ZOTrack*						_track;
 	ZOSession*						_session;
+	NSDictionary*					_sessionInfo;
 	NSDictionary*					_trackEditInfo;
 
 }
@@ -44,27 +45,28 @@
 	
 	/// setup location manager
 	_track = [ZOTrackCollection instance].currentTrack;
+	[self.mapView addOverlay:_track];
+	[self.mapView addOverlays:_track.trackObjects];
+	
 	if ( _track.currentSessionInfo ) {
-		
 		_session = _track.currentSession;
-		
-		 
-		[self.mapView addOverlay:_track];
-		[self.mapView addOverlays:_track.trackObjects];
-		[self.mapView addOverlay:_session];
-		
 	} else {
+		// create new session
+		_session = [_track addSessionAtDate:[NSDate date]];
 		
-		todo create new session
-		// creating a new track so start off where the user is
-		// TODO: add search
 		_locationManager = [[CLLocationManager alloc] init];
 		[_locationManager setDelegate:self];
 		[_locationManager setDistanceFilter:kCLDistanceFilterNone];
 		[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
-		[_locationManager startUpdatingLocation];
+		
 	}
 	
+	[self.mapView addOverlay:_session];
+}
+
+- (void) viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	[_session archive];	// exiting so make sure to save out session
 }
 
 - (void)didReceiveMemoryWarning {
@@ -99,6 +101,7 @@
 		return trackRenderer;
 	} else if ( [overlay class] == [ZOSession class]) {
 		ZOSessionRenderer* sessionRenderer = [[ZOSessionRenderer alloc] initWithOverlay:overlay];
+		return sessionRenderer;
 	}
 	
 	return nil;
@@ -112,6 +115,19 @@
 	// TODO: do other sensor data
 	[_session addLocations:zolocations];
 	
+}
+
+#pragma mark IBActions
+
+- (IBAction) toggleSessionUpdate:(id)sender {
+	UIButton* button = (UIButton*)sender;
+	button.selected = !button.selected;
+	if ( button.selected ) {
+		[_locationManager startUpdatingLocation];
+	} else {
+		[_locationManager stopUpdatingLocation];
+		[_session archive];	// make sure to save session
+	}
 }
 
 

@@ -9,6 +9,7 @@
 #import "ZOSessionRenderer.h"
 #import "ZOSession.h"
 #import "ZOTrackObjectDelegate.h"
+#import "ZOLocation.h"
 
 @interface ZOSessionRenderer () <ZOTrackObjectDelegate>
 
@@ -36,24 +37,28 @@
 	
 	[super drawMapRect:mapRect zoomScale:zoomScale inContext:context];
 	
-	
-	
-//	ZOTrack* track = (ZOTrack*)self.overlay;
-//	
-//	UIGraphicsPushContext( context ); {
-//		
-//		
-//		CGContextSetFillColorWithColor( context, [UIColor grayColor].CGColor );
-//		CGContextSetAlpha( context, 0.1 );
-//		CGContextFillRect( context, [self rectForMapRect:track.boundingMapRect] );
-//		
-//		CGContextSetLineWidth( context, 12 );
-//		CGContextSetAlpha( context, 0.5 );
-//		CGContextSetStrokeColorWithColor( context, [UIColor redColor].CGColor );
-//		CGContextStrokeRect( context, [self rectForMapRect:track.boundingMapRect] );
-//		
-//	} UIGraphicsPopContext();
-	
+	ZOSession* session = (ZOSession*)self.overlay;
+	if ( [session.locations count] > 1 ) {
+		UIGraphicsPushContext( context ); {
+			CGContextBeginPath( context );
+			CGContextSetLineWidth( context, 12 );
+			CGContextSetStrokeColorWithColor( context, [UIColor greenColor].CGColor );
+			CGPoint point;
+			for ( ZOLocation* location in session.locations ) {
+				point = [self pointForMapPoint:MKMapPointForCoordinate( location.coordinate) ];
+
+				if ( location != [session.locations firstObject] ) {
+					CGContextAddLineToPoint( context, point.x, point.y );
+				} else {	// first point
+					CGContextMoveToPoint( context, point.x, point.y );
+				}
+			}
+			
+			
+			CGContextStrokePath( context );
+		} UIGraphicsPopContext();
+		
+	}
 	
 	
 }

@@ -142,8 +142,11 @@
 	NSIndexPath* selectedIndexPath = [self.tableView indexPathForSelectedRow];
 	if ( [selectedIndexPath row] == [[ZOTrackCollection instance].tracks count] ) {	// new track
 		// we are creating a new track so make sure to null out selected track
+		[ZOTrackCollection instance].currentTrackInfo = nil;
+	} else {
 		NSArray* tracks = [[ZOTrackCollection instance] tracks];
 		[ZOTrackCollection instance].currentTrackInfo = [tracks objectAtIndex:[selectedIndexPath row]];
+		
 	}
 }
 
