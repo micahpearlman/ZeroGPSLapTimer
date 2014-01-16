@@ -22,10 +22,13 @@
 
 - (id) initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)boundingMapRect sessionInfo:(NSDictionary*)sessionInfo;
 
+/// locations
 - (void) addLocations:(NSArray*)locations;	// ZOLocations!
 
+/// archiving
 - (void) archive;
 + (ZOSession*) unarchiveFromSessionInfo:(NSDictionary*)sessionInfo;
+- (void) deleteFromDisk;
 
 + (NSDictionary*) newSessionInfoAtDate:(NSDate*)date;
 

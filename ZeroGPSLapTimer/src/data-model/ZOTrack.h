@@ -36,11 +36,12 @@
 
 /// sessions
 - (ZOSession*) addSessionAtDate:(NSDate*)time;
+- (void) removeSessionInfo:(NSDictionary *)sessionInfo;
 
 /// archiving
 - (void) archive;
 + (ZOTrack*) unarchiveFromTrackInfo:(NSDictionary*)trackInfo;
-
+- (void) deleteFromDisk;
 
 @end
 

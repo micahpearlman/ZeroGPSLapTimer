@@ -124,6 +124,18 @@
 	return newSession;
 }
 
+- (void) removeSessionInfo:(NSDictionary *)sessionInfo {
+	NSError* error;
+	[[NSFileManager defaultManager] removeItemAtPath:[sessionInfo objectForKey:@"archive-path"] error:&error];
+	[_sessionInfos removeObject:sessionInfo];
+	if ( self.currentSessionInfo == sessionInfo ) {
+		self.currentSessionInfo = nil;
+		self.currentSession = nil;
+	}
+	
+	[self archive];
+}
+
 
 - (ZOSession*) currentSession {
 	if ( self.currentSessionInfo && _currentSession == nil ) {
@@ -148,6 +160,13 @@
 	return track;
 
 }
+
+- (void) deleteFromDisk {
+	NSError* error;
+	[[NSFileManager defaultManager] removeItemAtPath:[self.trackInfo objectForKey:@"archive-path"] error:&error];
+	// TODO: check for error
+}
+
 
 
 @end

@@ -19,7 +19,7 @@
 
 - (NSDictionary*) addTrackNamed:(NSString*)name;
 - (void) removeTrackNamed:(NSString*)name;
-- (void) removeTrack:(NSDictionary*)track;
+- (void) removeTrack:(NSDictionary*)trackInfo;
 - (NSDictionary*) findTrackNamed:(NSString*)name;
 
 

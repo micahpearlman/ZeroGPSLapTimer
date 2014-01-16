@@ -83,9 +83,18 @@
 	[self removeTrack:track];
 }
 
-- (void) removeTrack:(NSDictionary*)track {
-	[_tracks removeObject:track];
+- (void) removeTrack:(NSDictionary*)trackInfo {
+	[_tracks removeObject:trackInfo];
 	[self save];
+	NSError* error;
+	[[NSFileManager defaultManager] removeItemAtPath:[trackInfo objectForKey:@"archive-path"] error:&error];
+	// TODO: check for error
+	
+	if ( self.currentTrackInfo == trackInfo ) {
+		self.currentTrackInfo = nil;
+		self.currentTrack = nil;
+	}
+
 }
 
 - (NSDictionary*) findTrackNamed:(NSString*)name {

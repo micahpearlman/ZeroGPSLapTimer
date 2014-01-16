@@ -74,7 +74,7 @@
 
 + (NSDictionary*) newSessionInfoAtDate:(NSDate*)date {
 	NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
-	[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+	[dateFormatter setTimeStyle:NSDateFormatterMediumStyle];
 	[dateFormatter setDateStyle:NSDateFormatterMediumStyle];
 	NSString* timeString = [dateFormatter stringFromDate:date];
 	
@@ -95,6 +95,12 @@
 	ZOSession* session = [(ZOSession*)[NSKeyedUnarchiver unarchiveObjectWithFile:[sessionInfo objectForKey:@"archive-path"]] mutableCopy];
 	session.sessionInfo = sessionInfo;
 	return session;	
+}
+
+- (void) deleteFromDisk {
+	NSError* error;
+	[[NSFileManager defaultManager] removeItemAtPath:[self.sessionInfo objectForKey:@"archive-path"] error:&error];
+	// TODO: check for error
 }
 
 
