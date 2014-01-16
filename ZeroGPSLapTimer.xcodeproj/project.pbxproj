@@ -38,6 +38,7 @@
 		FABCD7B818788A5500EFB248 /* ZOTrackSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7B718788A5500EFB248 /* ZOTrackSelectViewController.m */; };
 		FABCD7BB1878B76700EFB248 /* ZOTrackEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7BA1878B76700EFB248 /* ZOTrackEditViewController.m */; };
 		FABCD7C11879EE8F00EFB248 /* ZOStartFinishLineRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7C01879EE8F00EFB248 /* ZOStartFinishLineRenderer.m */; };
+		FAC39BE518876D640053689E /* MKMapView+ZoomLevel.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC39BE418876D640053689E /* MKMapView+ZoomLevel.m */; };
 		FACF91A91884D86000EDE2A2 /* ZOSessionMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91A81884D86000EDE2A2 /* ZOSessionMapViewController.m */; };
 		FACF91AC1884DB7C00EDE2A2 /* ZOSession.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91AB1884DB7C00EDE2A2 /* ZOSession.m */; };
 		FACF91AF1884E23400EDE2A2 /* ZOSessionRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91AE1884E23400EDE2A2 /* ZOSessionRenderer.m */; };
@@ -109,6 +110,8 @@
 		FABCD7BA1878B76700EFB248 /* ZOTrackEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOTrackEditViewController.m; sourceTree = "<group>"; };
 		FABCD7BF1879EE8F00EFB248 /* ZOStartFinishLineRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOStartFinishLineRenderer.h; sourceTree = "<group>"; };
 		FABCD7C01879EE8F00EFB248 /* ZOStartFinishLineRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOStartFinishLineRenderer.m; sourceTree = "<group>"; };
+		FAC39BE318876D640053689E /* MKMapView+ZoomLevel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MKMapView+ZoomLevel.h"; sourceTree = "<group>"; };
+		FAC39BE418876D640053689E /* MKMapView+ZoomLevel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKMapView+ZoomLevel.m"; sourceTree = "<group>"; };
 		FACF91A71884D86000EDE2A2 /* ZOSessionMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOSessionMapViewController.h; sourceTree = "<group>"; };
 		FACF91A81884D86000EDE2A2 /* ZOSessionMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOSessionMapViewController.m; sourceTree = "<group>"; };
 		FACF91AA1884DB7C00EDE2A2 /* ZOSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOSession.h; sourceTree = "<group>"; };
@@ -150,6 +153,8 @@
 			children = (
 				FA09750B186D5291005C9B05 /* ZOCircularBuffer.h */,
 				FA09750C186D52A2005C9B05 /* ZOCircularBuffer.c */,
+				FAC39BE318876D640053689E /* MKMapView+ZoomLevel.h */,
+				FAC39BE418876D640053689E /* MKMapView+ZoomLevel.m */,
 			);
 			path = util;
 			sourceTree = "<group>";
@@ -438,6 +443,7 @@
 				FAB03F05188242E8007BD08D /* ZOStartFinishLine.m in Sources */,
 				FAB03EF81881F486007BD08D /* ZOTrackCollection.m in Sources */,
 				FA188720187F89F200B388D6 /* ZOTrackRenderer.m in Sources */,
+				FAC39BE518876D640053689E /* MKMapView+ZoomLevel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

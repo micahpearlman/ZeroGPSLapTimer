@@ -12,9 +12,10 @@
 #import "ZOStartFinishLineRenderer.h"
 #import "ZOTrackRenderer.h"
 #import "ZOSessionRenderer.h"
+#import "MKMapView+ZoomLevel.h"
 #import <ZOLocation.h>
 
-@interface ZOSessionMapViewController () <CLLocationManagerDelegate> {
+@interface ZOSessionMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate> {
 	CLLocationManager*				_locationManager;
 	ZOTrack*						_track;
 	ZOSession*						_session;
@@ -58,6 +59,7 @@
 		[_locationManager setDelegate:self];
 		[_locationManager setDistanceFilter:kCLDistanceFilterNone];
 		[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
+
 		
 	}
 	
@@ -80,14 +82,13 @@
 	for ( MKAnnotationView* annotationView in views ) {
 		id<MKAnnotation> mp = [annotationView annotation];
 		if ( [mp class] == [MKUserLocation class]) {
-			MKCoordinateRegion adjustedRegion = MKCoordinateRegionMakeWithDistance([mp coordinate], 0.0001, 0.0001);
-			[mapView_ setRegion:adjustedRegion animated:NO];
-			// if no track created create a default track
-			if ( _track == nil ) {
-				_track = [[ZOTrack alloc] initWithCoordinate:[mp coordinate] boundingMapRect:mapView_.visibleMapRect];
-				[mapView_ addOverlay:_track];
-			}
-			
+//			MKCoordinateRegion adjustedRegion = MKCoordinateRegionMakeWithDistance([mp coordinate], 0.0001, 0.0001);
+//			[mapView_ setRegion:adjustedRegion animated:NO];
+			[mapView_ setCenterCoordinate:[mp coordinate] zoomLevel:20 animated:NO];
+			MKCoordinateRegion coordRegion = [mapView_ region];
+			coordRegion.span.latitudeDelta *= 0.1;
+			coordRegion.span.longitudeDelta *= 0.1;
+			[mapView_ setRegion:coordRegion];
 		}
 	}
 }
@@ -110,10 +111,17 @@
 #pragma mark CLLocationManagerDelegate
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 	
-
 	NSArray* zolocations = [ZOLocation ZOLocationArrayFromCLLocationArray:locations];
 	// TODO: do other sensor data
 	[_session addLocations:zolocations];
+	
+	// update the map
+//	CLLocation* lastLocation = [locations lastObject];
+//	[self.mapView setCenterCoordinate:lastLocation.coordinate];
+//	MKCoordinateRegion adjustedRegion = MKCoordinateRegionMakeWithDistance(lastLocation.coordinate, 0.0001, 0.0001);
+//	[self.mapView setRegion:adjustedRegion animated:NO];
+
+	
 	
 }
 
@@ -124,9 +132,13 @@
 	button.selected = !button.selected;
 	if ( button.selected ) {
 		[_locationManager startUpdatingLocation];
+		
+		[self.mapView setUserTrackingMode:MKUserTrackingModeFollow];
 	} else {
 		[_locationManager stopUpdatingLocation];
 		[_session archive];	// make sure to save session
+		
+		[self.mapView setUserTrackingMode:MKUserTrackingModeNone];
 	}
 }
 
