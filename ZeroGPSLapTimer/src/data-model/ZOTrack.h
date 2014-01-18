@@ -10,6 +10,7 @@
 #import <MapKit/MapKit.h>
 #import "ZOTrackObject.h"
 #import "ZOSession.h"
+#import "CLLocation+measuring.h"
 
 
 @interface ZOTrack : NSObject <ZOTrackObject>
@@ -32,6 +33,7 @@
 - (void) removeTrackObject:(id<ZOTrackObject>)trackObject;
 - (NSArray*) trackObjectsAtCoordinate:(CLLocationCoordinate2D)coordinate;
 - (id<ZOTrackObject>) addStartFinishLineAtCoordinate:(CLLocationCoordinate2D)coord;
+- (id<ZOTrackObject>) checkTrackObjectsIntersectLineSegment:(CLCoordinateLineSegment)line withIntersectResult:(CLLocationCoordinate2D*)result;
 
 
 /// sessions

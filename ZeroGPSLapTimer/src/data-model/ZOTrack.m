@@ -10,7 +10,7 @@
 #import "ZOStartFinishLine.h"
 #import "NSCoder+ZOTrackObject.h"
 
-@interface ZOTrack () {
+@interface ZOTrack () <ZOTrackObjectDelegate> {
 	NSMutableArray*				_trackObjects;	// id<ZOTrackObjectProtocol>
 	CLLocationCoordinate2D		_coordinate;
 	NSMutableArray*				_sessionInfos;
@@ -104,6 +104,20 @@
 	return startFinishLine;
 }
 
+
+
+- (id<ZOTrackObject>) checkTrackObjectsIntersectLineSegment:(CLCoordinateLineSegment)line withIntersectResult:(CLLocationCoordinate2D*)result {
+	for ( id<ZOTrackObject> trackObject in _trackObjects ) {
+		if ( [trackObject respondsToSelector:@selector(checkLineSegmentIntersects:withResult:)]) {
+			if ( [trackObject checkLineSegmentIntersects:line withResult:result] ) {
+				return trackObject;	// intersects.  BUGBUG: could intersect multiple track objects!
+			}
+		}
+	}
+	
+	return nil;
+}
+
 #pragma mark Sessions
 
 - (ZOSession*) addSessionAtDate:(NSDate*)time {
@@ -114,6 +128,9 @@
 	ZOSession* newSession = [[ZOSession alloc] initWithCoordinate:self.coordinate
 												  boundingMapRect:self.boundingMapRect
 													  sessionInfo:newSessionInfo];
+	
+	newSession.delegate = self;
+	newSession.track = self;
 
 	// save to disk even though there is no real data
 	[newSession archive];
@@ -166,6 +183,18 @@
 	[[NSFileManager defaultManager] removeItemAtPath:[self.trackInfo objectForKey:@"archive-path"] error:&error];
 	// TODO: check for error
 }
+
+#pragma mark ZOTrackObjectDelegate
+
+//- (void) zoTrackObject:(id<ZOTrackObject>)trackObject isDirty:(BOOL)isDirty {
+//	ZOSession* session = (ZOSession*)trackObject;
+//	
+//	// check if we have crossed any track barriers
+//	for (id<ZOTrackObject> trackObject in _trackObjects ) {
+//		// TODO:
+//	}
+//}
+
 
 
 

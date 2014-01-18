@@ -181,6 +181,13 @@
                                     <barButtonItem image="fast-forward" id="zEq-6T-YcY" userLabel="fast-forward"/>
                                 </items>
                             </toolbar>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="OFF TRACK" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g5E-Vl-Nwa" userLabel="lap-time">
+                                <rect key="frame" x="68" y="67" width="185" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="34"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -196,6 +203,7 @@
                     <navigationItem key="navigationItem" id="jHT-8L-Ls7"/>
                     <connections>
                         <outlet property="fastForward" destination="zEq-6T-YcY" id="dHt-fS-LF5"/>
+                        <outlet property="lapTime" destination="g5E-Vl-Nwa" id="693-V7-MgW"/>
                         <outlet property="mapView" destination="CyR-Ql-NYC" id="Nuw-6e-rUa"/>
                         <outlet property="play" destination="0cW-hO-Nvm" id="iME-kL-Fzd"/>
                         <outlet property="record" destination="v7z-dR-vaG" id="F2W-lB-Nrq"/>

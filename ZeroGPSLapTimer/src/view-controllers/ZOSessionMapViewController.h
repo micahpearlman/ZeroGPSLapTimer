@@ -17,5 +17,8 @@
 @property (nonatomic,retain) IBOutlet UIBarButtonItem* record;
 @property (nonatomic,retain) IBOutlet UIBarButtonItem* fastForward;
 
+@property (nonatomic,retain) IBOutlet UILabel* lapTime;
+
 - (IBAction) toggleSessionRecord:(id)sender;
+
 @end

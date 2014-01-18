@@ -18,7 +18,7 @@
 @property (nonatomic, assign)	CLLocationCoordinate2D coordinate;
 @property (nonatomic, assign)	MKMapRect boundingMapRect;
 @property (nonatomic, assign)	BOOL isSelected;
-@property (nonatomic, readonly) CLLocationCoordinate2D* lineEnds;
+@property (nonatomic, readonly) CLCoordinateLineSegment line;
 @property (nonatomic, assign)	double rotate;
 
 

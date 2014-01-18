@@ -30,7 +30,7 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 @interface ZOStartFinishLine () {
 	CLLocationCoordinate2D	_coordinate;
 	MKMapRect				_boundingMapRect;
-	CLLocationCoordinate2D	_lineEnds[2];
+	CLCoordinateLineSegment	_line;
 	BOOL					_isSelected;
 	double					_angle;
 
@@ -43,7 +43,7 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 
 @synthesize boundingMapRect		= _boundingMapRect;
 @synthesize delegate;
-@dynamic	lineEnds;
+@synthesize line = _line;
 @dynamic	isSelected;
 @dynamic	coordinate;
 @dynamic	rotate;
@@ -72,9 +72,6 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 	[aCoder encodeCLLocationCoordinate2D:self.coordinate forKey:@"coordinate"];
 }
 
-- (CLLocationCoordinate2D*)lineEnds {
-	return _lineEnds;
-}
 
 - (BOOL) isSelected {
 	return _isSelected;
@@ -98,8 +95,8 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 	CGAffineTransform rotationTransform = CGAffineTransformMakeRotation( -_angle );	// NOTE: negative angle!
 	lineEnds[0] = CGPointApplyAffineTransform( lineEnds[0], rotationTransform );
 	lineEnds[1] = CGPointApplyAffineTransform( lineEnds[1], rotationTransform );
-	_lineEnds[0] = MKCoordinateOffsetFromCoordinate( _coordinate, lineEnds[0].x, lineEnds[0].y );
-	_lineEnds[1] = MKCoordinateOffsetFromCoordinate( _coordinate, lineEnds[1].x, lineEnds[1].y );
+	_line.start = MKCoordinateOffsetFromCoordinate( _coordinate, lineEnds[0].x, lineEnds[0].y );
+	_line.end = MKCoordinateOffsetFromCoordinate( _coordinate, lineEnds[1].x, lineEnds[1].y );
 	
 	
 	MKMapPoint mapPointCenter = MKMapPointForCoordinate(_coordinate);
@@ -120,6 +117,11 @@ CLLocationCoordinate2D MKCoordinateOffsetFromCoordinate(CLLocationCoordinate2D c
 - (void)setRotate:(double)rotate {
 	_angle = rotate;
 	self.coordinate = _coordinate;
+}
+
+- (BOOL) checkLineSegmentIntersects:(CLCoordinateLineSegment)line withResult:(CLLocationCoordinate2D*)intersection {
+		
+	return CLCoordinateLineSegmentIntersecting( line, _line, intersection );
 }
 
 @end

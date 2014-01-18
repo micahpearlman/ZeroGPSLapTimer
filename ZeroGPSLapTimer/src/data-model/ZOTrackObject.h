@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
+#import "CLLocation+measuring.h"
 
 @protocol ZOTrackObjectDelegate;
 @protocol ZOTrackObject <MKOverlay, NSCoding, NSObject>
@@ -18,7 +19,7 @@
 
 @optional
 @property (nonatomic, assign) double rotate;	// radians
-
+- (BOOL) checkLineSegmentIntersects:(CLCoordinateLineSegment)line withResult:(CLLocationCoordinate2D*)intersection;
 
 
 @end

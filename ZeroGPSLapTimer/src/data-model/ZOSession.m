@@ -9,9 +9,13 @@
 #import "ZOSession.h"
 #import "NSCoder+ZOTrackObject.h"
 #import "ZOLocation.h"
+#import "CLLocation+measuring.h"
+#import "ZOTrack.h"
 
 @interface ZOSession () {
 	NSMutableArray* _locations;	// ZOLocations
+	NSPointerArray* _delegates; // id<ZOTrackObjectDelegate>
+	ZOSessionState	_state;
 }
 
 @end
@@ -21,13 +25,15 @@
 @synthesize coordinate;
 @synthesize boundingMapRect;
 @synthesize isSelected;
-@synthesize delegate;
 @synthesize locations = _locations;
 @synthesize sessionInfo;
+@synthesize state = _state;
+@dynamic delegate;
 
 - (id) init {
 	if ( self = [super init] ) {
 		self.locations = [[NSMutableArray alloc] init];
+		
 	}
 	return self;
 }
@@ -38,6 +44,7 @@
 		self.coordinate = coord;
 		self.boundingMapRect = boundingMapRect_;
 		self.sessionInfo = sessionInfo_;
+		_state = ZOSessionState_Offtrack;
 	}
 	
 	return self;
@@ -51,6 +58,7 @@
 		self.coordinate = [aDecoder decodeCLLocationCoordinate2DForKey:@"coordinate"];
 		self.boundingMapRect = [aDecoder decodeMKMapRectForKey:@"boundingMapRect"];
 		self.locations = [aDecoder decodeObjectForKey:@"locations"];
+		_state = ZOSessionState_Offtrack;
 	}
 	return self;
 }
@@ -64,11 +72,38 @@
 	[aCoder encodeObject:self.locations forKey:@"locations"];
 }
 
-- (void) addLocations:(NSArray *)locations {
-	[_locations addObjectsFromArray:locations];
+- (void) addLocation:(ZOLocation*)location {
+	ZOLocation* lastLocation = [_locations lastObject];
+	if ( lastLocation ) {	// check that this is not the first object being added
+		CLCoordinateLineSegment line;
+		line.start = lastLocation.coordinate;
+		line.end = location.coordinate;
+		CLLocationCoordinate2D intersection;
+		id<ZOTrackObject> intersectObject = [self.track checkTrackObjectsIntersectLineSegment:line withIntersectResult:&intersection];
+		if ( intersectObject ) {
+			ZOSessionState newState = _state == ZOSessionState_Offtrack ? ZOSessionState_Lapping : ZOSessionState_Offtrack;
+			[self.stateMonitorDelegate zoSession:self stateChangedFrom:_state to:newState atLocation:nil]; // TODO: interpolate location
+			_state = newState;
+		}
+	}
+	
+	[_locations addObject:location];
+	
+	// BUGBUG: not reporting dirty with this method
+}
 
-	if ( [self.delegate respondsToSelector:@selector(zoTrackObject:isDirty:)] ) {
-		[self.delegate zoTrackObject:self isDirty:YES];
+- (void) addLocations:(NSArray *)locations {
+	
+	// add locations one by one
+	for ( ZOLocation* location in locations ) {
+		[self addLocation:location];
+	}
+	
+
+	for ( id<ZOTrackObjectDelegate> delegate in _delegates ) {
+		if ( [delegate respondsToSelector:@selector(zoTrackObject:isDirty:)] ) {
+			[delegate zoTrackObject:self isDirty:YES];
+		}
 	}
 }
 
@@ -106,6 +141,16 @@
 	[[NSFileManager defaultManager] removeItemAtPath:[self.sessionInfo objectForKey:@"archive-path"] error:&error];
 	// TODO: check for error
 }
+
+#pragma mark Property implementation
+
+- (void) setDelegate:(id<ZOTrackObjectDelegate>)delegate {
+	if ( _delegates == nil ) {
+		_delegates = [NSPointerArray pointerArrayWithOptions:NSPointerFunctionsWeakMemory];
+	}
+	[_delegates addPointer:(__bridge void *)(delegate)];
+}
+
 
 
 @end

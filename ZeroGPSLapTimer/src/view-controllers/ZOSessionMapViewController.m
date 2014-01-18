@@ -20,7 +20,7 @@ typedef enum  {
 	ZOSessionMapViewController_Recording
 } ZOSessionMapViewControllerState;
 
-@interface ZOSessionMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate> {
+@interface ZOSessionMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate, ZOSessionStateDelegate> {
 	CLLocationManager*				_locationManager;
 	ZOTrack*						_track;
 	ZOSession*						_session;
@@ -58,6 +58,7 @@ typedef enum  {
 	[self.mapView addOverlays:_track.trackObjects];
 	
 	if ( _track.currentSessionInfo ) {
+		// load existing session
 		_session = _track.currentSession;
 	} else {
 		// create new session
@@ -67,9 +68,9 @@ typedef enum  {
 		[_locationManager setDelegate:self];
 		[_locationManager setDistanceFilter:kCLDistanceFilterNone];
 		[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
-
-		
 	}
+	
+	_session.stateMonitorDelegate = self;
 	
 	[self.mapView addOverlay:_session];
 }
@@ -182,6 +183,19 @@ typedef enum  {
 //
 	}
 }
+
+#pragma mark ZOSessionStateDelegate
+
+- (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atLocation:(ZOLocation*)location {
+	
+	if ( to == ZOSessionState_Lapping ) {
+		self.lapTime.text = @"LAPPING";
+	} else {
+		self.lapTime.text = @"OFF TRACK";
+	}
+	
+}
+
 
 
 @end

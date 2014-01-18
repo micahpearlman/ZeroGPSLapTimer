@@ -43,8 +43,8 @@
 	ZOStartFinishLine* startFinishLineOverlay = (ZOStartFinishLine*)self.overlay;
 	
 	CGPoint ends[2];
-	ends[0] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.lineEnds[0] )];
-	ends[1] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.lineEnds[1] )];
+	ends[0] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.line.start )];
+	ends[1] = [self pointForMapPoint:MKMapPointForCoordinate( startFinishLineOverlay.line.end )];
 	CGRect rect = [self rectForMapRect:startFinishLineOverlay.boundingMapRect];
 
 	

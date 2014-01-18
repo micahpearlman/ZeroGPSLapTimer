@@ -9,21 +9,37 @@
 #import <Foundation/Foundation.h>
 #import "ZOTrackObject.h"
 #import "ZOTrackObjectDelegate.h"
+#import "ZOLocation.h"
 
+@class ZOTrack;
+
+typedef enum {
+	ZOSessionState_Offtrack,
+	ZOSessionState_Lapping
+} ZOSessionState;
+
+@protocol ZOSessionStateDelegate;
 
 @interface ZOSession : NSObject <ZOTrackObject>
 
 @property (nonatomic, assign)	CLLocationCoordinate2D coordinate;
 @property (nonatomic, assign)	MKMapRect boundingMapRect;
 @property (nonatomic, assign)	BOOL isSelected;
-@property (nonatomic, assign)	id<ZOTrackObjectDelegate> delegate;
 @property (nonatomic, retain)	NSArray* locations;
 @property (nonatomic, retain)	NSDictionary* sessionInfo;
+@property (nonatomic, assign)	ZOTrack* track;
+@property (nonatomic, assign)	id<ZOTrackObjectDelegate> delegate;
+@property (nonatomic, readonly)	ZOSessionState state;
+@property (nonatomic, assign)	id<ZOSessionStateDelegate> stateMonitorDelegate;
+
+// make delegate writeonly: http://stackoverflow.com/questions/4266197/write-only-property-in-objective-c
+- (id<ZOTrackObjectDelegate>) delegate UNAVAILABLE_ATTRIBUTE;
 
 - (id) initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)boundingMapRect sessionInfo:(NSDictionary*)sessionInfo;
 
 /// locations
-- (void) addLocations:(NSArray*)locations;	// ZOLocations!
+- (void) addLocations:(NSArray*)locations;	// ZOLocations
+- (void) addLocation:(ZOLocation*)location;
 
 /// archiving
 - (void) archive;
@@ -31,5 +47,11 @@
 - (void) deleteFromDisk;
 
 + (NSDictionary*) newSessionInfoAtDate:(NSDate*)date;
+
+@end
+
+@protocol ZOSessionStateDelegate <NSObject>
+@required
+- (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atLocation:(ZOLocation*)location;
 
 @end
