@@ -8,12 +8,12 @@
 
 #import "ZOSession.h"
 #import "NSCoder+ZOTrackObject.h"
-#import "ZOLocation.h"
+#import "ZOWaypoint.h"
 #import "CLLocation+measuring.h"
 #import "ZOTrack.h"
 
 @interface ZOSession () {
-	NSMutableArray* _locations;	// ZOLocations
+	NSMutableArray* _waypoints;	// ZOLocations
 	NSPointerArray* _delegates; // id<ZOTrackObjectDelegate>
 	ZOSessionState	_state;
 }
@@ -25,14 +25,15 @@
 @synthesize coordinate;
 @synthesize boundingMapRect;
 @synthesize isSelected;
-@synthesize locations = _locations;
+@synthesize waypoints = _waypoints;
 @synthesize sessionInfo;
 @synthesize state = _state;
+@dynamic totalTime;
 @dynamic delegate;
 
 - (id) init {
 	if ( self = [super init] ) {
-		self.locations = [[NSMutableArray alloc] init];
+		self.waypoints = [[NSMutableArray alloc] init];
 		
 	}
 	return self;
@@ -57,7 +58,7 @@
 	if ( self ) {
 		self.coordinate = [aDecoder decodeCLLocationCoordinate2DForKey:@"coordinate"];
 		self.boundingMapRect = [aDecoder decodeMKMapRectForKey:@"boundingMapRect"];
-		self.locations = [aDecoder decodeObjectForKey:@"locations"];
+		self.waypoints = [aDecoder decodeObjectForKey:@"locations"];
 		_state = ZOSessionState_Offtrack;
 	}
 	return self;
@@ -69,11 +70,11 @@
 	
 	[aCoder encodeCLLocationCoordinate2D:self.coordinate forKey:@"coordinate"];
 	[aCoder encodeMKMapRect:self.boundingMapRect forKey:@"boundingMapRect"];
-	[aCoder encodeObject:self.locations forKey:@"locations"];
+	[aCoder encodeObject:self.waypoints forKey:@"locations"];
 }
 
-- (void) addLocation:(ZOLocation*)location {
-	ZOLocation* lastLocation = [_locations lastObject];
+- (void) addWaypoint:(ZOWaypoint*)location {
+	ZOWaypoint* lastLocation = [_waypoints lastObject];
 	if ( lastLocation ) {	// check that this is not the first object being added
 		CLCoordinateLineSegment line;
 		line.start = lastLocation.coordinate;
@@ -87,16 +88,16 @@
 		}
 	}
 	
-	[_locations addObject:location];
+	[_waypoints addObject:location];
 	
 	// BUGBUG: not reporting dirty with this method
 }
 
-- (void) addLocations:(NSArray *)locations {
+- (void) addWaypoints:(NSArray *)locations {
 	
 	// add locations one by one
-	for ( ZOLocation* location in locations ) {
-		[self addLocation:location];
+	for ( ZOWaypoint* location in locations ) {
+		[self addWaypoint:location];
 	}
 	
 
@@ -106,6 +107,41 @@
 		}
 	}
 }
+
+- (ZOWaypoint*) waypointAtTimeInterval:(NSTimeInterval)timeInterval {
+	if ( timeInterval > self.totalTime ) {
+		return nil;
+	}
+	
+	if ( !([_waypoints count] > 1) ) {
+		return nil;
+	}
+	
+	ZOWaypoint* start = [_waypoints firstObject];
+	ZOWaypoint* bracketWaypoints[2] = {nil, nil};
+	NSTimeInterval bracketTimes[2];
+	for ( int i = 0; i < [_waypoints count]; i++ ) {
+		bracketWaypoints[0] = [_waypoints objectAtIndex:i];
+		i++;
+		bracketWaypoints[1] = [_waypoints objectAtIndex:i];
+
+		bracketTimes[0] = [start.timestamp timeIntervalSinceDate:bracketWaypoints[0].timestamp];
+		bracketTimes[1] = [start.timestamp timeIntervalSinceDate:bracketWaypoints[1].timestamp];
+
+		if ( timeInterval > bracketTimes[0] && timeInterval < bracketTimes[1] ) {
+			break;	// found it
+		}
+	}
+	
+	NSTimeInterval timeSinceFirstBracket = timeInterval - bracketTimes[0];
+	NSTimeInterval timeBetweenBrackets = bracketTimes[1] - bracketTimes[0];
+	double interpolationFactor = timeSinceFirstBracket / timeBetweenBrackets;	// normalize the time distance 0..1
+	ZOWaypoint* interpolatedWayPoint = [bracketWaypoints[0] timeInterpolateToWayPoint:bracketWaypoints[1] factor:interpolationFactor];
+	
+	return interpolatedWayPoint;
+}
+
+#pragma mark Archiving
 
 + (NSDictionary*) newSessionInfoAtDate:(NSDate*)date {
 	NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
@@ -124,7 +160,7 @@
 
 }
 
-#pragma mark Archiving
+
 
 - (void) archive {
 	[NSKeyedArchiver archiveRootObject:self toFile:[self.sessionInfo objectForKey:@"archive-path"]];
@@ -151,6 +187,11 @@
 	[_delegates addPointer:(__bridge void *)(delegate)];
 }
 
+- (NSTimeInterval) totalTime {
+	ZOWaypoint* first = [_waypoints firstObject];
+	ZOWaypoint* last = [_waypoints lastObject];
+	return [last.timestamp timeIntervalSinceDate:first.timestamp];
+}
 
 
 @end

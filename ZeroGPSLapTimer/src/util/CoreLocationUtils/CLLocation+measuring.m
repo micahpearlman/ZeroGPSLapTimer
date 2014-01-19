@@ -331,6 +331,31 @@ BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLCoordina
 	
 }
 
+// returns a new location interpolated via time of a second location
+- (CLLocation*) timeInterpolateToLocation:(CLLocation*)location factor:(double)factor {
+	CLLocationCoordinate2D deltaCoordinate = CLLocationCoordinate2DSubstract( location.coordinate, self.coordinate );
+	CLLocationCoordinate2D scaledDeltaCoordinate = CLLocationCoordinate2DMultiply( deltaCoordinate, factor );
+	CLLocationCoordinate2D interpolatedCoordinate = CLLocationCoordinate2DAdd( self.coordinate, scaledDeltaCoordinate );
+	
+	CLLocationDistance deltaAltitude = location.altitude - self.altitude;
+	CLLocationDistance scaledDeltaAltitude = deltaAltitude * factor;
+	CLLocationDistance interpolatedAltitude = self.altitude + scaledDeltaAltitude;
+	
+	NSTimeInterval deltaTimeInterval = [location.timestamp timeIntervalSinceDate:self.timestamp];
+	NSTimeInterval scaledTimeInterval = deltaTimeInterval * factor;
+	NSDate* interpolatedTimestamp = [self.timestamp dateByAddingTimeInterval:scaledTimeInterval];
+	
+	
+	CLLocation* interpolatedLocation = [[CLLocation alloc] initWithCoordinate:interpolatedCoordinate
+																	 altitude:interpolatedAltitude
+														   horizontalAccuracy:self.horizontalAccuracy
+															 verticalAccuracy:self.verticalAccuracy
+																	timestamp:interpolatedTimestamp];
+	
+	return interpolatedLocation;
+
+}
+
 
 
 @end

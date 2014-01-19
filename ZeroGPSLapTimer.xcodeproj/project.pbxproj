@@ -43,10 +43,12 @@
 		FAC39BF41888D0720053689E /* CLLocation+routeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC39BED1888D0720053689E /* CLLocation+routeInfo.m */; };
 		FAC39BF51888D0720053689E /* CLLocationDeadReckoning.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC39BEF1888D0720053689E /* CLLocationDeadReckoning.m */; };
 		FAC39BF61888D0720053689E /* CLLocationDispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC39BF11888D0720053689E /* CLLocationDispatch.m */; };
+		FAC39BF9188B0CF60053689E /* ZOLap.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC39BF8188B0CF60053689E /* ZOLap.m */; };
+		FAC39BFC188B25810053689E /* ZOWaypointRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = FAC39BFB188B25810053689E /* ZOWaypointRenderer.m */; };
 		FACF91A91884D86000EDE2A2 /* ZOSessionMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91A81884D86000EDE2A2 /* ZOSessionMapViewController.m */; };
 		FACF91AC1884DB7C00EDE2A2 /* ZOSession.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91AB1884DB7C00EDE2A2 /* ZOSession.m */; };
 		FACF91AF1884E23400EDE2A2 /* ZOSessionRenderer.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91AE1884E23400EDE2A2 /* ZOSessionRenderer.m */; };
-		FACF91B21884E5DB00EDE2A2 /* ZOLocation.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91B11884E5DB00EDE2A2 /* ZOLocation.m */; };
+		FACF91B21884E5DB00EDE2A2 /* ZOWaypoint.m in Sources */ = {isa = PBXBuildFile; fileRef = FACF91B11884E5DB00EDE2A2 /* ZOWaypoint.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -125,14 +127,18 @@
 		FAC39BF01888D0720053689E /* CLLocationDispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLLocationDispatch.h; sourceTree = "<group>"; };
 		FAC39BF11888D0720053689E /* CLLocationDispatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CLLocationDispatch.m; sourceTree = "<group>"; };
 		FAC39BF21888D0720053689E /* CLUtilsDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CLUtilsDefines.h; sourceTree = "<group>"; };
+		FAC39BF7188B0CF60053689E /* ZOLap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOLap.h; sourceTree = "<group>"; };
+		FAC39BF8188B0CF60053689E /* ZOLap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOLap.m; sourceTree = "<group>"; };
+		FAC39BFA188B25810053689E /* ZOWaypointRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOWaypointRenderer.h; sourceTree = "<group>"; };
+		FAC39BFB188B25810053689E /* ZOWaypointRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOWaypointRenderer.m; sourceTree = "<group>"; };
 		FACF91A71884D86000EDE2A2 /* ZOSessionMapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOSessionMapViewController.h; sourceTree = "<group>"; };
 		FACF91A81884D86000EDE2A2 /* ZOSessionMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOSessionMapViewController.m; sourceTree = "<group>"; };
 		FACF91AA1884DB7C00EDE2A2 /* ZOSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOSession.h; sourceTree = "<group>"; };
 		FACF91AB1884DB7C00EDE2A2 /* ZOSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOSession.m; sourceTree = "<group>"; };
 		FACF91AD1884E23400EDE2A2 /* ZOSessionRenderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOSessionRenderer.h; sourceTree = "<group>"; };
 		FACF91AE1884E23400EDE2A2 /* ZOSessionRenderer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOSessionRenderer.m; sourceTree = "<group>"; };
-		FACF91B01884E5DB00EDE2A2 /* ZOLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOLocation.h; sourceTree = "<group>"; };
-		FACF91B11884E5DB00EDE2A2 /* ZOLocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOLocation.m; sourceTree = "<group>"; };
+		FACF91B01884E5DB00EDE2A2 /* ZOWaypoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOWaypoint.h; sourceTree = "<group>"; };
+		FACF91B11884E5DB00EDE2A2 /* ZOWaypoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOWaypoint.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -296,6 +302,8 @@
 				FA18871F187F89F200B388D6 /* ZOTrackRenderer.m */,
 				FACF91AD1884E23400EDE2A2 /* ZOSessionRenderer.h */,
 				FACF91AE1884E23400EDE2A2 /* ZOSessionRenderer.m */,
+				FAC39BFA188B25810053689E /* ZOWaypointRenderer.h */,
+				FAC39BFB188B25810053689E /* ZOWaypointRenderer.m */,
 			);
 			path = "map-overlays";
 			sourceTree = "<group>";
@@ -330,8 +338,10 @@
 				FAB03EF71881F486007BD08D /* ZOTrackCollection.m */,
 				FACF91AA1884DB7C00EDE2A2 /* ZOSession.h */,
 				FACF91AB1884DB7C00EDE2A2 /* ZOSession.m */,
-				FACF91B01884E5DB00EDE2A2 /* ZOLocation.h */,
-				FACF91B11884E5DB00EDE2A2 /* ZOLocation.m */,
+				FACF91B01884E5DB00EDE2A2 /* ZOWaypoint.h */,
+				FACF91B11884E5DB00EDE2A2 /* ZOWaypoint.m */,
+				FAC39BF7188B0CF60053689E /* ZOLap.h */,
+				FAC39BF8188B0CF60053689E /* ZOLap.m */,
 			);
 			path = "data-model";
 			sourceTree = "<group>";
@@ -451,6 +461,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAC39BF9188B0CF60053689E /* ZOLap.m in Sources */,
 				FAB03F04188242E8007BD08D /* NSCoder+ZOTrackObject.m in Sources */,
 				FAC39BF61888D0720053689E /* CLLocationDispatch.m in Sources */,
 				FAB03EFB18823895007BD08D /* ZOSessionSelectViewController.m in Sources */,
@@ -461,8 +472,9 @@
 				FAC39BF51888D0720053689E /* CLLocationDeadReckoning.m in Sources */,
 				FAADF4381864D38C00F301B7 /* main.m in Sources */,
 				FAADF44E18692EEA00F301B7 /* ZOGPS.m in Sources */,
+				FAC39BFC188B25810053689E /* ZOWaypointRenderer.m in Sources */,
 				FAADF43B1864D38C00F301B7 /* ZOAppDelegate.m in Sources */,
-				FACF91B21884E5DB00EDE2A2 /* ZOLocation.m in Sources */,
+				FACF91B21884E5DB00EDE2A2 /* ZOWaypoint.m in Sources */,
 				FAADF4571869375500F301B7 /* ZOGPSExternalVenus.m in Sources */,
 				FA097508186A37F4005C9B05 /* ZOVenusCommand.c in Sources */,
 				FAC39BF41888D0720053689E /* CLLocation+routeInfo.m in Sources */,

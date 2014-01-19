@@ -102,6 +102,8 @@ extern BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLC
 // returns a new location that will be reached after travelling from self location at 'speed' for 'duration' in 'direction'.
 - (CLLocation*) newLocationAfterMovingAtSpeed:(CLLocationSpeed)speed duration:(NSTimeInterval)duration direction:(CLLocationDirection)direction;
 
+// returns a new location interpolated via time of a second location
+- (CLLocation*) timeInterpolateToLocation:(CLLocation*)location factor:(double)factor;
 
 
 @end

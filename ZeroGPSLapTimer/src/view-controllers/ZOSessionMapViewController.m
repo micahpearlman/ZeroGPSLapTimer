@@ -12,12 +12,15 @@
 #import "ZOStartFinishLineRenderer.h"
 #import "ZOTrackRenderer.h"
 #import "ZOSessionRenderer.h"
+#import "ZOWaypointRenderer.h"
 #import "MKMapView+ZoomLevel.h"
-#import <ZOLocation.h>
+#import <ZOWaypoint.h>
 
 typedef enum  {
 	ZOSessionMapViewController_None,
-	ZOSessionMapViewController_Recording
+	ZOSessionMapViewController_Recording,
+	ZOSessionMapViewController_Playback,
+	ZOSessionMapViewController_Paused
 } ZOSessionMapViewControllerState;
 
 @interface ZOSessionMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate, ZOSessionStateDelegate> {
@@ -27,7 +30,9 @@ typedef enum  {
 	NSDictionary*					_sessionInfo;
 	NSDictionary*					_trackEditInfo;
 	ZOSessionMapViewControllerState	_state;
-
+	NSTimer*						_playbackTimer;
+	NSTimeInterval					_currentPlaybackTime;
+	ZOWaypoint*						_currentPlaybackWaypoint;
 }
 
 @end
@@ -42,6 +47,7 @@ typedef enum  {
 	self = [super initWithCoder:aDecoder];
 	if ( self ) {
 		self.hidesBottomBarWhenPushed = YES;
+		_currentPlaybackTime = 0;
 	}
 	return self;
 }
@@ -86,6 +92,10 @@ typedef enum  {
 }
 
 - (void) gotoState:(ZOSessionMapViewControllerState)state {
+	if ( state == _state ) {
+		return;
+	}
+	
 	switch ( state ) {
 			
 		case ZOSessionMapViewController_None:
@@ -102,11 +112,35 @@ typedef enum  {
 			[_locationManager startUpdatingLocation];
 			[self.mapView setUserTrackingMode:MKUserTrackingModeFollow];
 			break;
+			
+		case ZOSessionMapViewController_Playback:
+			self.play.image = [UIImage imageNamed:@"pause"];
+			if ( _currentPlaybackWaypoint == nil ) {
+				_currentPlaybackWaypoint = [[_session.waypoints firstObject] copy];
+				[self.mapView addOverlay:_currentPlaybackWaypoint];
+			}
+			_playbackTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/20.0 target:self selector:@selector(playbackTimer:) userInfo:nil repeats:YES];
+			break;
+			
+		case ZOSessionMapViewController_Paused:
+			self.play.image = [UIImage imageNamed:@"play"];
+			[_playbackTimer invalidate];
+			break;
+			
 		default:
 			break;
 	}
 	_state = state;
 }
+
+#pragma mark Playback
+- (void) playbackTimer:(NSTimer*)timer {
+	
+	ZOWaypoint* waypointAtTime = [_session waypointAtTimeInterval:_currentPlaybackTime];
+	
+	_currentPlaybackTime = _currentPlaybackTime + timer.timeInterval;
+}
+
 
 #pragma mark MKMapViewDelegate
 
@@ -135,6 +169,9 @@ typedef enum  {
 	} else if ( [overlay class] == [ZOSession class]) {
 		ZOSessionRenderer* sessionRenderer = [[ZOSessionRenderer alloc] initWithOverlay:overlay];
 		return sessionRenderer;
+	} else if ( [overlay class] == [ZOWaypoint class] ) {
+		ZOWaypointRenderer* waypointRenderer = [[ZOWaypointRenderer alloc] initWithOverlay:overlay];
+		return waypointRenderer;
 	}
 	
 	return nil;
@@ -143,9 +180,9 @@ typedef enum  {
 #pragma mark CLLocationManagerDelegate
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 	
-	NSArray* zolocations = [ZOLocation ZOLocationArrayFromCLLocationArray:locations];
+	NSArray* zolocations = [ZOWaypoint ZOLocationArrayFromCLLocationArray:locations];
 	// TODO: do other sensor data
-	[_session addLocations:zolocations];
+	[_session addWaypoints:zolocations];
 	
 	// update the map
 //	CLLocation* lastLocation = [locations lastObject];
@@ -161,40 +198,33 @@ typedef enum  {
 
 - (IBAction) toggleSessionRecord:(id)sender {
 	
-	if ( sender == self.record ) {
-		
-		if ( _state == ZOSessionMapViewController_None ) {
-			[self gotoState:ZOSessionMapViewController_Recording];
-		} else if ( _state == ZOSessionMapViewController_Recording ) {
-			[self gotoState:ZOSessionMapViewController_None];
-		}
-		
-//		self.record.selected = !self.record.selected;
-//		if ( self.record.selected ) {
-//			[_locationManager startUpdatingLocation];
-//			
-//			[self.mapView setUserTrackingMode:MKUserTrackingModeFollow];
-//		} else {
-//			[_locationManager stopUpdatingLocation];
-//			[_session archive];	// make sure to save session
-//			
-//			[self.mapView setUserTrackingMode:MKUserTrackingModeNone];
-//		}
-//
+	if ( _state == ZOSessionMapViewController_None ) {
+		[self gotoState:ZOSessionMapViewController_Recording];
+	} else if ( _state == ZOSessionMapViewController_Recording ) {
+		[self gotoState:ZOSessionMapViewController_None];
 	}
 }
 
+- (IBAction) onPlayPause:(id)sender {
+	if ( _state == ZOSessionMapViewController_None || _state == ZOSessionMapViewController_Paused ) {
+		[self gotoState:ZOSessionMapViewController_Playback];
+	} else if ( _state == ZOSessionMapViewController_Playback ) {
+		[self gotoState:ZOSessionMapViewController_Paused];
+	}
+}
+
+
 #pragma mark ZOSessionStateDelegate
 
-- (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atLocation:(ZOLocation*)location {
+- (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atLocation:(ZOWaypoint*)location {
 	
 	if ( to == ZOSessionState_Lapping ) {
 		self.lapTime.text = @"LAPPING";
 	} else {
 		self.lapTime.text = @"OFF TRACK";
 	}
-	
 }
+
 
 
 

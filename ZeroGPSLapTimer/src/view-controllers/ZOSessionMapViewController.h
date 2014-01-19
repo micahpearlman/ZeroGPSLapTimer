@@ -20,5 +20,6 @@
 @property (nonatomic,retain) IBOutlet UILabel* lapTime;
 
 - (IBAction) toggleSessionRecord:(id)sender;
+- (IBAction) onPlayPause:(id)sender;
 
 @end

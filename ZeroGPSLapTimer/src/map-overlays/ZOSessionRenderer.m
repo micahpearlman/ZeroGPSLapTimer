@@ -9,7 +9,7 @@
 #import "ZOSessionRenderer.h"
 #import "ZOSession.h"
 #import "ZOTrackObjectDelegate.h"
-#import "ZOLocation.h"
+#import "ZOWaypoint.h"
 
 @interface ZOSessionRenderer () <ZOTrackObjectDelegate>
 
@@ -38,16 +38,16 @@
 	[super drawMapRect:mapRect zoomScale:zoomScale inContext:context];
 	
 	ZOSession* session = (ZOSession*)self.overlay;
-	if ( [session.locations count] > 1 ) {
+	if ( [session.waypoints count] > 1 ) {
 		UIGraphicsPushContext( context ); {
 			CGContextBeginPath( context );
-			CGContextSetLineWidth( context, 12 );
-			CGContextSetStrokeColorWithColor( context, [UIColor greenColor].CGColor );
+			CGContextSetLineWidth( context, 4 );
+			CGContextSetStrokeColorWithColor( context, [UIColor blueColor].CGColor );
 			CGPoint point;
-			for ( ZOLocation* location in session.locations ) {
-				point = [self pointForMapPoint:MKMapPointForCoordinate( location.coordinate) ];
+			for ( ZOWaypoint* waypoint in session.waypoints ) {
+				point = [self pointForMapPoint:MKMapPointForCoordinate( waypoint.coordinate) ];
 
-				if ( location != [session.locations firstObject] ) {
+				if ( waypoint != [session.waypoints firstObject] ) {
 					CGContextAddLineToPoint( context, point.x, point.y );
 				} else {	// first point
 					CGContextMoveToPoint( context, point.x, point.y );

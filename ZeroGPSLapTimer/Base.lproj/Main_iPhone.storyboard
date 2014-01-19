@@ -172,7 +172,11 @@
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <items>
                                     <barButtonItem image="rewind" id="8Ei-rE-v8p" userLabel="rewind"/>
-                                    <barButtonItem image="play" id="0cW-hO-Nvm" userLabel="play"/>
+                                    <barButtonItem image="play" id="0cW-hO-Nvm" userLabel="play">
+                                        <connections>
+                                            <action selector="onPlayPause:" destination="bEy-hP-sRe" id="A50-Ye-vLc"/>
+                                        </connections>
+                                    </barButtonItem>
                                     <barButtonItem image="record" id="v7z-dR-vaG" userLabel="record">
                                         <connections>
                                             <action selector="toggleSessionRecord:" destination="bEy-hP-sRe" id="5D3-qD-usR"/>
