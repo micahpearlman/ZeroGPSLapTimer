@@ -120,24 +120,23 @@
 	ZOWaypoint* start = [_waypoints firstObject];
 	ZOWaypoint* bracketWaypoints[2] = {nil, nil};
 	NSTimeInterval bracketTimes[2];
-	for ( int i = 0; i < [_waypoints count]; i++ ) {
+	for ( int i = 0; i < [_waypoints count] - 1; i++ ) {
 		bracketWaypoints[0] = [_waypoints objectAtIndex:i];
-		i++;
-		bracketWaypoints[1] = [_waypoints objectAtIndex:i];
+		bracketWaypoints[1] = [_waypoints objectAtIndex:i+1];
 
-		bracketTimes[0] = [start.timestamp timeIntervalSinceDate:bracketWaypoints[0].timestamp];
-		bracketTimes[1] = [start.timestamp timeIntervalSinceDate:bracketWaypoints[1].timestamp];
-
-		if ( timeInterval > bracketTimes[0] && timeInterval < bracketTimes[1] ) {
+		bracketTimes[0] = [bracketWaypoints[0].timestamp timeIntervalSinceDate:start.timestamp];
+		bracketTimes[1] = [bracketWaypoints[1].timestamp timeIntervalSinceDate:start.timestamp];
+		if ( timeInterval >= bracketTimes[0] && timeInterval <= bracketTimes[1] ) {
 			break;	// found it
 		}
 	}
+	
 	
 	NSTimeInterval timeSinceFirstBracket = timeInterval - bracketTimes[0];
 	NSTimeInterval timeBetweenBrackets = bracketTimes[1] - bracketTimes[0];
 	double interpolationFactor = timeSinceFirstBracket / timeBetweenBrackets;	// normalize the time distance 0..1
 	ZOWaypoint* interpolatedWayPoint = [bracketWaypoints[0] timeInterpolateToWayPoint:bracketWaypoints[1] factor:interpolationFactor];
-	
+
 	return interpolatedWayPoint;
 }
 

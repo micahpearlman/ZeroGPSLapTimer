@@ -192,6 +192,13 @@
                                 <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Br6-tW-unC" userLabel="debug">
+                                <rect key="frame" x="0.0" y="492" width="320" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
@@ -206,6 +213,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="jHT-8L-Ls7"/>
                     <connections>
+                        <outlet property="debug" destination="Br6-tW-unC" id="zsG-GE-K8G"/>
                         <outlet property="fastForward" destination="zEq-6T-YcY" id="dHt-fS-LF5"/>
                         <outlet property="lapTime" destination="g5E-Vl-Nwa" id="693-V7-MgW"/>
                         <outlet property="mapView" destination="CyR-Ql-NYC" id="Nuw-6e-rUa"/>

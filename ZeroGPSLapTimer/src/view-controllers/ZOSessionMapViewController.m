@@ -33,6 +33,7 @@ typedef enum  {
 	NSTimer*						_playbackTimer;
 	NSTimeInterval					_currentPlaybackTime;
 	ZOWaypoint*						_currentPlaybackWaypoint;
+	ZOWaypoint*						_interpolatedWayPoint;
 }
 
 @end
@@ -47,7 +48,7 @@ typedef enum  {
 	self = [super initWithCoder:aDecoder];
 	if ( self ) {
 		self.hidesBottomBarWhenPushed = YES;
-		_currentPlaybackTime = 0;
+		_currentPlaybackTime = 10;
 	}
 	return self;
 }
@@ -114,13 +115,14 @@ typedef enum  {
 			break;
 			
 		case ZOSessionMapViewController_Playback:
+			self.mapView.showsUserLocation = NO;
 			self.play.image = [UIImage imageNamed:@"pause"];
 			if ( _currentPlaybackWaypoint == nil ) {
 				_currentPlaybackWaypoint = [[_session.waypoints firstObject] copy];
 				[self.mapView addOverlay:_currentPlaybackWaypoint];
 			}
 			_playbackTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/20.0 target:self selector:@selector(playbackTimer:) userInfo:nil repeats:YES];
-			break;
+ 			break;
 			
 		case ZOSessionMapViewController_Paused:
 			self.play.image = [UIImage imageNamed:@"play"];
@@ -136,7 +138,10 @@ typedef enum  {
 #pragma mark Playback
 - (void) playbackTimer:(NSTimer*)timer {
 	
-	ZOWaypoint* waypointAtTime = [_session waypointAtTimeInterval:_currentPlaybackTime];
+	_interpolatedWayPoint = [_session waypointAtTimeInterval:_currentPlaybackTime];
+
+	[_currentPlaybackWaypoint setCoordinate:_interpolatedWayPoint.coordinate];
+	self.debug.text = [NSString stringWithFormat:@"%f, %f", _interpolatedWayPoint.coordinate.latitude, _interpolatedWayPoint.coordinate.longitude];
 	
 	_currentPlaybackTime = _currentPlaybackTime + timer.timeInterval;
 }

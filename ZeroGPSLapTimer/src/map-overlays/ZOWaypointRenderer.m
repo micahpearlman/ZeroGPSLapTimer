@@ -41,10 +41,10 @@
 	CGRect rect = [self rectForMapRect:waypoint.boundingMapRect];
 	
 	UIGraphicsPushContext( context ); {
-		CGContextSetLineWidth( context, 12 );
+		CGContextSetLineWidth( context, 4 );
 		CGContextSetFillColorWithColor( context, [UIColor redColor].CGColor );
 		CGContextSetStrokeColorWithColor( context, [UIColor blueColor].CGColor );
-		CGContextSetAlpha( context, 0.3 );
+		CGContextSetAlpha( context, 0.9 );
 		CGContextFillEllipseInRect( context, rect );
 		CGContextSetAlpha( context, 0.8 );
 		CGContextStrokeEllipseInRect( context, rect );

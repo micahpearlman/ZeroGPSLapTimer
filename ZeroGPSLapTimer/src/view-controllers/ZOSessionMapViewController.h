@@ -16,8 +16,8 @@
 @property (nonatomic,retain) IBOutlet UIBarButtonItem* play;
 @property (nonatomic,retain) IBOutlet UIBarButtonItem* record;
 @property (nonatomic,retain) IBOutlet UIBarButtonItem* fastForward;
-
 @property (nonatomic,retain) IBOutlet UILabel* lapTime;
+@property (nonatomic,retain) IBOutlet UILabel* debug;
 
 - (IBAction) toggleSessionRecord:(id)sender;
 - (IBAction) onPlayPause:(id)sender;
