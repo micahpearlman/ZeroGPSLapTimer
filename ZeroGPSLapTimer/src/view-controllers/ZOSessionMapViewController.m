@@ -48,7 +48,7 @@ typedef enum  {
 	self = [super initWithCoder:aDecoder];
 	if ( self ) {
 		self.hidesBottomBarWhenPushed = YES;
-		_currentPlaybackTime = 10;
+		_currentPlaybackTime = 0;
 	}
 	return self;
 }
@@ -140,6 +140,22 @@ typedef enum  {
 - (void) playbackTimer:(NSTimer*)timer {
 	
 	_interpolatedWayPoint = [_session waypointAtTimeInterval:_currentPlaybackTime];
+	
+	NSTimeInterval minutes = _currentPlaybackTime / 60.0;
+	NSTimeInterval seconds = fmod(_currentPlaybackTime, 60.0);
+	self.lapTime.text = [NSString stringWithFormat:@"%d:%4.2f", (int)minutes, seconds];
+	
+	
+	// check for finish line cross
+	CLCoordinateLineSegment line;
+	line.start = _currentPlaybackWaypoint.coordinate;
+	line.end = _interpolatedWayPoint.coordinate;
+	CLLocationCoordinate2D intersection;
+	id<ZOTrackObject> intersectObject = [_track checkTrackObjectsIntersectLineSegment:line withIntersectResult:&intersection];
+	if ( intersectObject ) {
+		NSLog(@"CROSSED FINISHE LINE");
+	}
+
 
 	[_currentPlaybackWaypoint setCoordinate:_interpolatedWayPoint.coordinate];
 //	self.debug.text = [NSString stringWithFormat:@"%f, %f", _interpolatedWayPoint.coordinate.latitude, _interpolatedWayPoint.coordinate.longitude];
