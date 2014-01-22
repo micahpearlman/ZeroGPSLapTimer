@@ -69,13 +69,17 @@ BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLCoordina
 	}
 }
 
+extern double CLLocationSpeedToMilesPerHour( CLLocationSpeed speed ) {
+	return speed * 2.23694;
+}
+
 
 @implementation CLLocation(measuring)
 
 @dynamic mph;
 
 - (double) mph {
-	return self.speed * 2.23694;
+	return CLLocationSpeedToMilesPerHour( self.speed );
 }
 
 + (CLLocationDistance) distanceFromCoordinate:(CLLocationCoordinate2D)fromCoord toCoordinate:(CLLocationCoordinate2D) toCoord
@@ -358,7 +362,7 @@ BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLCoordina
 	// speed
 	CLLocationSpeed deltaSpeed = location.speed - self.speed;
 	CLLocationSpeed scaledDeltaSpeed = deltaSpeed * factor;
-	CLLocationSpeed interpolatedSpeed = location.speed + deltaSpeed;
+	CLLocationSpeed interpolatedSpeed = location.speed + scaledDeltaSpeed;
 	
 	// course
 	CLLocationDirection deltaCourse = location.course - self.course;

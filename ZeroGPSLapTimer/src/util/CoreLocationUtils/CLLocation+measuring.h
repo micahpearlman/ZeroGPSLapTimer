@@ -59,6 +59,7 @@ extern double CLLocationCoordinate2DCrossProduct( CLLocationCoordinate2D p1, CLL
 extern CLLocationCoordinate2D CLLocationCoordinate2DAdd( CLLocationCoordinate2D p1, CLLocationCoordinate2D p2 );
 extern CLLocationCoordinate2D CLLocationCoordinate2DMultiply( CLLocationCoordinate2D p1, double factor );
 extern BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLCoordinateLineSegment l2, CLLocationCoordinate2D* intesection );
+extern double CLLocationSpeedToMilesPerHour( CLLocationSpeed speed );
 
 
 /*
