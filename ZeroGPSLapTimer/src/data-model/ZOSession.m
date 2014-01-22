@@ -15,6 +15,7 @@
 @interface ZOSession () {
 	NSMutableArray* _waypoints;	// ZOLocations
 	NSPointerArray* _delegates; // id<ZOTrackObjectDelegate>
+	NSTimer*		_playbackTimer;
 	ZOSessionState	_state;
 }
 
@@ -30,6 +31,7 @@
 @synthesize state = _state;
 @dynamic totalTime;
 @dynamic delegate;
+@dynamic isPlaybackPaused;
 
 - (id) init {
 	if ( self = [super init] ) {
@@ -177,6 +179,41 @@
 	// TODO: check for error
 }
 
+#pragma mark Playback
+
+- (void) startPlaybackAtStartTime:(NSTimeInterval)startTime withTimeInterval:(NSTimeInterval)timeInterval andScale:(double)scale {
+	self.playbackTimeInterval = timeInterval;
+	self.playbackScale = scale;
+	self.playbackTime = startTime;
+	[self setIsPlaybackPaused:NO];
+}
+
+- (void) playbackTimer:(NSTimer*)timer {
+	
+	ZOWaypoint* waypointCursor = [self waypointAtTimeInterval:self.playbackTime];
+	[self.stateMonitorDelegate zoSession:self playbackCursorAtWaypoint:waypointCursor];
+
+	self.playbackTime = self.playbackTime + timer.timeInterval;
+}
+
+- (BOOL) isPlaybackPaused {
+	return ![_playbackTimer isValid];
+}
+
+- (void) setIsPlaybackPaused:(BOOL)isPlaybackPaused {
+	if ( isPlaybackPaused && !self.isPlaybackPaused ) {
+		[_playbackTimer invalidate];	// stop timer
+	} else {	// start up the timer
+		_playbackTimer = [NSTimer scheduledTimerWithTimeInterval:self.playbackTimeInterval
+														  target:self
+														selector:@selector(playbackTimer:)
+														userInfo:nil
+														 repeats:YES];
+		
+	}
+}
+
+
 #pragma mark Property implementation
 
 - (void) setDelegate:(id<ZOTrackObjectDelegate>)delegate {
@@ -191,6 +228,8 @@
 	ZOWaypoint* last = [_waypoints lastObject];
 	return [last.timestamp timeIntervalSinceDate:first.timestamp];
 }
+
+
 
 
 @end

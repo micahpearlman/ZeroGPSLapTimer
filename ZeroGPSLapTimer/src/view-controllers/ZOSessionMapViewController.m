@@ -30,10 +30,7 @@ typedef enum  {
 	NSDictionary*					_sessionInfo;
 	NSDictionary*					_trackEditInfo;
 	ZOSessionMapViewControllerState	_state;
-	NSTimer*						_playbackTimer;
-	NSTimeInterval					_currentPlaybackTime;
-	ZOWaypoint*						_currentPlaybackWaypoint;
-	ZOWaypoint*						_interpolatedWayPoint;
+	ZOWaypoint*						_playbackCursor;
 }
 
 @end
@@ -48,7 +45,7 @@ typedef enum  {
 	self = [super initWithCoder:aDecoder];
 	if ( self ) {
 		self.hidesBottomBarWhenPushed = YES;
-		_currentPlaybackTime = 0;
+//		_currentPlaybackTime = 0;
 	}
 	return self;
 }
@@ -117,54 +114,27 @@ typedef enum  {
 		case ZOSessionMapViewController_Playback:
 			self.mapView.showsUserLocation = NO;
 			self.play.image = [UIImage imageNamed:@"pause"];
-			if ( _currentPlaybackWaypoint == nil ) {
-				_currentPlaybackWaypoint = [[_session.waypoints firstObject] copy];
-				_currentPlaybackWaypoint.boundingMapRect = _track.boundingMapRect;	// IMPORTANT: set the bounding maprect to the track bounding map rect
-				[self.mapView addOverlay:_currentPlaybackWaypoint];
+			
+			// create a cursor that will track the playback
+			if ( _playbackCursor == nil ) {
+				_playbackCursor = [[_session.waypoints firstObject] copy];
+				_playbackCursor.boundingMapRect = _track.boundingMapRect;	// IMPORTANT: set the bounding maprect to the track bounding map rect
+				[self.mapView addOverlay:_playbackCursor];
 			}
-			_playbackTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/20.0 target:self selector:@selector(playbackTimer:) userInfo:nil repeats:YES];
+			[_session startPlaybackAtStartTime:0
+							  withTimeInterval:1.0/20.0
+									  andScale:1.0];
  			break;
 			
 		case ZOSessionMapViewController_Paused:
+			[_session setIsPlaybackPaused:YES];
 			self.play.image = [UIImage imageNamed:@"play"];
-			[_playbackTimer invalidate];
 			break;
 			
 		default:
 			break;
 	}
 	_state = state;
-}
-
-#pragma mark Playback
-- (void) playbackTimer:(NSTimer*)timer {
-	
-	_interpolatedWayPoint = [_session waypointAtTimeInterval:_currentPlaybackTime];
-	
-	NSTimeInterval minutes = _currentPlaybackTime / 60.0;
-	NSTimeInterval seconds = fmod(_currentPlaybackTime, 60.0);
-	self.lapTime.text = [NSString stringWithFormat:@"%d:%4.2f", (int)minutes, seconds];
-	
-	
-	// check for finish line cross
-	CLCoordinateLineSegment line;
-	line.start = _currentPlaybackWaypoint.coordinate;
-	line.end = _interpolatedWayPoint.coordinate;
-	CLLocationCoordinate2D intersection;
-	id<ZOTrackObject> intersectObject = [_track checkTrackObjectsIntersectLineSegment:line withIntersectResult:&intersection];
-	if ( intersectObject ) {
-		NSLog(@"CROSSED FINISHE LINE");
-	}
-
-
-	[_currentPlaybackWaypoint setCoordinate:_interpolatedWayPoint.coordinate];
-//	self.debug.text = [NSString stringWithFormat:@"%f, %f", _interpolatedWayPoint.coordinate.latitude, _interpolatedWayPoint.coordinate.longitude];
-
-	self.debug.text = [NSString stringWithFormat:@"%f", _interpolatedWayPoint.location.mph];
-	_currentPlaybackTime = _currentPlaybackTime + timer.timeInterval;
-	
-	// update map to center
-	self.mapView.camera.centerCoordinate = _interpolatedWayPoint.coordinate;
 }
 
 
@@ -209,7 +179,7 @@ typedef enum  {
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 	
 	NSArray* zolocations = [ZOWaypoint ZOLocationArrayFromCLLocationArray:locations];
-	// TODO: do other sensor data
+	// TODO: do other sensor data such as accelerometer
 	[_session addWaypoints:zolocations];
 	
 	// update the map
@@ -251,6 +221,26 @@ typedef enum  {
 	} else {
 		self.lapTime.text = @"OFF TRACK";
 	}
+}
+
+- (void) zoSession:(ZOSession*)session playbackCursorAtWaypoint:(ZOWaypoint*)waypoint {
+	
+	// update laptime label
+	NSTimeInterval minutes = _session.playbackTime / 60.0;
+	NSTimeInterval seconds = fmod( _session.playbackTime, 60.0);
+	self.lapTime.text = [NSString stringWithFormat:@"%d:%4.2f", (int)minutes, seconds];
+	
+	// update speed label
+	self.debug.text = [NSString stringWithFormat:@"%f", waypoint.location.mph];
+	
+	// center map on the waypoint
+	self.mapView.camera.centerCoordinate = waypoint.coordinate;
+	
+	// update the cursor
+	[_playbackCursor setCoordinate:waypoint.coordinate];
+
+
+	
 }
 
 

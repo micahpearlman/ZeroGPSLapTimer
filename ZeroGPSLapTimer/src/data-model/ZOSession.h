@@ -32,6 +32,10 @@ typedef enum {
 @property (nonatomic, readonly)	ZOSessionState state;
 @property (nonatomic, assign)	id<ZOSessionStateDelegate> stateMonitorDelegate;
 @property (nonatomic, readonly) NSTimeInterval totalTime;
+@property (nonatomic, assign)	double playbackScale;
+@property (nonatomic, assign)	NSTimeInterval playbackTime;
+@property (nonatomic, assign)	NSTimeInterval playbackTimeInterval;	// NOTE: need to pause and unpause for this property to take effect
+@property (nonatomic, assign)	BOOL isPlaybackPaused;
 
 // make delegate writeonly: http://stackoverflow.com/questions/4266197/write-only-property-in-objective-c
 - (id<ZOTrackObjectDelegate>) delegate UNAVAILABLE_ATTRIBUTE;
@@ -50,10 +54,15 @@ typedef enum {
 - (void) deleteFromDisk;
 + (NSDictionary*) newSessionInfoAtDate:(NSDate*)date;
 
+/// playback
+- (void) startPlaybackAtStartTime:(NSTimeInterval)startTime withTimeInterval:(NSTimeInterval)timeInterval andScale:(double)scale;
+
+
+
 @end
 
 @protocol ZOSessionStateDelegate <NSObject>
 @required
 - (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atLocation:(ZOWaypoint*)location;
-
+- (void) zoSession:(ZOSession*)session playbackCursorAtWaypoint:(ZOWaypoint*)waypoint;
 @end
