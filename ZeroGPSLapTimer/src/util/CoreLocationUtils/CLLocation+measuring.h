@@ -60,6 +60,7 @@ extern CLLocationCoordinate2D CLLocationCoordinate2DAdd( CLLocationCoordinate2D 
 extern CLLocationCoordinate2D CLLocationCoordinate2DMultiply( CLLocationCoordinate2D p1, double factor );
 extern BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLCoordinateLineSegment l2, CLLocationCoordinate2D* intesection );
 
+
 /*
  *  CLLocation (measuring) extension 
  *  
@@ -105,5 +106,6 @@ extern BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLC
 // returns a new location interpolated via time of a second location
 - (CLLocation*) timeInterpolateToLocation:(CLLocation*)location factor:(double)factor;
 
+@property (nonatomic,readonly) double mph;
 
 @end

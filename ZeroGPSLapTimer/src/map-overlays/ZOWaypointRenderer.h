@@ -8,6 +8,6 @@
 
 #import <MapKit/MapKit.h>
 
-@interface ZOWaypointRenderer : MKOverlayRenderer
+@interface ZOWaypointRenderer : MKOverlayPathRenderer
 
 @end

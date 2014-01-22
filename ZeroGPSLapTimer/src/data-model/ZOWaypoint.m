@@ -10,7 +10,7 @@
 #import "NSCoder+ZOTrackObject.h"
 #import "ZOTrackObjectDelegate.h"
 
-static const float kWayPointDiameter = 5.0f;
+static const float kWayPointDiameter = 5.5f;
 
 @interface ZOWaypoint () <NSCopying> {
 	CLLocation*				_location;
@@ -32,14 +32,13 @@ static const float kWayPointDiameter = 5.0f;
 @dynamic isSelected;
 @dynamic timestamp;
 @dynamic altitude;
+@dynamic radius;
 
 - (id) initWithCLLocation:(CLLocation*)location {
 	
 	if ( self = [super init]  ) {
 		_location = location;
 		self.coordinate = location.coordinate;
-//		MKMapPoint point = MKMapPointForCoordinate( self.coordinate );
-//		self.boundingMapRect = MKMapRectMake(point.x, point.y, 20.0, 20.0);
 	}
 	
 	return self;
@@ -48,7 +47,6 @@ static const float kWayPointDiameter = 5.0f;
 - (id) initWithCoder:(NSCoder *)aDecoder {
 	if ( self = [super init] ) {
 		self.coordinate = [aDecoder decodeCLLocationCoordinate2DForKey:@"coordinate"];
-		self.boundingMapRect = [aDecoder decodeMKMapRectForKey:@"boundingMapRect"];
 		_location = [aDecoder decodeObjectForKey:@"location"];
 	}
 	return self;
@@ -56,8 +54,7 @@ static const float kWayPointDiameter = 5.0f;
 
 - (void) encodeWithCoder:(NSCoder *)aCoder {
 	[aCoder encodeCLLocationCoordinate2D:self.coordinate forKey:@"coordinate"];
-	[aCoder encodeMKMapRect:self.boundingMapRect forKey:@"boundingMapRect"];
-	[aCoder encodeObject:self.location forKey:@"location"];
+ 	[aCoder encodeObject:self.location forKey:@"location"];
 }
 
 - (id) copyWithZone:(NSZone *)zone {
@@ -117,16 +114,13 @@ static const float kWayPointDiameter = 5.0f;
 	return _coordinate;
 }
 
+- (CLLocationDistance) radius {
+	return kWayPointDiameter;
+}
+
 - (void) setCoordinate:(CLLocationCoordinate2D)coordinate {
 	_coordinate = coordinate;
-	
-	// bounding map rect
-	MKMapPoint mapPointCenter = MKMapPointForCoordinate(_coordinate);
-	double mapPointRadius = (kWayPointDiameter/2.0f) * kWayPointDiameter;
-	MKMapPoint upperLeftMapPoint = MKMapPointMake(mapPointCenter.x - mapPointRadius, mapPointCenter.y - mapPointRadius );
-	self.boundingMapRect = MKMapRectMake( upperLeftMapPoint.x, upperLeftMapPoint.y, mapPointRadius * 2, mapPointRadius * 2);
 
-	
 	// create a new location for the new coordinate
 	_location = [[CLLocation alloc] initWithCoordinate:coordinate altitude:_location.altitude horizontalAccuracy:_location.horizontalAccuracy verticalAccuracy:_location.verticalAccuracy course:_location.course speed:_location.speed timestamp:_location.timestamp];
 	
@@ -136,7 +130,7 @@ static const float kWayPointDiameter = 5.0f;
 			[delegate zoTrackObject:self movedCoordinate:self.coordinate];
 		}
 	}
-	
 }
+
 
 @end

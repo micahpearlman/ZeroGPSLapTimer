@@ -25,56 +25,20 @@
 	return self;
 }
 
-- (BOOL)canDrawMapRect:(MKMapRect)mapRect
-             zoomScale:(MKZoomScale)zoomScale {
-	return YES;
-}
-
-- (void)drawMapRect:(MKMapRect)mapRect
-          zoomScale:(MKZoomScale)zoomScale
-          inContext:(CGContextRef)context {
-	
-	[super drawMapRect:mapRect zoomScale:zoomScale inContext:context];
-	
+- (void) createPath {
 	ZOWaypoint* waypoint = (ZOWaypoint*)self.overlay;
 	
-	CGRect rect = [self rectForMapRect:waypoint.boundingMapRect];
-	
-	UIGraphicsPushContext( context ); {
-		CGContextSetLineWidth( context, 4 );
-		CGContextSetFillColorWithColor( context, [UIColor redColor].CGColor );
-		CGContextSetStrokeColorWithColor( context, [UIColor blueColor].CGColor );
-		CGContextSetAlpha( context, 0.9 );
-		CGContextFillEllipseInRect( context, rect );
-		CGContextSetAlpha( context, 0.8 );
-		CGContextStrokeEllipseInRect( context, rect );
+	// generate bounding map
+	MKMapPoint mapPointCenter = MKMapPointForCoordinate(waypoint.coordinate);
+	double mapPointRadius = (waypoint.radius/2.0f) * waypoint.radius;
+	MKMapPoint upperLeftMapPoint = MKMapPointMake(mapPointCenter.x - mapPointRadius, mapPointCenter.y - mapPointRadius );
+	MKMapRect boundingMapRect = MKMapRectMake( upperLeftMapPoint.x, upperLeftMapPoint.y, mapPointRadius * 2, mapPointRadius * 2);
 
-	} UIGraphicsPopContext();
-
+	CGMutablePathRef path = CGPathCreateMutable();
 	
-//	if ( [session.waypoints count] > 1 ) {
-//		UIGraphicsPushContext( context ); {
-//			CGContextBeginPath( context );
-//			CGContextSetLineWidth( context, 4 );
-//			CGContextSetStrokeColorWithColor( context, [UIColor blueColor].CGColor );
-//			CGPoint point;
-//			for ( ZOWaypoint* waypoint in session.waypoints ) {
-//				point = [self pointForMapPoint:MKMapPointForCoordinate( waypoint.coordinate) ];
-//				
-//				if ( waypoint != [session.waypoints firstObject] ) {
-//					CGContextAddLineToPoint( context, point.x, point.y );
-//				} else {	// first point
-//					CGContextMoveToPoint( context, point.x, point.y );
-//				}
-//			}
-//			
-//			
-//			CGContextStrokePath( context );
-//		} UIGraphicsPopContext();
-//		
-//	}
-	
-	
+	CGRect rect = [self rectForMapRect:boundingMapRect];
+	CGPathAddEllipseInRect( path, NULL, rect );
+	self.path = path;
 }
 
 #pragma mark ZOTrackObjectDelegate
@@ -84,11 +48,11 @@
 }
 
 - (void) zoTrackObject:(id<ZOTrackObject>)trackObject movedCoordinate:(CLLocationCoordinate2D)coord {
-	[self setNeedsDisplay];
+	[self invalidatePath];
 }
 
 - (void) zoTrackObject:(id<ZOTrackObject>)trackObject isDirty:(BOOL)isDirty {
-	[self setNeedsDisplay];
+	[self invalidatePath];
 }
 
 @end

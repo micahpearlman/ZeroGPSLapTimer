@@ -13,11 +13,13 @@
 
 @property (nonatomic, assign)	CLLocationCoordinate2D coordinate;
 @property (nonatomic, assign)	MKMapRect boundingMapRect;
+@property (nonatomic, readonly) CLLocationDistance radius;
 @property (nonatomic, readonly)	CLLocation* location;
 @property (nonatomic, assign)	BOOL isSelected;
 @property (nonatomic, assign)	id<ZOTrackObjectDelegate> delegate;
 @property (nonatomic, readonly)	NSDate* timestamp;
 @property (nonatomic, readonly) CLLocationDistance altitude;
+
 
 // make delegate writeonly: http://stackoverflow.com/questions/4266197/write-only-property-in-objective-c
 - (id<ZOTrackObjectDelegate>) delegate UNAVAILABLE_ATTRIBUTE;

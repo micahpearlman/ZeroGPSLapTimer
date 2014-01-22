@@ -119,6 +119,7 @@ typedef enum  {
 			self.play.image = [UIImage imageNamed:@"pause"];
 			if ( _currentPlaybackWaypoint == nil ) {
 				_currentPlaybackWaypoint = [[_session.waypoints firstObject] copy];
+				_currentPlaybackWaypoint.boundingMapRect = _track.boundingMapRect;	// IMPORTANT: set the bounding maprect to the track bounding map rect
 				[self.mapView addOverlay:_currentPlaybackWaypoint];
 			}
 			_playbackTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/20.0 target:self selector:@selector(playbackTimer:) userInfo:nil repeats:YES];
@@ -141,9 +142,13 @@ typedef enum  {
 	_interpolatedWayPoint = [_session waypointAtTimeInterval:_currentPlaybackTime];
 
 	[_currentPlaybackWaypoint setCoordinate:_interpolatedWayPoint.coordinate];
-	self.debug.text = [NSString stringWithFormat:@"%f, %f", _interpolatedWayPoint.coordinate.latitude, _interpolatedWayPoint.coordinate.longitude];
-	
+//	self.debug.text = [NSString stringWithFormat:@"%f, %f", _interpolatedWayPoint.coordinate.latitude, _interpolatedWayPoint.coordinate.longitude];
+
+	self.debug.text = [NSString stringWithFormat:@"%f", _interpolatedWayPoint.location.mph];
 	_currentPlaybackTime = _currentPlaybackTime + timer.timeInterval;
+	
+	// update map to center
+	self.mapView.camera.centerCoordinate = _interpolatedWayPoint.coordinate;
 }
 
 
@@ -153,13 +158,10 @@ typedef enum  {
 	for ( MKAnnotationView* annotationView in views ) {
 		id<MKAnnotation> mp = [annotationView annotation];
 		if ( [mp class] == [MKUserLocation class]) {
-//			MKCoordinateRegion adjustedRegion = MKCoordinateRegionMakeWithDistance([mp coordinate], 0.0001, 0.0001);
-//			[mapView_ setRegion:adjustedRegion animated:NO];
-			[mapView_ setCenterCoordinate:[mp coordinate] zoomLevel:20 animated:NO];
-//			MKCoordinateRegion coordRegion = [mapView_ region];
-//			coordRegion.span.latitudeDelta *= 0.1;
-//			coordRegion.span.longitudeDelta *= 0.1;
-//			[mapView_ setRegion:coordRegion];
+			MKMapCamera* camera = [MKMapCamera cameraLookingAtCenterCoordinate:[mp coordinate]
+															 fromEyeCoordinate:[mp coordinate]
+																   eyeAltitude:50];
+			[self.mapView setCamera:camera];
 		}
 	}
 }
@@ -176,7 +178,12 @@ typedef enum  {
 		return sessionRenderer;
 	} else if ( [overlay class] == [ZOWaypoint class] ) {
 		ZOWaypointRenderer* waypointRenderer = [[ZOWaypointRenderer alloc] initWithOverlay:overlay];
+		waypointRenderer.fillColor = [UIColor redColor];
 		return waypointRenderer;
+	} else if ( [overlay class] == [MKCircle class] ) {
+		MKCircleRenderer* circleRenderer = [[MKCircleRenderer alloc] initWithOverlay:overlay];
+		circleRenderer.fillColor = [UIColor redColor];
+		return circleRenderer;		
 	}
 	
 	return nil;

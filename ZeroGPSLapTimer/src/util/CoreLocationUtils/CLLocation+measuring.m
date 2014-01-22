@@ -72,6 +72,12 @@ BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLCoordina
 
 @implementation CLLocation(measuring)
 
+@dynamic mph;
+
+- (double) mph {
+	return self.speed * 2.23694;
+}
+
 + (CLLocationDistance) distanceFromCoordinate:(CLLocationCoordinate2D)fromCoord toCoordinate:(CLLocationCoordinate2D) toCoord
 {
     CLLocation *location = [[CLLocation alloc] initWithLatitude:fromCoord.latitude longitude:fromCoord.longitude];
@@ -345,11 +351,14 @@ BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLCoordina
 	NSTimeInterval scaledTimeInterval = deltaTimeInterval * factor;
 	NSDate* interpolatedTimestamp = [self.timestamp dateByAddingTimeInterval:scaledTimeInterval];
 	
+	//TODO: interpolate course and speed
 	
 	CLLocation* interpolatedLocation = [[CLLocation alloc] initWithCoordinate:interpolatedCoordinate
 																	 altitude:interpolatedAltitude
 														   horizontalAccuracy:self.horizontalAccuracy
 															 verticalAccuracy:self.verticalAccuracy
+																	   course:self.course
+																		speed:self.speed
 																	timestamp:interpolatedTimestamp];
 	
 	return interpolatedLocation;
