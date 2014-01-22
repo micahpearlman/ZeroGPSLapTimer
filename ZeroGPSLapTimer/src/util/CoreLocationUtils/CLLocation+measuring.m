@@ -339,26 +339,40 @@ BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLCoordina
 
 // returns a new location interpolated via time of a second location
 - (CLLocation*) timeInterpolateToLocation:(CLLocation*)location factor:(double)factor {
+	
+	// coordinate
 	CLLocationCoordinate2D deltaCoordinate = CLLocationCoordinate2DSubstract( location.coordinate, self.coordinate );
 	CLLocationCoordinate2D scaledDeltaCoordinate = CLLocationCoordinate2DMultiply( deltaCoordinate, factor );
 	CLLocationCoordinate2D interpolatedCoordinate = CLLocationCoordinate2DAdd( self.coordinate, scaledDeltaCoordinate );
 	
+	// altitude
 	CLLocationDistance deltaAltitude = location.altitude - self.altitude;
 	CLLocationDistance scaledDeltaAltitude = deltaAltitude * factor;
 	CLLocationDistance interpolatedAltitude = self.altitude + scaledDeltaAltitude;
 	
+	// time
 	NSTimeInterval deltaTimeInterval = [location.timestamp timeIntervalSinceDate:self.timestamp];
 	NSTimeInterval scaledTimeInterval = deltaTimeInterval * factor;
 	NSDate* interpolatedTimestamp = [self.timestamp dateByAddingTimeInterval:scaledTimeInterval];
 	
-	//TODO: interpolate course and speed
+	// speed
+	CLLocationSpeed deltaSpeed = location.speed - self.speed;
+	CLLocationSpeed scaledDeltaSpeed = deltaSpeed * factor;
+	CLLocationSpeed interpolatedSpeed = location.speed + deltaSpeed;
+	
+	// course
+	CLLocationDirection deltaCourse = location.course - self.course;
+	CLLocationDirection scaledDeltaCourse = deltaCourse * factor;
+	CLLocationDirection interpolatedCourse = location.course + scaledDeltaCourse;
+	
+
 	
 	CLLocation* interpolatedLocation = [[CLLocation alloc] initWithCoordinate:interpolatedCoordinate
 																	 altitude:interpolatedAltitude
 														   horizontalAccuracy:self.horizontalAccuracy
 															 verticalAccuracy:self.verticalAccuracy
-																	   course:self.course
-																		speed:self.speed
+																	   course:interpolatedCourse
+																		speed:interpolatedSpeed
 																	timestamp:interpolatedTimestamp];
 	
 	return interpolatedLocation;

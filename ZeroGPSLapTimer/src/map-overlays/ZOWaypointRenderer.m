@@ -34,10 +34,11 @@
 	MKMapPoint upperLeftMapPoint = MKMapPointMake(mapPointCenter.x - mapPointRadius, mapPointCenter.y - mapPointRadius );
 	MKMapRect boundingMapRect = MKMapRectMake( upperLeftMapPoint.x, upperLeftMapPoint.y, mapPointRadius * 2, mapPointRadius * 2);
 
+	// create circle
 	CGMutablePathRef path = CGPathCreateMutable();
-	
 	CGRect rect = [self rectForMapRect:boundingMapRect];
 	CGPathAddEllipseInRect( path, NULL, rect );
+	
 	self.path = path;
 }
 
