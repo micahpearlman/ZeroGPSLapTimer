@@ -26,6 +26,7 @@ typedef enum {
 	id<ZOTrackObject>				_selectedTrackObject;
 	ZOTrack*						_track;
 	NSDictionary*					_trackEditInfo;
+	BOOL							_isNewTrack;
 }
 
 @end
@@ -60,9 +61,12 @@ typedef enum {
 		_track = [ZOTrack unarchiveFromTrackInfo:[ZOTrackCollection instance].currentTrackInfo];
 		[self.mapView addOverlay:_track];
 		[self.mapView addOverlays:_track.trackObjects];
+		self.title = _track.name;
+		_isNewTrack = NO;
 	} else {
 		// creating a new track so start off where the user is
 		// TODO: add search
+		_isNewTrack = YES;
 		_locationManager = [[CLLocationManager alloc] init];
 		[_locationManager setDelegate:self];
 		[_locationManager setDistanceFilter:kCLDistanceFilterNone];
@@ -272,10 +276,14 @@ typedef enum {
 }
 
 - (IBAction)onSave:(id)sender {
-	// get track name
-	UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Track Name" message:@"Enter Track Name:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
-	alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
-	[alertView show];
+	if ( _isNewTrack ) {
+		// get track name
+		UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Track Name" message:@"Enter Track Name:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+		alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+		[alertView show];
+	} else {
+		[_track archive];	// save over existing track
+	}
 }
 
 #pragma mark UIAlertViewDelegate
