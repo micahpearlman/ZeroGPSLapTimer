@@ -39,6 +39,7 @@ typedef enum {
 @property (nonatomic, assign)	NSTimeInterval playbackTime;
 @property (nonatomic, assign)	NSTimeInterval playbackTimeInterval;	// NOTE: need to pause and unpause for this property to take effect
 @property (nonatomic, assign)	BOOL isPlaybackPaused;
+@property (nonatomic, readonly)	NSArray* laps;	// ZOLaps
 
 // make delegate writeonly: http://stackoverflow.com/questions/4266197/write-only-property-in-objective-c
 - (id<ZOTrackObjectDelegate>) delegate UNAVAILABLE_ATTRIBUTE;

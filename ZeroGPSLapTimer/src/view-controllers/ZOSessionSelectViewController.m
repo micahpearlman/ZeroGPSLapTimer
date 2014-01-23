@@ -7,6 +7,7 @@
 //
 
 #import "ZOSessionSelectViewController.h"
+#import "ZOLapsViewController.h"
 #import "ZOTrackCollection.h"
 
 @interface ZOSessionSelectViewController () {
@@ -117,6 +118,10 @@
 	return UITableViewCellEditingStyleDelete;
 }
 
+- (void)tableView:(UITableView *)aTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+	NSLog(@"selected row: %ld", (long)[indexPath row] );
+}
+
 
 /*
 // Override to support rearranging the table view.
@@ -140,17 +145,28 @@
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-	NSIndexPath* selectedIndexPath = [self.tableView indexPathForSelectedRow];
-	if ( [selectedIndexPath row] == [_sessionInfos count] ) {	// new session
-		// we are creating a new track so make sure to null out selected track
-		[ZOTrackCollection instance].currentTrack.currentSessionInfo = nil;
-	} else {
+	NSIndexPath* selectedIndexPath = [self.tableView indexPathForCell:sender];
+	NSInteger row = [selectedIndexPath row];
 
-		[ZOTrackCollection instance].currentTrack.currentSessionInfo = [_sessionInfos objectAtIndex:[selectedIndexPath row]];
+	if ( [segue.identifier isEqualToString:@"lap-segue"] ) {
+		// update the track on the currently selected session
+		[ZOTrackCollection instance].currentTrack.currentSessionInfo = [_sessionInfos objectAtIndex:row];
+		
+		ZOLapsViewController* lapsViewController = (ZOLapsViewController*)segue.destinationViewController;
+		lapsViewController.laps = [ZOTrackCollection instance].currentTrack.currentSession.laps;
+	} else {	// show map
+		// Pass the selected object to the new view controller.
+		if ( [selectedIndexPath row] == [_sessionInfos count] ) {	// new session
+			// we are creating a new track so make sure to null out selected track
+			[ZOTrackCollection instance].currentTrack.currentSessionInfo = nil;
+		} else {
+			
+			[ZOTrackCollection instance].currentTrack.currentSessionInfo = [_sessionInfos objectAtIndex:row];
+			
+		}
 		
 	}
+    // Get the new view controller using [segue destinationViewController].
 
 }
 

@@ -17,7 +17,11 @@
 @property (nonatomic, assign)	MKMapRect boundingMapRect;
 @property (nonatomic, assign)	BOOL isSelected;
 @property (nonatomic, assign)	id<ZOTrackObjectDelegate> delegate;
+@property (nonatomic, readonly)	NSTimeInterval time;
+@property (nonatomic, readonly) NSString* timeString;
+
 // make delegate writeonly: http://stackoverflow.com/questions/4266197/write-only-property-in-objective-c
 - (id<ZOTrackObjectDelegate>) delegate UNAVAILABLE_ATTRIBUTE;
 
+- (id) initWithWaypoints:(NSArray*)waypoints coordinate:(CLLocationCoordinate2D)coordinate_ boundingMapRect:(MKMapRect)boundingMapRect_;
 @end

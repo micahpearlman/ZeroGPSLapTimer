@@ -125,15 +125,16 @@
                                     <segue destination="bEy-hP-sRe" kind="push" id="a90-O1-NGT"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="session-cell" id="d6b-S5-hwy">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" accessoryType="detailDisclosureButton" indentationWidth="10" reuseIdentifier="session-cell" id="d6b-S5-hwy">
                                 <rect key="frame" x="0.0" y="130" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="d6b-S5-hwy" id="WIu-Vl-cCO">
-                                    <rect key="frame" x="0.0" y="0.0" width="287" height="43"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="253" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
                                     <segue destination="bEy-hP-sRe" kind="push" id="bko-Q7-wl5"/>
+                                    <segue destination="miB-ku-Rhc" kind="push" identifier="lap-segue" trigger="accessoryAction" id="W3c-m8-IFR"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -146,7 +147,36 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HWz-55-JUT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1524" y="54"/>
+            <point key="canvasLocation" x="1413" y="33"/>
+        </scene>
+        <!--Laps View Controller-->
+        <scene sceneID="AUq-A3-skg">
+            <objects>
+                <tableViewController id="miB-ku-Rhc" customClass="ZOLapsViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="IuJ-Iw-0bA">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="lap-cell" id="6Sx-xP-aZQ">
+                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Sx-xP-aZQ" id="ODo-St-G3h">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="miB-ku-Rhc" id="pnk-Ch-H62"/>
+                            <outlet property="delegate" destination="miB-ku-Rhc" id="wqy-gq-znK"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="t38-i3-JCh"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="AiY-Hv-NLA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1965" y="-517"/>
         </scene>
         <!--Session Map View Controller-->
         <scene sceneID="xf3-X4-72e">

@@ -11,6 +11,7 @@
 #import "ZOWaypoint.h"
 #import "CLLocation+measuring.h"
 #import "ZOTrack.h"
+#import "ZOLap.h"
 
 @interface ZOSession () {
 	NSMutableArray* _waypoints;	// ZOLocations
@@ -18,6 +19,7 @@
 	NSTimer*		_playbackTimer;
 	ZOSessionState	_state;
 	ZOWaypoint*		_waypointCursor;
+	NSMutableArray*	_laps;
 }
 
 @end
@@ -33,6 +35,7 @@
 @dynamic totalTime;
 @dynamic delegate;
 @dynamic isPlaybackPaused;
+@dynamic laps;
 
 - (id) init {
 	if ( self = [super init] ) {
@@ -278,6 +281,57 @@
 														 repeats:YES];
 		
 	}
+}
+
+#pragma mark Laps
+- (NSArray*) laps {
+	if ( _laps == nil ) {
+		_laps = [[NSMutableArray alloc] init];
+		const NSTimeInterval dt = 1.0/20.0;
+		const NSTimeInterval totalTime = self.totalTime;
+		ZOSessionState state = ZOSessionState_Pits;
+		ZOWaypoint* previousWaypoint = [self.waypoints firstObject];
+		NSMutableArray* lapWayPoints = nil;
+		for ( NSTimeInterval time = 0; time < totalTime; time += dt ) {
+			ZOWaypoint* newWaypointCursor = [self waypointAtTimeInterval:time];
+			
+			if ( newWaypointCursor == nil ) {
+				break;	// at the end of the lap
+			}
+			
+			// debug killme
+//			ZOWaypoint* first = [self.waypoints firstObject];
+//			{
+//				CLCoordinateLineSegment line;
+//				
+//				line.start = first.coordinate;
+//				line.end = newWaypointCursor.coordinate;
+//				
+//				CLLocationDistance killme = CLCoordinateLineSegmentDistance( line );
+//				NSLog(@"length: %f", killme);
+//			}
+			
+			// check for intersection
+			ZOWaypoint* intersect = [self checkWaypointsIntersectTrackObjects:previousWaypoint end:newWaypointCursor];
+			if ( intersect ) {
+				if ( state == ZOSessionState_Pits ) {	// if first laps
+					state = ZOSessionState_StartLap;
+					lapWayPoints = [[NSMutableArray alloc] init];
+					[lapWayPoints addObject:intersect];
+				} else if ( state == ZOSessionState_StartLap ) {	// finished lap
+					[lapWayPoints addObject:intersect];
+					ZOLap* lap = [[ZOLap alloc] initWithWaypoints:lapWayPoints coordinate:self.coordinate boundingMapRect:self.boundingMapRect];
+					[_laps addObject:lap];
+				}
+			} else if ( state == ZOSessionState_StartLap ) {	// currently in a lap so add waypoint to lap
+				[lapWayPoints addObject:newWaypointCursor];
+			}
+
+			previousWaypoint = newWaypointCursor;
+		}
+	}
+	
+	return _laps;
 }
 
 

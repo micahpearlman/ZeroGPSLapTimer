@@ -26,6 +26,18 @@
 @synthesize boundingMapRect;
 @dynamic delegate;
 @dynamic isSelected;
+@dynamic time;
+@dynamic timeString;
+
+- (id) initWithWaypoints:(NSArray*)waypoints coordinate:(CLLocationCoordinate2D)coordinate_ boundingMapRect:(MKMapRect)boundingMapRect_
+ {
+	if ( self = [super init] ) {
+		self.coordinate = coordinate_;
+		self.boundingMapRect = boundingMapRect_;
+		_waypoints = [[NSMutableArray alloc] initWithArray:waypoints];
+	}
+	return self;
+}
 
 - (id) initWithCoder:(NSCoder *)aDecoder {
 	if ( self = [super init] ) {
@@ -63,6 +75,20 @@
 			[delegate zoTrackObject:self isSelected:isSelected];
 		}
 	}
+}
+
+- (NSTimeInterval) time {
+	ZOWaypoint* firstWaypoint = [_waypoints firstObject];
+	ZOWaypoint* lastWaypoint = [_waypoints lastObject];
+	return [lastWaypoint.timestamp timeIntervalSinceDate:firstWaypoint.timestamp];
+}
+
+- (NSString*) timeString {
+	NSTimeInterval lapTime = self.time;
+	NSTimeInterval minutes = lapTime / 60.0;
+	NSTimeInterval seconds = fmod( lapTime, 60.0);
+	return [NSString stringWithFormat:@"%d:%4.2f", (int)minutes, seconds];
+
 }
 
 @end
