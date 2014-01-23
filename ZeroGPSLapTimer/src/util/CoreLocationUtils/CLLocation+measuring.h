@@ -58,9 +58,11 @@ extern CLLocationCoordinate2D CLLocationCoordinate2DSubstract( CLLocationCoordin
 extern double CLLocationCoordinate2DCrossProduct( CLLocationCoordinate2D p1, CLLocationCoordinate2D p2 );
 extern CLLocationCoordinate2D CLLocationCoordinate2DAdd( CLLocationCoordinate2D p1, CLLocationCoordinate2D p2 );
 extern CLLocationCoordinate2D CLLocationCoordinate2DMultiply( CLLocationCoordinate2D p1, double factor );
-extern BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLCoordinateLineSegment l2, CLLocationCoordinate2D* intesection );
 extern double CLLocationSpeedToMilesPerHour( CLLocationSpeed speed );
 
+/// CLCoordinateLineSegment functions
+extern BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLCoordinateLineSegment l2, CLLocationCoordinate2D* intesection );
+extern CLLocationDistance CLCoordinateLineSegmentDistance( CLCoordinateLineSegment line );
 
 /*
  *  CLLocation (measuring) extension 
@@ -105,7 +107,7 @@ extern double CLLocationSpeedToMilesPerHour( CLLocationSpeed speed );
 - (CLLocation*) newLocationAfterMovingAtSpeed:(CLLocationSpeed)speed duration:(NSTimeInterval)duration direction:(CLLocationDirection)direction;
 
 // returns a new location interpolated via time of a second location
-- (CLLocation*) timeInterpolateToLocation:(CLLocation*)location factor:(double)factor;
+- (CLLocation*) interpolateToLocation:(CLLocation*)location factor:(double)factor;
 
 @property (nonatomic,readonly) double mph;
 

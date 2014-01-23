@@ -74,7 +74,7 @@ static const float kWayPointDiameter = 5.5f;
 #pragma Interpolation
 
 - (ZOWaypoint*) timeInterpolateToWayPoint:(ZOWaypoint*)waypoint factor:(double)factor {
-	CLLocation* interpolatedLocation = [self.location timeInterpolateToLocation:waypoint.location factor:factor];
+	CLLocation* interpolatedLocation = [self.location interpolateToLocation:waypoint.location factor:factor];
 	ZOWaypoint* interpolatedWaypoint = [[ZOWaypoint alloc] initWithCLLocation:interpolatedLocation];
 	return interpolatedWaypoint;
 }
@@ -122,7 +122,13 @@ static const float kWayPointDiameter = 5.5f;
 	_coordinate = coordinate;
 
 	// create a new location for the new coordinate
-	_location = [[CLLocation alloc] initWithCoordinate:coordinate altitude:_location.altitude horizontalAccuracy:_location.horizontalAccuracy verticalAccuracy:_location.verticalAccuracy course:_location.course speed:_location.speed timestamp:_location.timestamp];
+	_location = [[CLLocation alloc] initWithCoordinate:coordinate
+											  altitude:_location.altitude
+									horizontalAccuracy:_location.horizontalAccuracy
+									  verticalAccuracy:_location.verticalAccuracy
+												course:_location.course
+												 speed:_location.speed
+											 timestamp:_location.timestamp];
 	
 	// inform any delegates
 	for ( id<ZOTrackObjectDelegate> delegate in _delegates ) {

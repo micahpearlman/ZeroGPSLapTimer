@@ -31,6 +31,7 @@ typedef enum  {
 	NSDictionary*					_trackEditInfo;
 	ZOSessionMapViewControllerState	_state;
 	ZOWaypoint*						_playbackCursor;
+	NSDate*							_startLapTimeStamp;
 }
 
 @end
@@ -45,7 +46,6 @@ typedef enum  {
 	self = [super initWithCoder:aDecoder];
 	if ( self ) {
 		self.hidesBottomBarWhenPushed = YES;
-//		_currentPlaybackTime = 0;
 	}
 	return self;
 }
@@ -121,7 +121,7 @@ typedef enum  {
 				_playbackCursor.boundingMapRect = _track.boundingMapRect;	// IMPORTANT: set the bounding maprect to the track bounding map rect
 				[self.mapView addOverlay:_playbackCursor];
 			}
-			[_session startPlaybackAtStartTime:0
+			[_session startPlaybackAtStartTime:10	//HACKHACK: starting at 10 seconds
 							  withTimeInterval:1.0/20.0
 									  andScale:1.0];
  			break;
@@ -214,21 +214,23 @@ typedef enum  {
 
 #pragma mark ZOSessionStateDelegate
 
-- (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atLocation:(ZOWaypoint*)location {
-	
-	if ( to == ZOSessionState_Lapping ) {
-		self.lapTime.text = @"LAPPING";
-	} else {
-		self.lapTime.text = @"OFF TRACK";
+- (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atWaypoint:(ZOWaypoint*)waypoint {
+
+	if ( to == ZOSessionState_StartLap ) {
+		_startLapTimeStamp = waypoint.timestamp;
 	}
 }
 
 - (void) zoSession:(ZOSession*)session playbackCursorAtWaypoint:(ZOWaypoint*)waypoint {
 	
 	// update laptime label
-	NSTimeInterval minutes = _session.playbackTime / 60.0;
-	NSTimeInterval seconds = fmod( _session.playbackTime, 60.0);
-	self.lapTime.text = [NSString stringWithFormat:@"%d:%4.2f", (int)minutes, seconds];
+	if ( _session.state == ZOSessionState_StartLap ) {
+		NSTimeInterval lapTime = [waypoint.timestamp timeIntervalSinceDate:_startLapTimeStamp];
+		NSTimeInterval minutes = lapTime / 60.0;
+		NSTimeInterval seconds = fmod( lapTime, 60.0);
+		self.lapTime.text = [NSString stringWithFormat:@"%d:%4.2f", (int)minutes, seconds];
+		
+	}
 	
 	// update speed label
 	self.debug.text = [NSString stringWithFormat:@"%f", waypoint.location.mph];

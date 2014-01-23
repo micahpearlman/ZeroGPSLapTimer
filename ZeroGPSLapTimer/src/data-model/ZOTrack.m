@@ -122,7 +122,7 @@
 
 - (ZOSession*) addSessionAtDate:(NSDate*)time {
 
-	NSDictionary* newSessionInfo = [ZOSession newSessionInfoAtDate:time];
+	NSDictionary* newSessionInfo = [ZOSession newSessionInfoAtDate:time track:self];
 	[_sessionInfos addObject:newSessionInfo];
 	
 	ZOSession* newSession = [[ZOSession alloc] initWithCoordinate:self.coordinate
@@ -157,6 +157,7 @@
 - (ZOSession*) currentSession {
 	if ( self.currentSessionInfo && _currentSession == nil ) {
 		_currentSession = [ZOSession unarchiveFromSessionInfo:self.currentSessionInfo];
+		_currentSession.track = self;
 	}
 	return _currentSession;
 }

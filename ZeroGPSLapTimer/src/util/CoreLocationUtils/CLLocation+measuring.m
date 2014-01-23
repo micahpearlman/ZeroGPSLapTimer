@@ -69,10 +69,14 @@ BOOL CLCoordinateLineSegmentIntersecting( CLCoordinateLineSegment l1, CLCoordina
 	}
 }
 
-extern double CLLocationSpeedToMilesPerHour( CLLocationSpeed speed ) {
+double CLLocationSpeedToMilesPerHour( CLLocationSpeed speed ) {
 	return speed * 2.23694;
 }
 
+
+CLLocationDistance CLCoordinateLineSegmentDistance( CLCoordinateLineSegment line ) {
+	return [CLLocation distanceFromCoordinate:line.start toCoordinate:line.end];
+}
 
 @implementation CLLocation(measuring)
 
@@ -342,7 +346,7 @@ extern double CLLocationSpeedToMilesPerHour( CLLocationSpeed speed ) {
 }
 
 // returns a new location interpolated via time of a second location
-- (CLLocation*) timeInterpolateToLocation:(CLLocation*)location factor:(double)factor {
+- (CLLocation*) interpolateToLocation:(CLLocation*)location factor:(double)factor {
 	
 	// coordinate
 	CLLocationCoordinate2D deltaCoordinate = CLLocationCoordinate2DSubstract( location.coordinate, self.coordinate );

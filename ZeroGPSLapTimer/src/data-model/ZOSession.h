@@ -14,8 +14,11 @@
 @class ZOTrack;
 
 typedef enum {
-	ZOSessionState_Offtrack,
-	ZOSessionState_Lapping
+	ZOSessionState_Undefined,
+	ZOSessionState_Offtrack,	// off the track bounding area
+	ZOSessionState_Pits,
+	ZOSessionState_StartLap,
+	ZOSessionState_EndLap
 } ZOSessionState;
 
 @protocol ZOSessionStateDelegate;
@@ -52,7 +55,7 @@ typedef enum {
 - (void) archive;
 + (ZOSession*) unarchiveFromSessionInfo:(NSDictionary*)sessionInfo;
 - (void) deleteFromDisk;
-+ (NSDictionary*) newSessionInfoAtDate:(NSDate*)date;
++ (NSDictionary*) newSessionInfoAtDate:(NSDate*)date track:(ZOTrack*)track;
 
 /// playback
 - (void) startPlaybackAtStartTime:(NSTimeInterval)startTime withTimeInterval:(NSTimeInterval)timeInterval andScale:(double)scale;
@@ -63,6 +66,6 @@ typedef enum {
 
 @protocol ZOSessionStateDelegate <NSObject>
 @required
-- (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atLocation:(ZOWaypoint*)location;
+- (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atWaypoint:(ZOWaypoint*)location;
 - (void) zoSession:(ZOSession*)session playbackCursorAtWaypoint:(ZOWaypoint*)waypoint;
 @end
