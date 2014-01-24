@@ -128,4 +128,17 @@
 	return _trackInfos;
 }
 
+- (NSDictionary*) trackAtCoordinate:(CLLocationCoordinate2D)coordinate {
+	MKMapPoint mapPoint = MKMapPointForCoordinate( coordinate );
+	for ( NSDictionary* trackInfo in _trackInfos ) {
+		NSDictionary* boundingMapRectDictionary = [trackInfo objectForKey:@"bounding-map-rect"];
+		MKMapRect mapRect = [boundingMapRectDictionary MKMapRect];
+		if ( MKMapRectContainsPoint( mapRect, mapPoint ) ) {
+			return trackInfo;
+		}
+		
+	}
+	return nil;
+}
+
 @end

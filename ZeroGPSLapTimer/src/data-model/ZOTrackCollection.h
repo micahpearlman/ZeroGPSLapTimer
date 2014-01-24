@@ -17,11 +17,13 @@
 
 + (ZOTrackCollection*)instance;
 
+/// track info management
 - (NSDictionary*) createTrackInfoNamed:(NSString*)name withBoundingMapRect:(MKMapRect)boundingMapRect;
 - (void) removeTrackInfoNamed:(NSString*)name;
 - (void) removeTrackInfo:(NSDictionary*)trackInfo;
 - (NSDictionary*) findTrackInfoNamed:(NSString*)name;
 
-
+/// query
+- (NSDictionary*) trackAtCoordinate:(CLLocationCoordinate2D)coordinate;
 
 @end
