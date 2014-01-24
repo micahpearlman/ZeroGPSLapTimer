@@ -299,17 +299,6 @@
 				break;	// at the end of the lap
 			}
 			
-			// debug killme
-//			ZOWaypoint* first = [self.waypoints firstObject];
-//			{
-//				CLCoordinateLineSegment line;
-//				
-//				line.start = first.coordinate;
-//				line.end = newWaypointCursor.coordinate;
-//				
-//				CLLocationDistance killme = CLCoordinateLineSegmentDistance( line );
-//				NSLog(@"length: %f", killme);
-//			}
 			
 			// check for intersection
 			ZOWaypoint* intersect = [self checkWaypointsIntersectTrackObjects:previousWaypoint end:newWaypointCursor];
@@ -322,6 +311,10 @@
 					[lapWayPoints addObject:intersect];
 					ZOLap* lap = [[ZOLap alloc] initWithWaypoints:lapWayPoints coordinate:self.coordinate boundingMapRect:self.boundingMapRect];
 					[_laps addObject:lap];
+					
+					// restart lapWaypoint
+					[lapWayPoints removeAllObjects];
+					[lapWayPoints addObject:intersect];
 				}
 			} else if ( state == ZOSessionState_StartLap ) {	// currently in a lap so add waypoint to lap
 				[lapWayPoints addObject:newWaypointCursor];

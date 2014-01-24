@@ -121,7 +121,7 @@ typedef enum  {
 				_playbackCursor.boundingMapRect = _track.boundingMapRect;	// IMPORTANT: set the bounding maprect to the track bounding map rect
 				[self.mapView addOverlay:_playbackCursor];
 			}
-			[_session startPlaybackAtStartTime:10	//HACKHACK: starting at 10 seconds
+			[_session startPlaybackAtStartTime:0
 							  withTimeInterval:1.0/20.0
 									  andScale:1.0];
  			break;
@@ -228,7 +228,7 @@ typedef enum  {
 		NSTimeInterval lapTime = [waypoint.timestamp timeIntervalSinceDate:_startLapTimeStamp];
 		NSTimeInterval minutes = lapTime / 60.0;
 		NSTimeInterval seconds = fmod( lapTime, 60.0);
-		self.lapTime.text = [NSString stringWithFormat:@"%d:%4.2f", (int)minutes, seconds];
+		self.lapTime.text = [NSString stringWithFormat:@"%02d:%04.2f", (int)minutes, seconds];
 		
 	}
 	

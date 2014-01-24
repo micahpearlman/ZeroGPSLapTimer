@@ -37,7 +37,7 @@ CLLocationCoordinate2D CLLocationCoordinate2DSubstract( CLLocationCoordinate2D p
 }
 
 double CLLocationCoordinate2DCrossProduct( CLLocationCoordinate2D p1, CLLocationCoordinate2D p2 ) {
-	double result = (p1.latitude * p2.longitude) - (p1.longitude - p2.latitude);
+	double result = (p1.latitude * p2.longitude) - (p1.longitude * p2.latitude);
 	return result;
 }
 

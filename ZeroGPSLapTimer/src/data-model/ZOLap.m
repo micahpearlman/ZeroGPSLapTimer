@@ -87,7 +87,7 @@
 	NSTimeInterval lapTime = self.time;
 	NSTimeInterval minutes = lapTime / 60.0;
 	NSTimeInterval seconds = fmod( lapTime, 60.0);
-	return [NSString stringWithFormat:@"%d:%4.2f", (int)minutes, seconds];
+	return [NSString stringWithFormat:@"%02d:%04.2f", (int)minutes, seconds];
 
 }
 
