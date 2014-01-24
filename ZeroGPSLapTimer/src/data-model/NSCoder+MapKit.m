@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Micah Pearlman. All rights reserved.
 //
 
-#import "NSCoder+ZOTrackObject.h"
+#import "NSCoder+MapKit.h"
 
-@implementation NSCoder (ZOTrackObject)
+@implementation NSCoder (MapKit)
 
 #pragma mark CLLocationCoordinate2D
 - (void) encodeCLLocationCoordinate2D:(CLLocationCoordinate2D)coordinate forKey:(NSString*)key {

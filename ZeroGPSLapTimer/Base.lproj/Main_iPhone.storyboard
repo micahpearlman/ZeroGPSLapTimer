@@ -4,10 +4,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
-        <!--Map View Controller - First-->
+        <!--Lap Time View Controller - First-->
         <scene sceneID="W3I-pn-N6e">
             <objects>
-                <viewController title="First" id="CZ4-MO-1fc" customClass="ZOMapViewController" sceneMemberID="viewController">
+                <viewController title="First" id="CZ4-MO-1fc" customClass="ZOLapTimeViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wCp-Ds-UJ7"/>
                         <viewControllerLayoutGuide type="bottom" id="T81-0N-xMl"/>
@@ -16,32 +16,63 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="prd-c9-Rgs">
-                                <rect key="frame" x="0.0" y="-48" width="320" height="568"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <connections>
-                                    <outlet property="delegate" destination="CZ4-MO-1fc" id="QkJ-de-4fz"/>
-                                </connections>
-                            </mapView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Current Coordinates" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ahO-8E-wir">
-                                <rect key="frame" x="20" y="20" width="280" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00.00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vd8-7Y-v7y">
+                                <rect key="frame" x="19" y="87" width="280" height="83"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="70"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mTi-gr-3Bt">
+                                <rect key="frame" x="228" y="57" width="71" height="22"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="18"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Track Not Found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FAM-sq-zTh">
+                                <rect key="frame" x="0.0" y="20" width="320" height="17"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                <fontDescription key="fontDescription" name="STHeitiTC-Medium" family="Heiti TC" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="8Yc-pd-if8">
+                                <rect key="frame" x="0.0" y="178" width="320" height="340"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="8Yc-pd-if8" firstAttribute="leading" secondItem="2VE-Yg-loa" secondAttribute="leading" id="1Fn-wy-mfX"/>
+                            <constraint firstItem="T81-0N-xMl" firstAttribute="top" secondItem="8Yc-pd-if8" secondAttribute="bottom" constant="1" id="7TR-sk-atD"/>
+                            <constraint firstItem="mTi-gr-3Bt" firstAttribute="leading" secondItem="2VE-Yg-loa" secondAttribute="leading" constant="228" id="8W0-da-kP9"/>
+                            <constraint firstItem="vd8-7Y-v7y" firstAttribute="leading" secondItem="2VE-Yg-loa" secondAttribute="leading" constant="19" id="BIt-n8-G6S"/>
+                            <constraint firstItem="mTi-gr-3Bt" firstAttribute="top" secondItem="FAM-sq-zTh" secondAttribute="bottom" constant="20" id="FzS-Rn-O98"/>
+                            <constraint firstAttribute="trailing" secondItem="mTi-gr-3Bt" secondAttribute="trailing" constant="21" id="Gi9-dj-xHK"/>
+                            <constraint firstItem="vd8-7Y-v7y" firstAttribute="top" secondItem="mTi-gr-3Bt" secondAttribute="bottom" constant="8" id="eWq-1d-RJc"/>
+                            <constraint firstItem="8Yc-pd-if8" firstAttribute="top" secondItem="vd8-7Y-v7y" secondAttribute="bottom" constant="8" id="ekA-6i-zea"/>
+                            <constraint firstItem="FAM-sq-zTh" firstAttribute="top" secondItem="wCp-Ds-UJ7" secondAttribute="bottom" id="fRB-NU-hhR"/>
+                            <constraint firstItem="FAM-sq-zTh" firstAttribute="leading" secondItem="2VE-Yg-loa" secondAttribute="leading" id="gck-p0-Llp"/>
+                            <constraint firstItem="8Yc-pd-if8" firstAttribute="top" secondItem="vd8-7Y-v7y" secondAttribute="bottom" constant="8" id="ivN-Sf-vnO"/>
+                            <constraint firstAttribute="trailing" secondItem="vd8-7Y-v7y" secondAttribute="trailing" constant="21" id="kcO-up-QRS"/>
+                            <constraint firstAttribute="trailing" secondItem="8Yc-pd-if8" secondAttribute="trailing" id="n5V-vY-7Ee"/>
+                            <constraint firstAttribute="trailing" secondItem="FAM-sq-zTh" secondAttribute="trailing" id="pgM-f9-hcC"/>
+                            <constraint firstItem="vd8-7Y-v7y" firstAttribute="top" secondItem="mTi-gr-3Bt" secondAttribute="bottom" constant="8" id="zTa-pJ-voO"/>
+                        </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="First" image="first" id="u1e-5L-l1D"/>
+                    <tabBarItem key="tabBarItem" title="First" image="stop-watch" id="u1e-5L-l1D"/>
                     <connections>
-                        <outlet property="currentCoordinateLabel" destination="ahO-8E-wir" id="JaX-Hd-eF5"/>
-                        <outlet property="mapView" destination="prd-c9-Rgs" id="xpm-H0-GIZ"/>
+                        <outlet property="currentLapTime" destination="vd8-7Y-v7y" id="K4l-Mf-Wmq"/>
+                        <outlet property="previousLapTime" destination="mTi-gr-3Bt" id="fik-DC-t4p"/>
+                        <outlet property="tableView" destination="8Yc-pd-if8" id="PE1-bC-fU7"/>
+                        <outlet property="trackName" destination="FAM-sq-zTh" id="tVK-LL-oJF"/>
+                        <outlet property="view" destination="2VE-Yg-loa" id="G8M-XW-wba"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qh2-T1-AhA" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="653" y="-138"/>
+            <point key="canvasLocation" x="628" y="-98"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="Vex-rW-GRa">
@@ -355,6 +386,7 @@
         <image name="record" width="35" height="35"/>
         <image name="rewind" width="35" height="35"/>
         <image name="save" width="60" height="60"/>
+        <image name="stop-watch" width="35" height="35"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

@@ -31,10 +31,12 @@
 		FAADF4571869375500F301B7 /* ZOGPSExternalVenus.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4561869375500F301B7 /* ZOGPSExternalVenus.m */; };
 		FAB03EF81881F486007BD08D /* ZOTrackCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB03EF71881F486007BD08D /* ZOTrackCollection.m */; };
 		FAB03EFB18823895007BD08D /* ZOSessionSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB03EFA18823895007BD08D /* ZOSessionSelectViewController.m */; };
-		FAB03F04188242E8007BD08D /* NSCoder+ZOTrackObject.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB03EFD188242E8007BD08D /* NSCoder+ZOTrackObject.m */; };
+		FAB03F04188242E8007BD08D /* NSCoder+MapKit.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB03EFD188242E8007BD08D /* NSCoder+MapKit.m */; };
 		FAB03F05188242E8007BD08D /* ZOStartFinishLine.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB03EFF188242E8007BD08D /* ZOStartFinishLine.m */; };
 		FAB03F06188242E8007BD08D /* ZOTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB03F01188242E8007BD08D /* ZOTrack.m */; };
 		FAB1112E1891B45A00100467 /* ZOLapsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB1112D1891B45A00100467 /* ZOLapsViewController.m */; };
+		FAB111321892E9F900100467 /* ZOLapTimeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB111311892E9F900100467 /* ZOLapTimeViewController.m */; };
+		FAB111381893026300100467 /* NSDictionary+MapKit.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB111371893026300100467 /* NSDictionary+MapKit.m */; };
 		FABCD7B51877569100EFB248 /* assets in Resources */ = {isa = PBXBuildFile; fileRef = FABCD7B41877569100EFB248 /* assets */; };
 		FABCD7B818788A5500EFB248 /* ZOTrackSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7B718788A5500EFB248 /* ZOTrackSelectViewController.m */; };
 		FABCD7BB1878B76700EFB248 /* ZOTrackEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FABCD7BA1878B76700EFB248 /* ZOTrackEditViewController.m */; };
@@ -101,8 +103,8 @@
 		FAB03EF71881F486007BD08D /* ZOTrackCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOTrackCollection.m; sourceTree = "<group>"; };
 		FAB03EF918823895007BD08D /* ZOSessionSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOSessionSelectViewController.h; sourceTree = "<group>"; };
 		FAB03EFA18823895007BD08D /* ZOSessionSelectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOSessionSelectViewController.m; sourceTree = "<group>"; };
-		FAB03EFC188242E8007BD08D /* NSCoder+ZOTrackObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSCoder+ZOTrackObject.h"; sourceTree = "<group>"; };
-		FAB03EFD188242E8007BD08D /* NSCoder+ZOTrackObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSCoder+ZOTrackObject.m"; sourceTree = "<group>"; };
+		FAB03EFC188242E8007BD08D /* NSCoder+MapKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSCoder+MapKit.h"; sourceTree = "<group>"; };
+		FAB03EFD188242E8007BD08D /* NSCoder+MapKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSCoder+MapKit.m"; sourceTree = "<group>"; };
 		FAB03EFE188242E8007BD08D /* ZOStartFinishLine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOStartFinishLine.h; sourceTree = "<group>"; };
 		FAB03EFF188242E8007BD08D /* ZOStartFinishLine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOStartFinishLine.m; sourceTree = "<group>"; };
 		FAB03F00188242E8007BD08D /* ZOTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOTrack.h; sourceTree = "<group>"; };
@@ -111,6 +113,10 @@
 		FAB03F03188242E8007BD08D /* ZOTrackObjectDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOTrackObjectDelegate.h; sourceTree = "<group>"; };
 		FAB1112C1891B45A00100467 /* ZOLapsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOLapsViewController.h; sourceTree = "<group>"; };
 		FAB1112D1891B45A00100467 /* ZOLapsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOLapsViewController.m; sourceTree = "<group>"; };
+		FAB111301892E9F900100467 /* ZOLapTimeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOLapTimeViewController.h; sourceTree = "<group>"; };
+		FAB111311892E9F900100467 /* ZOLapTimeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOLapTimeViewController.m; sourceTree = "<group>"; };
+		FAB111361893026300100467 /* NSDictionary+MapKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+MapKit.h"; sourceTree = "<group>"; };
+		FAB111371893026300100467 /* NSDictionary+MapKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+MapKit.m"; sourceTree = "<group>"; };
 		FABCD7B2187744E200EFB248 /* libkml-ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = "libkml-ios.a"; path = "thirdparty/kml-ios/build/Debug-iphoneos/libkml-ios.a"; sourceTree = "<group>"; };
 		FABCD7B41877569100EFB248 /* assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = assets; sourceTree = "<group>"; };
 		FABCD7B618788A5500EFB248 /* ZOTrackSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOTrackSelectViewController.h; sourceTree = "<group>"; };
@@ -283,6 +289,8 @@
 				FACF91A81884D86000EDE2A2 /* ZOSessionMapViewController.m */,
 				FAB1112C1891B45A00100467 /* ZOLapsViewController.h */,
 				FAB1112D1891B45A00100467 /* ZOLapsViewController.m */,
+				FAB111301892E9F900100467 /* ZOLapTimeViewController.h */,
+				FAB111311892E9F900100467 /* ZOLapTimeViewController.m */,
 			);
 			path = "view-controllers";
 			sourceTree = "<group>";
@@ -331,8 +339,8 @@
 		FAB03EF51881F455007BD08D /* data-model */ = {
 			isa = PBXGroup;
 			children = (
-				FAB03EFC188242E8007BD08D /* NSCoder+ZOTrackObject.h */,
-				FAB03EFD188242E8007BD08D /* NSCoder+ZOTrackObject.m */,
+				FAB03EFC188242E8007BD08D /* NSCoder+MapKit.h */,
+				FAB03EFD188242E8007BD08D /* NSCoder+MapKit.m */,
 				FAB03EFE188242E8007BD08D /* ZOStartFinishLine.h */,
 				FAB03EFF188242E8007BD08D /* ZOStartFinishLine.m */,
 				FAB03F00188242E8007BD08D /* ZOTrack.h */,
@@ -347,6 +355,8 @@
 				FACF91B11884E5DB00EDE2A2 /* ZOWaypoint.m */,
 				FAC39BF7188B0CF60053689E /* ZOLap.h */,
 				FAC39BF8188B0CF60053689E /* ZOLap.m */,
+				FAB111361893026300100467 /* NSDictionary+MapKit.h */,
+				FAB111371893026300100467 /* NSDictionary+MapKit.m */,
 			);
 			path = "data-model";
 			sourceTree = "<group>";
@@ -467,7 +477,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAC39BF9188B0CF60053689E /* ZOLap.m in Sources */,
-				FAB03F04188242E8007BD08D /* NSCoder+ZOTrackObject.m in Sources */,
+				FAB03F04188242E8007BD08D /* NSCoder+MapKit.m in Sources */,
 				FAC39BF61888D0720053689E /* CLLocationDispatch.m in Sources */,
 				FAB03EFB18823895007BD08D /* ZOSessionSelectViewController.m in Sources */,
 				FAADF4391864D38C00F301B7 /* ZOMapViewController.m in Sources */,
@@ -489,6 +499,8 @@
 				FACF91A91884D86000EDE2A2 /* ZOSessionMapViewController.m in Sources */,
 				FAB03F06188242E8007BD08D /* ZOTrack.m in Sources */,
 				FAA68D581870B7BA007DD016 /* ZOBluetooth.m in Sources */,
+				FAB111321892E9F900100467 /* ZOLapTimeViewController.m in Sources */,
+				FAB111381893026300100467 /* NSDictionary+MapKit.m in Sources */,
 				FACF91AF1884E23400EDE2A2 /* ZOSessionRenderer.m in Sources */,
 				FAA68D5B18720778007DD016 /* ZOParseNMEA.c in Sources */,
 				FAB03F05188242E8007BD08D /* ZOStartFinishLine.m in Sources */,

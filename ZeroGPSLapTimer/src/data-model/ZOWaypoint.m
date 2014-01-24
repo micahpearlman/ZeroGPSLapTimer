@@ -7,7 +7,7 @@
 //
 
 #import "ZOWaypoint.h"
-#import "NSCoder+ZOTrackObject.h"
+#import "NSCoder+MapKit.h"
 #import "ZOTrackObjectDelegate.h"
 
 static const float kWayPointDiameter = 5.5f;

@@ -8,7 +8,7 @@
 
 #import "ZOTrack.h"
 #import "ZOStartFinishLine.h"
-#import "NSCoder+ZOTrackObject.h"
+#import "NSCoder+MapKit.h"
 
 @interface ZOTrack () <ZOTrackObjectDelegate> {
 	NSMutableArray*				_trackObjects;	// id<ZOTrackObjectProtocol>

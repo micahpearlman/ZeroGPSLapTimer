@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
-@interface NSCoder (ZOTrackObject)
+@interface NSCoder (MapKit)
 
 // CLLocationCoordinate2D
 - (void) encodeCLLocationCoordinate2D:(CLLocationCoordinate2D)coordinate forKey:(NSString*)key;

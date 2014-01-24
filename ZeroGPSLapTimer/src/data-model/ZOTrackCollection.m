@@ -7,9 +7,10 @@
 //
 
 #import "ZOTrackCollection.h"
+#import "NSDictionary+MapKit.h"
 
 @interface ZOTrackCollection () {
-	NSMutableArray* _tracks;
+	NSMutableArray* _trackInfos;
 	ZOTrack*		_currentTrack;
 }
 
@@ -17,7 +18,7 @@
 
 @implementation ZOTrackCollection
 
-@synthesize tracks = _tracks;
+@dynamic trackInfos;
 @dynamic currentTrack;
 
 // singleton. see: http://www.galloway.me.uk/tutorials/singleton-classes/
@@ -45,19 +46,19 @@
 }
 
 - (void) load {
-	_tracks = [NSMutableArray arrayWithContentsOfFile:[self path]];
-	if ( _tracks == nil ) {	// need to create a tracks.sav
-		_tracks = [[NSMutableArray alloc] init];
-		[_tracks writeToFile:@"tracks.sav" atomically:YES];
+	_trackInfos = [NSMutableArray arrayWithContentsOfFile:[self path]];
+	if ( _trackInfos == nil ) {	// need to create a tracks.sav
+		_trackInfos = [[NSMutableArray alloc] init];
+		[_trackInfos writeToFile:@"tracks.sav" atomically:YES];
 	}
 }
 
 - (void) save {
-	[_tracks writeToFile:[self path] atomically:YES];
+	[_trackInfos writeToFile:[self path] atomically:YES];
 }
 
-- (NSDictionary*) addTrackNamed:(NSString*)name {
-	NSDictionary* track = [self findTrackNamed:name];
+- (NSDictionary*) createTrackInfoNamed:(NSString*)name withBoundingMapRect:(MKMapRect)boundingMapRect {
+	NSDictionary* track = [self findTrackInfoNamed:name];
 	
 	if ( track == nil ) {
 		NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
@@ -66,10 +67,11 @@
 
 		track = @{	@"type" : @"track",
 					@"name" : name,
-					@"archive-path" : trackArchivePath
+					@"archive-path" : trackArchivePath,
+					@"bounding-map-rect" : [NSDictionary dictionaryFromMKMapRect:boundingMapRect]
 					};
 		
-		[_tracks addObject:track];
+		[_trackInfos addObject:track];
 		
 		[self save];
 
@@ -78,13 +80,13 @@
 	return track;
 }
 
-- (void) removeTrackNamed:(NSString*)name {
-	NSDictionary* track = [self findTrackNamed:name];
-	[self removeTrack:track];
+- (void) removeTrackInfoNamed:(NSString*)name {
+	NSDictionary* track = [self findTrackInfoNamed:name];
+	[self removeTrackInfo:track];
 }
 
-- (void) removeTrack:(NSDictionary*)trackInfo {
-	[_tracks removeObject:trackInfo];
+- (void) removeTrackInfo:(NSDictionary*)trackInfo {
+	[_trackInfos removeObject:trackInfo];
 	[self save];
 	NSError* error;
 	[[NSFileManager defaultManager] removeItemAtPath:[trackInfo objectForKey:@"archive-path"] error:&error];
@@ -97,8 +99,8 @@
 
 }
 
-- (NSDictionary*) findTrackNamed:(NSString*)name {
-	for ( NSDictionary* track in _tracks ) {
+- (NSDictionary*) findTrackInfoNamed:(NSString*)name {
+	for ( NSDictionary* track in _trackInfos ) {
 		if ( [name isEqualToString:[track objectForKey:@"name"]]) {
 			return track;
 		}
@@ -117,6 +119,13 @@
 
 -(void) setCurrentTrack:(ZOTrack *)currentTrack {
 	_currentTrack = currentTrack;
+}
+
+- (NSArray*) trackInfos {
+	if ( _trackInfos == nil ) {
+		[self load];
+	}
+	return _trackInfos;
 }
 
 @end

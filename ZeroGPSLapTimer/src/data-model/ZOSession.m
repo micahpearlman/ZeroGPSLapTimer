@@ -7,7 +7,7 @@
 //
 
 #import "ZOSession.h"
-#import "NSCoder+ZOTrackObject.h"
+#import "NSCoder+MapKit.h"
 #import "ZOWaypoint.h"
 #import "CLLocation+measuring.h"
 #import "ZOTrack.h"

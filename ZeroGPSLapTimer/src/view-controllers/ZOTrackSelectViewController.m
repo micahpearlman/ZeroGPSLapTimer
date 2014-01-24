@@ -58,13 +58,13 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     // Return the number of rows in the section.
-    return [[ZOTrackCollection instance].tracks count] + 1;
+    return [[ZOTrackCollection instance].trackInfos count] + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	NSInteger idx = [indexPath row];
-	if ( idx == [[ZOTrackCollection instance].tracks count] ) {	// new track
+	if ( idx == [[ZOTrackCollection instance].trackInfos count] ) {	// new track
 		static NSString *CellIdentifier = @"new-track-cell";
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
 		[cell.textLabel setText:@"[Add New Track]"];
@@ -73,7 +73,7 @@
 		static NSString *CellIdentifier = @"track-cell";
 		UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
 
-		NSArray* tracks = [[ZOTrackCollection instance] tracks];
+		NSArray* tracks = [[ZOTrackCollection instance] trackInfos];
 		NSDictionary* track = [tracks objectAtIndex:idx];
 		[cell.textLabel setText:[track objectForKey:@"name"]];
 		return cell;
@@ -88,7 +88,7 @@
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     // Return NO if you do not want the specified item to be editable.
 	NSInteger idx = [indexPath row];
-	if ( idx == [[ZOTrackCollection instance].tracks count] ) {
+	if ( idx == [[ZOTrackCollection instance].trackInfos count] ) {
 		return NO;	// can't add add track button
 	}
     return YES;
@@ -100,9 +100,9 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		
-		NSArray* tracks = [[ZOTrackCollection instance] tracks];
+		NSArray* tracks = [[ZOTrackCollection instance] trackInfos];
 		NSDictionary* track = [tracks objectAtIndex:[indexPath row]];
-		[[ZOTrackCollection instance] removeTrack:track];
+		[[ZOTrackCollection instance] removeTrackInfo:track];
 
         // Delete the row from the data source
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -140,11 +140,11 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     // Get the new view controller using [segue destinationViewController].
 	NSIndexPath* selectedIndexPath = [self.tableView indexPathForSelectedRow];
-	if ( [selectedIndexPath row] == [[ZOTrackCollection instance].tracks count] ) {	// new track
+	if ( [selectedIndexPath row] == [[ZOTrackCollection instance].trackInfos count] ) {	// new track
 		// we are creating a new track so make sure to null out selected track
 		[ZOTrackCollection instance].currentTrackInfo = nil;
 	} else {
-		NSArray* tracks = [[ZOTrackCollection instance] tracks];
+		NSArray* tracks = [[ZOTrackCollection instance] trackInfos];
 		[ZOTrackCollection instance].currentTrackInfo = [tracks objectAtIndex:[selectedIndexPath row]];
 		
 	}

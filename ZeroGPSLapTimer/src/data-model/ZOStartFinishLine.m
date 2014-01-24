@@ -7,7 +7,7 @@
 //
 
 #import "ZOStartFinishLine.h"
-#import "NSCoder+ZOTrackObject.h"
+#import "NSCoder+MapKit.h"
 
 static inline double zoDegreesToRadians (double degrees) {return degrees * M_PI/180.0;}
 

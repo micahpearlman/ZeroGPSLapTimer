@@ -296,7 +296,7 @@ typedef enum {
 	UITextField* textField = [alertView textFieldAtIndex:0];
 	_track.name = textField.text;
 	
-	_track.trackInfo = [[ZOTrackCollection instance] addTrackNamed:_track.name];
+	_track.trackInfo = [[ZOTrackCollection instance] createTrackInfoNamed:_track.name withBoundingMapRect:_track.boundingMapRect];
 	[_track archive];
 	
 	
