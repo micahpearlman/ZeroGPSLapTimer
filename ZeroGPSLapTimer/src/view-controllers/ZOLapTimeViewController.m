@@ -12,7 +12,7 @@
 
 @interface ZOLapTimeViewController () <CLLocationManagerDelegate> {
 	CLLocationManager*		_locationManager;
-	NSDictionary*			_trackInfo;
+	ZOTrack*				_track;
 }
 
 @end
@@ -46,11 +46,12 @@
 
 #pragma mark CLLocationManagerDelegate
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-	if ( _trackInfo == nil ) {
+	if ( _track == nil ) {
 		CLLocation* lastLocation = [locations lastObject];
-		_trackInfo = [[ZOTrackCollection instance] trackAtCoordinate:lastLocation.coordinate];
-		if ( _trackInfo ) {
-			self.trackName.text = [_trackInfo objectForKey:@"name"];
+		NSDictionary* trackInfo = [[ZOTrackCollection instance] trackAtCoordinate:lastLocation.coordinate];
+		if ( trackInfo ) {
+			_track = [ZOTrack unarchiveFromTrackInfo:trackInfo];
+			self.trackName.text = _track.name;
 		}
 	}
 	
