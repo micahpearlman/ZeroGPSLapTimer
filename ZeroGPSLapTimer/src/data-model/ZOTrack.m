@@ -120,7 +120,12 @@
 
 #pragma mark Sessions
 
-- (ZOSession*) addSessionAtDate:(NSDate*)time {
+- (void) addSessionInfo:(NSDictionary*)sessionInfo {
+	[_sessionInfos addObject:sessionInfo];
+	[self archive];
+}
+/*
+- (ZOSession*) createSessionAtDate:(NSDate*)time {
 
 	NSDictionary* newSessionInfo = [ZOSession newSessionInfoAtDate:time track:self];
 	[_sessionInfos addObject:newSessionInfo];
@@ -140,6 +145,7 @@
 	
 	return newSession;
 }
+ */
 
 - (void) removeSessionInfo:(NSDictionary *)sessionInfo {
 	NSError* error;

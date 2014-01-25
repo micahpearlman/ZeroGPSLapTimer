@@ -65,8 +65,9 @@ typedef enum  {
 		// load existing session
 		_session = _track.currentSession;
 	} else {
-		// create new session
-		_session = [_track addSessionAtDate:[NSDate date]];
+		// create a new session
+		_session = [[ZOSession alloc] initWithTrack:_track];
+		[_track addSessionInfo:_session.sessionInfo];
 		
 		_locationManager = [[CLLocationManager alloc] init];
 		[_locationManager setDelegate:self];

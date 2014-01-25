@@ -37,8 +37,9 @@
 
 
 /// sessions
-- (ZOSession*) addSessionAtDate:(NSDate*)time;
-- (void) removeSessionInfo:(NSDictionary *)sessionInfo;
+//- (ZOSession*) createSessionAtDate:(NSDate*)time;
+- (void) addSessionInfo:(NSDictionary*)sessionInfo;
+- (void) removeSessionInfo:(NSDictionary*)sessionInfo;
 
 /// archiving
 - (void) archive;

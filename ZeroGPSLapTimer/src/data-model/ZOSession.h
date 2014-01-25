@@ -30,7 +30,7 @@ typedef enum {
 @property (nonatomic, assign)	BOOL isSelected;
 @property (nonatomic, retain)	NSArray* waypoints;
 @property (nonatomic, retain)	NSDictionary* sessionInfo;
-@property (nonatomic, assign)	ZOTrack* track;
+@property (nonatomic, weak)		ZOTrack* track;
 @property (nonatomic, assign)	id<ZOTrackObjectDelegate> delegate;
 @property (nonatomic, readonly)	ZOSessionState state;
 @property (nonatomic, assign)	id<ZOSessionStateDelegate> stateMonitorDelegate;
@@ -44,7 +44,8 @@ typedef enum {
 // make delegate writeonly: http://stackoverflow.com/questions/4266197/write-only-property-in-objective-c
 - (id<ZOTrackObjectDelegate>) delegate UNAVAILABLE_ATTRIBUTE;
 
-- (id) initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)boundingMapRect sessionInfo:(NSDictionary*)sessionInfo;
+//- (id) initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)boundingMapRect sessionInfo:(NSDictionary*)sessionInfo;
+- (id) initWithTrack:(ZOTrack*)track;
 
 /// Waypoint
 - (void) addWaypoints:(NSArray*)waypoints;	// ZOWaypoint

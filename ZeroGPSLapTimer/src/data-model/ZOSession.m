@@ -36,7 +36,7 @@
 @dynamic delegate;
 @dynamic isPlaybackPaused;
 @dynamic laps;
-
+/*
 - (id) init {
 	if ( self = [super init] ) {
 		self.waypoints = [[NSMutableArray alloc] init];
@@ -56,6 +56,19 @@
 		// TODO: set track from track name
 	}
 	
+	return self;
+}
+ */
+
+- (id) initWithTrack:(ZOTrack*)track {
+	if ( self = [super init] ) {
+		self.track = track;
+		self.coordinate = track.coordinate;
+		self.boundingMapRect = track.boundingMapRect;
+		self.waypoints = [[NSMutableArray alloc] init];
+		_state = ZOSessionState_Undefined;
+		self.sessionInfo = [ZOSession newSessionInfoAtDate:[NSDate date] track:self.track];
+	}
 	return self;
 }
 
