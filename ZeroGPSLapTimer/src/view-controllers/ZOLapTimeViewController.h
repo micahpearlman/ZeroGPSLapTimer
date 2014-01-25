@@ -14,5 +14,8 @@
 @property (nonatomic,retain) IBOutlet UILabel* currentLapTime;
 @property (nonatomic,retain) IBOutlet UILabel* previousLapTime;
 @property (nonatomic,retain) IBOutlet UITableView* tableView;
+@property (nonatomic,retain) IBOutlet UIButton* startStopSession;
+
+- (IBAction) onStartStopSession:(id)sender;
 
 @end

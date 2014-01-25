@@ -12,13 +12,13 @@
 #import "ZOLap.h"
 #import <MapKit/MapKit.h>
 
-@interface ZOLapTimeViewController () <CLLocationManagerDelegate, ZOSessionStateDelegate> {
+@interface ZOLapTimeViewController () <CLLocationManagerDelegate, ZOSessionStateDelegate, ZOTrackObjectDelegate> {
 	CLLocationManager*		_locationManager;
 	ZOTrack*				_track;
 	ZOSession*				_session;
 	ZOLap*					_currentLap;
 	ZOLap*					_lastLap;
-//	NSDate*					_startLapTimeStamp;
+	
 }
 
 @end
@@ -45,6 +45,12 @@
 	
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	
+	[_session endSession];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -61,6 +67,7 @@
 			
 			// create a new session
 			_session = [[ZOSession alloc] initWithTrack:_track];
+			_session.stateMonitorDelegate = self;
 			[_track addSessionInfo:_session.sessionInfo];
 			
 			// set the track name label
@@ -73,15 +80,45 @@
 
 - (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atWaypoint:(ZOWaypoint*)location {
 	if ( to == ZOSessionState_StartLap ) {
-//		if ( _startLapTimeStamp ) {		// finished lap
-//			
-//		}
-//		_startLapTimeStamp = waypoint.timestamp;
+		// monitor lap events
+		ZOLap* currentLap = [session.laps lastObject];
+		currentLap.delegate = self;
+		
+		// set the previous lap
+		if ( [session.laps count] > 1 ) {
+			ZOLap* previousLap = [session.laps objectAtIndex:[session.laps count] - 2];
+			self.previousLapTime.text = previousLap.timeString;
+		}
+		
+		// set the stop button
+		self.startStopSession.enabled = YES;
+//		self.startStopSession.titleLabel.text = @"STOP";
+		
+		// TODO: make the lap table dirty
+	} else if ( to == ZOSessionState_EndSession ) {
+		self.startStopSession.enabled = NO;
+//		self.startStopSession.titleLabel.text = @"WAIT";
 	}
 
 }
-- (void) zoSession:(ZOSession*)session playbackCursorAtWaypoint:(ZOWaypoint*)waypoint {
-	
+
+#pragma mark ZOTrackObjectDelegate
+
+- (void) zoTrackObject:(id<ZOTrackObject>)trackObject isDirty:(BOOL)isDirty {
+	if ( [trackObject class] == [ZOLap class] ) {
+		// lap has been updated so update our time labels
+		ZOLap* currentLap = (ZOLap*)trackObject;
+		self.currentLapTime.text = currentLap.timeString;
+	}
+}
+
+#pragma mark Actions
+
+- (IBAction) onStartStopSession:(id)sender {
+
+	if ( _session.state == ZOSessionState_StartLap ) {
+		[_session endSession];
+	}
 }
 
 

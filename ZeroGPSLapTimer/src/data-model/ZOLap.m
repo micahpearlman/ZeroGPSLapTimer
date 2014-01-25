@@ -67,10 +67,44 @@
 
 - (void) addWaypoint:(ZOWaypoint*)waypoint {
 	[_waypoints addObject:waypoint];
+	
+	// notify anyone that we are dirty
+	for ( id<ZOTrackObjectDelegate> delegate in _delegates ) {
+		if ( [delegate respondsToSelector:@selector(zoTrackObject:isDirty:)] ) {
+			[delegate zoTrackObject:self isDirty:YES];
+		}
+	}
+
 }
 - (void) addWaypoints:(NSArray*)waypoints {
 	[_waypoints addObjectsFromArray:waypoints];
+	
+	// notify anyone that we are dirty
+	for ( id<ZOTrackObjectDelegate> delegate in _delegates ) {
+		if ( [delegate respondsToSelector:@selector(zoTrackObject:isDirty:)] ) {
+			[delegate zoTrackObject:self isDirty:YES];
+		}
+	}
+
 }
+
+#pragma mark Time
+
+- (NSTimeInterval) time {
+	ZOWaypoint* firstWaypoint = [_waypoints firstObject];
+	ZOWaypoint* lastWaypoint = [_waypoints lastObject];
+	return [lastWaypoint.timestamp timeIntervalSinceDate:firstWaypoint.timestamp];
+}
+
+- (NSString*) timeString {
+	NSTimeInterval lapTime = self.time;
+	NSTimeInterval minutes = lapTime / 60.0;
+	NSTimeInterval seconds = fmod( lapTime, 60.0);
+	return [NSString stringWithFormat:@"%02d:%04.2f", (int)minutes, seconds];
+	
+}
+
+
 
 
 #pragma mark Property implementation
@@ -93,20 +127,6 @@
 			[delegate zoTrackObject:self isSelected:isSelected];
 		}
 	}
-}
-
-- (NSTimeInterval) time {
-	ZOWaypoint* firstWaypoint = [_waypoints firstObject];
-	ZOWaypoint* lastWaypoint = [_waypoints lastObject];
-	return [lastWaypoint.timestamp timeIntervalSinceDate:firstWaypoint.timestamp];
-}
-
-- (NSString*) timeString {
-	NSTimeInterval lapTime = self.time;
-	NSTimeInterval minutes = lapTime / 60.0;
-	NSTimeInterval seconds = fmod( lapTime, 60.0);
-	return [NSString stringWithFormat:@"%02d:%04.2f", (int)minutes, seconds];
-
 }
 
 @end

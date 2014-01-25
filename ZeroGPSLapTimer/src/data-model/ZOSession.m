@@ -59,7 +59,6 @@
 	if ( self ) {
 		self.coordinate = [aDecoder decodeCLLocationCoordinate2DForKey:@"coordinate"];
 		self.boundingMapRect = [aDecoder decodeMKMapRectForKey:@"boundingMapRect"];
-//		self.waypoints = [aDecoder decodeObjectForKey:@"locations"];
 		_laps = [aDecoder decodeObjectForKey:@"laps"];
 		_state = ZOSessionState_Undefined;
 		
@@ -75,7 +74,6 @@
 	[aCoder encodeCLLocationCoordinate2D:self.coordinate forKey:@"coordinate"];
 	[aCoder encodeMKMapRect:self.boundingMapRect forKey:@"boundingMapRect"];
 	[aCoder encodeObject:_laps forKey:@"laps"];
-//	[aCoder encodeObject:self.waypoints forKey:@"locations"];
 }
 
 
@@ -94,7 +92,7 @@
 		
 		if ( intersect ) {
 			[self startLapAtWaypoint:intersect];
-		} else {
+		} else if ( _state == ZOSessionState_StartLap ) {	// only add waypoint if we are in a lap
 			ZOLap* currentLap = [_laps lastObject];
 			[currentLap addWaypoint:waypoint];
 		}
@@ -103,7 +101,6 @@
 		_waypoints = nil;
 		
 	} else {	// off track
-		//newState = ZOSessionState_Offtrack;
 		[self.stateMonitorDelegate zoSession:self
 							stateChangedFrom:_state
 										  to:ZOSessionState_Offtrack
@@ -285,8 +282,11 @@
 /// Lap
 - (void) startLapAtWaypoint:(ZOWaypoint*)waypoint {
 	@synchronized(_laps) {
-		ZOLap* lastLap = [_laps lastObject];
-		[lastLap addWaypoint:waypoint];
+		if ( _state == ZOSessionState_StartLap ) {
+			// finish off last lap
+			ZOLap* lastLap = [_laps lastObject];
+			[lastLap addWaypoint:waypoint];
+		}
 		
 		ZOLap* lap = [[ZOLap alloc] initWithSession:self];
 		[lap addWaypoint:waypoint];
@@ -305,6 +305,7 @@
 	@synchronized(_laps) {
 		// assume last lap is not completed so remove it
 		[_laps removeLastObject];
+		[self archive];
 	}
 }
 

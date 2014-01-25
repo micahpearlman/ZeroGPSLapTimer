@@ -75,5 +75,6 @@ typedef enum {
 @protocol ZOSessionStateDelegate <NSObject>
 @required
 - (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atWaypoint:(ZOWaypoint*)location;
+@optional
 - (void) zoSession:(ZOSession*)session playbackCursorAtWaypoint:(ZOWaypoint*)waypoint;
 @end
