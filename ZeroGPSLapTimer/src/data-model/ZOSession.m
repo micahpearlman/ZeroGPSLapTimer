@@ -14,13 +14,15 @@
 #import "ZOLap.h"
 
 @interface ZOSession () {
-	NSMutableArray* _waypoints;	// ZOLocations
+	NSMutableArray* _waypoints;	// ZOWwaypoint
+	ZOWaypoint*		_lastWaypoint;
 	NSPointerArray* _delegates; // id<ZOTrackObjectDelegate>
 	NSTimer*		_playbackTimer;
 	ZOSessionState	_state;
 	ZOWaypoint*		_waypointCursor;
 	NSMutableArray*	_laps;
 }
+
 
 @end
 
@@ -29,45 +31,23 @@
 @synthesize coordinate;
 @synthesize boundingMapRect;
 @synthesize isSelected;
-@synthesize waypoints = _waypoints;
 @synthesize sessionInfo;
 @synthesize state = _state;
 @dynamic totalTime;
 @dynamic delegate;
 @dynamic isPlaybackPaused;
 @dynamic laps;
-/*
-- (id) init {
-	if ( self = [super init] ) {
-		self.waypoints = [[NSMutableArray alloc] init];
-		
-	}
-	return self;
-}
-
-- (id) initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)boundingMapRect_ sessionInfo:(NSDictionary*)sessionInfo_ {
-	
-	if ( self = [self init] ) {
-		self.coordinate = coord;
-		self.boundingMapRect = boundingMapRect_;
-		self.sessionInfo = sessionInfo_;
-		_state = ZOSessionState_Undefined;
-		
-		// TODO: set track from track name
-	}
-	
-	return self;
-}
- */
+@dynamic waypoints;
 
 - (id) initWithTrack:(ZOTrack*)track {
 	if ( self = [super init] ) {
 		self.track = track;
 		self.coordinate = track.coordinate;
 		self.boundingMapRect = track.boundingMapRect;
-		self.waypoints = [[NSMutableArray alloc] init];
-		_state = ZOSessionState_Undefined;
+//		self.waypoints = [[NSMutableArray alloc] init];
 		self.sessionInfo = [ZOSession newSessionInfoAtDate:[NSDate date] track:self.track];
+		_laps = [[NSMutableArray alloc] init];
+		_state = ZOSessionState_Undefined;
 	}
 	return self;
 }
@@ -79,7 +59,8 @@
 	if ( self ) {
 		self.coordinate = [aDecoder decodeCLLocationCoordinate2DForKey:@"coordinate"];
 		self.boundingMapRect = [aDecoder decodeMKMapRectForKey:@"boundingMapRect"];
-		self.waypoints = [aDecoder decodeObjectForKey:@"locations"];
+//		self.waypoints = [aDecoder decodeObjectForKey:@"locations"];
+		_laps = [aDecoder decodeObjectForKey:@"laps"];
 		_state = ZOSessionState_Undefined;
 		
 		// TODO: set track from track name
@@ -93,55 +74,58 @@
 	
 	[aCoder encodeCLLocationCoordinate2D:self.coordinate forKey:@"coordinate"];
 	[aCoder encodeMKMapRect:self.boundingMapRect forKey:@"boundingMapRect"];
-	[aCoder encodeObject:self.waypoints forKey:@"locations"];
+	[aCoder encodeObject:_laps forKey:@"laps"];
+//	[aCoder encodeObject:self.waypoints forKey:@"locations"];
 }
 
 
-- (void) addWaypoint:(ZOWaypoint*)location {
+- (void) addWaypoint:(ZOWaypoint*)waypoint {
 	
-	ZOSessionState newState = ZOSessionState_Offtrack;
-	ZOWaypoint* stateChangeWaypoint = location;
+	if ( _lastWaypoint == nil ) {
+		_lastWaypoint = waypoint;
+	}
 	
 	// check if location is off track
-	if ( MKMapRectContainsPoint( self.track.boundingMapRect, MKMapPointForCoordinate(location.coordinate))) {
-		ZOWaypoint* lastLocation = [_waypoints lastObject];
-		if ( lastLocation ) {	// check that this is not the first object being added
-			
-			stateChangeWaypoint = [self checkWaypointsIntersectTrackObjects:lastLocation end:location];
-			
-			if ( stateChangeWaypoint ) {
-				newState = ZOSessionState_StartLap;
-			}
-		}
+	if ( MKMapRectContainsPoint( self.track.boundingMapRect, MKMapPointForCoordinate(waypoint.coordinate))) {
 		
-		[_waypoints addObject:location];
-
+		// check if we crossed finish line or track entrance/exit
+		ZOWaypoint* intersect = [self checkWaypointsIntersectTrackObjects:_lastWaypoint
+																	  end:waypoint];
+		
+		if ( intersect ) {
+			[self startLapAtWaypoint:intersect];
+		} else {
+			ZOLap* currentLap = [_laps lastObject];
+			[currentLap addWaypoint:waypoint];
+		}
+			
+		// make waypoints invalid
+		_waypoints = nil;
 		
 	} else {	// off track
-		newState = ZOSessionState_Offtrack;
-	}
-	
-	// notify state monitor delegate if state change
-	if ( newState != _state ) {
+		//newState = ZOSessionState_Offtrack;
 		[self.stateMonitorDelegate zoSession:self
 							stateChangedFrom:_state
-										  to:newState
-								  atWaypoint:stateChangeWaypoint];
+										  to:ZOSessionState_Offtrack
+								  atWaypoint:waypoint];
+		_state = ZOSessionState_Offtrack;
+
 	}
 	
-	_state = newState;
+	_lastWaypoint = waypoint;
+	
 
 	// BUGBUG: not reporting dirty with this method
 }
 
-- (void) addWaypoints:(NSArray *)locations {
+- (void) addWaypoints:(NSArray *)waypoints {
 	
 	// add locations one by one
-	for ( ZOWaypoint* location in locations ) {
-		[self addWaypoint:location];
+	for ( ZOWaypoint* waypoint in waypoints ) {
+		[self addWaypoint:waypoint];
 	}
 	
-
+	// notify anyone that we are dirty
 	for ( id<ZOTrackObjectDelegate> delegate in _delegates ) {
 		if ( [delegate respondsToSelector:@selector(zoTrackObject:isDirty:)] ) {
 			[delegate zoTrackObject:self isDirty:YES];
@@ -176,16 +160,16 @@
 		return nil;
 	}
 	
-	if ( !([_waypoints count] > 1) ) {
+	if ( !([self.waypoints count] > 1) ) {
 		return nil;
 	}
 	
-	ZOWaypoint* start = [_waypoints firstObject];
+	ZOWaypoint* start = [self.waypoints firstObject];
 	ZOWaypoint* bracketWaypoints[2] = {nil, nil};
 	NSTimeInterval bracketTimes[2];
-	for ( int i = 0; i < [_waypoints count] - 1; i++ ) {
-		bracketWaypoints[0] = [_waypoints objectAtIndex:i];
-		bracketWaypoints[1] = [_waypoints objectAtIndex:i+1];
+	for ( int i = 0; i < [self.waypoints count] - 1; i++ ) {
+		bracketWaypoints[0] = [self.waypoints objectAtIndex:i];
+		bracketWaypoints[1] = [self.waypoints objectAtIndex:i+1];
 
 		bracketTimes[0] = [bracketWaypoints[0].timestamp timeIntervalSinceDate:start.timestamp];
 		bracketTimes[1] = [bracketWaypoints[1].timestamp timeIntervalSinceDate:start.timestamp];
@@ -297,7 +281,35 @@
 }
 
 #pragma mark Laps
+
+/// Lap
+- (void) startLapAtWaypoint:(ZOWaypoint*)waypoint {
+	@synchronized(_laps) {
+		ZOLap* lastLap = [_laps lastObject];
+		[lastLap addWaypoint:waypoint];
+		
+		ZOLap* lap = [[ZOLap alloc] initWithSession:self];
+		[lap addWaypoint:waypoint];
+		[_laps addObject:lap];
+		
+		[self.stateMonitorDelegate zoSession:self
+							stateChangedFrom:_state
+										  to:ZOSessionState_StartLap
+								  atWaypoint:waypoint];
+		
+		_state = ZOSessionState_StartLap;
+	}
+}
+
+- (void) endSession {
+	@synchronized(_laps) {
+		// assume last lap is not completed so remove it
+		[_laps removeLastObject];
+	}
+}
+
 - (NSArray*) laps {
+	/*
 	if ( _laps == nil ) {
 		_laps = [[NSMutableArray alloc] init];
 		const NSTimeInterval dt = 1.0/20.0;
@@ -322,7 +334,8 @@
 					[lapWayPoints addObject:intersect];
 				} else if ( state == ZOSessionState_StartLap ) {	// finished lap
 					[lapWayPoints addObject:intersect];
-					ZOLap* lap = [[ZOLap alloc] initWithWaypoints:lapWayPoints coordinate:self.coordinate boundingMapRect:self.boundingMapRect];
+					ZOLap* lap = [[ZOLap alloc] initWithSession:self];
+					[lap addWaypoints:lapWayPoints];
 					[_laps addObject:lap];
 					
 					// restart lapWaypoint
@@ -336,7 +349,7 @@
 			previousWaypoint = newWaypointCursor;
 		}
 	}
-	
+	*/
 	return _laps;
 }
 
@@ -351,12 +364,24 @@
 }
 
 - (NSTimeInterval) totalTime {
-	ZOWaypoint* first = [_waypoints firstObject];
-	ZOWaypoint* last = [_waypoints lastObject];
+	ZOWaypoint* first = [self.waypoints firstObject];
+	ZOWaypoint* last = [self.waypoints lastObject];
 	return [last.timestamp timeIntervalSinceDate:first.timestamp];
 }
 
 
+- (NSArray*) waypoints {
 
+	@synchronized(_waypoints) {
+		if ( _waypoints == nil ) {
+			_waypoints = [[NSMutableArray alloc] init];
+			for ( ZOLap* lap in self.laps ) {
+				[_waypoints addObjectsFromArray:lap.waypoints];
+			}
+		}
+	}
+	
+	return _waypoints;
+}
 
 @end

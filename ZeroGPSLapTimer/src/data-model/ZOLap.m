@@ -9,6 +9,7 @@
 #import "ZOLap.h"
 #import "NSCoder+MapKit.h"
 #import "ZOTrackObjectDelegate.h"
+#import "ZOSession.h"
 
 @interface ZOLap () {
 	NSPointerArray* _delegates; // id<ZOTrackObjectDelegate>
@@ -24,17 +25,27 @@
 @synthesize waypoints = _waypoints;
 @synthesize coordinate;
 @synthesize boundingMapRect;
+@synthesize session;
 @dynamic delegate;
 @dynamic isSelected;
 @dynamic time;
 @dynamic timeString;
 
-- (id) initWithWaypoints:(NSArray*)waypoints coordinate:(CLLocationCoordinate2D)coordinate_ boundingMapRect:(MKMapRect)boundingMapRect_
- {
+- (id) initWithWaypoints:(NSArray*)waypoints coordinate:(CLLocationCoordinate2D)coordinate_ boundingMapRect:(MKMapRect)boundingMapRect_ {
 	if ( self = [super init] ) {
 		self.coordinate = coordinate_;
 		self.boundingMapRect = boundingMapRect_;
 		_waypoints = [[NSMutableArray alloc] initWithArray:waypoints];
+	}
+	return self;
+}
+
+- (id) initWithSession:(ZOSession*)session_ {
+	if ( self = [super init] ) {
+		self.session = session_;
+		self.coordinate = session_.coordinate;
+		self.boundingMapRect = session_.boundingMapRect;
+		_waypoints = [[NSMutableArray alloc] init];
 	}
 	return self;
 }
@@ -52,6 +63,13 @@
 	[aCoder encodeCLLocationCoordinate2D:self.coordinate forKey:@"coordinate"];
 	[aCoder encodeMKMapRect:self.boundingMapRect forKey:@"boundingMapRect"];
 	[aCoder encodeObject:_waypoints forKey:@"waypoints"];
+}
+
+- (void) addWaypoint:(ZOWaypoint*)waypoint {
+	[_waypoints addObject:waypoint];
+}
+- (void) addWaypoints:(NSArray*)waypoints {
+	[_waypoints addObjectsFromArray:waypoints];
 }
 
 

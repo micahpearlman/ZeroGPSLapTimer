@@ -12,13 +12,15 @@
 #import "ZOWaypoint.h"
 
 @class ZOTrack;
+@class ZOLap;
 
 typedef enum {
 	ZOSessionState_Undefined,
 	ZOSessionState_Offtrack,	// off the track bounding area
 	ZOSessionState_Pits,
 	ZOSessionState_StartLap,
-	ZOSessionState_EndLap
+	ZOSessionState_EndLap,
+	ZOSessionState_EndSession
 } ZOSessionState;
 
 @protocol ZOSessionStateDelegate;
@@ -28,7 +30,7 @@ typedef enum {
 @property (nonatomic, assign)	CLLocationCoordinate2D coordinate;
 @property (nonatomic, assign)	MKMapRect boundingMapRect;
 @property (nonatomic, assign)	BOOL isSelected;
-@property (nonatomic, retain)	NSArray* waypoints;
+@property (atomic, readonly)	NSArray* waypoints;
 @property (nonatomic, retain)	NSDictionary* sessionInfo;
 @property (nonatomic, weak)		ZOTrack* track;
 @property (nonatomic, assign)	id<ZOTrackObjectDelegate> delegate;
@@ -51,6 +53,10 @@ typedef enum {
 - (void) addWaypoints:(NSArray*)waypoints;	// ZOWaypoint
 - (void) addWaypoint:(ZOWaypoint*)waypoint;
 - (ZOWaypoint*) waypointAtTimeInterval:(NSTimeInterval)timeInterval;
+- (void) endSession;
+
+/// Lap
+- (void) startLapAtWaypoint:(ZOWaypoint*)waypoint;
 
 
 /// archiving

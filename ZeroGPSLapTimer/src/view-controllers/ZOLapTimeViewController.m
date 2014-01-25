@@ -9,12 +9,16 @@
 #import "ZOLapTimeViewController.h"
 #import "ZOTrackCollection.h"
 #import "ZOSession.h"
+#import "ZOLap.h"
 #import <MapKit/MapKit.h>
 
 @interface ZOLapTimeViewController () <CLLocationManagerDelegate, ZOSessionStateDelegate> {
 	CLLocationManager*		_locationManager;
 	ZOTrack*				_track;
 	ZOSession*				_session;
+	ZOLap*					_currentLap;
+	ZOLap*					_lastLap;
+//	NSDate*					_startLapTimeStamp;
 }
 
 @end
@@ -68,7 +72,13 @@
 #pragma mark ZOSessionStateDelegate
 
 - (void) zoSession:(ZOSession*)session stateChangedFrom:(ZOSessionState)from to:(ZOSessionState)to atWaypoint:(ZOWaypoint*)location {
-	
+	if ( to == ZOSessionState_StartLap ) {
+//		if ( _startLapTimeStamp ) {		// finished lap
+//			
+//		}
+//		_startLapTimeStamp = waypoint.timestamp;
+	}
+
 }
 - (void) zoSession:(ZOSession*)session playbackCursorAtWaypoint:(ZOWaypoint*)waypoint {
 	

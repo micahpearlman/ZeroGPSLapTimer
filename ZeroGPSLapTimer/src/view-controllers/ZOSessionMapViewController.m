@@ -81,6 +81,7 @@ typedef enum  {
 }
 
 - (void) viewWillDisappear:(BOOL)animated {
+	[self gotoState:ZOSessionMapViewController_None];
 	[super viewWillDisappear:animated];
 	[_session archive];	// exiting so make sure to save out session
 }
@@ -103,6 +104,9 @@ typedef enum  {
 				[_locationManager stopUpdatingLocation];
 				[self.mapView setUserTrackingMode:MKUserTrackingModeNone];
 				[_session archive];	// make sure to save session
+				[_session endSession];
+			} else if( _state == ZOSessionMapViewController_Playback ) {
+				[_session setIsPlaybackPaused:YES];
 			}
 			break;
 			
