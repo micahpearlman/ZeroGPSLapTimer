@@ -305,6 +305,10 @@
 	@synchronized(_laps) {
 		// assume last lap is not completed so remove it
 		[_laps removeLastObject];
+		if ( [_laps count] == 0 ) {
+			return;	// we don't archive if there is nothing to archive...
+		}
+
 		[self archive];
 	}
 }

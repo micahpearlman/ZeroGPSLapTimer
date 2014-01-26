@@ -124,28 +124,6 @@
 	[_sessionInfos addObject:sessionInfo];
 	[self archive];
 }
-/*
-- (ZOSession*) createSessionAtDate:(NSDate*)time {
-
-	NSDictionary* newSessionInfo = [ZOSession newSessionInfoAtDate:time track:self];
-	[_sessionInfos addObject:newSessionInfo];
-	
-	ZOSession* newSession = [[ZOSession alloc] initWithCoordinate:self.coordinate
-												  boundingMapRect:self.boundingMapRect
-													  sessionInfo:newSessionInfo];
-	
-	newSession.delegate = self;
-	newSession.track = self;
-
-	// save to disk even though there is no real data
-	[newSession archive];
-	
-	// save track
-	[self archive];
-	
-	return newSession;
-}
- */
 
 - (void) removeSessionInfo:(NSDictionary *)sessionInfo {
 	NSError* error;

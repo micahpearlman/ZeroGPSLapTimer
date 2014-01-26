@@ -48,6 +48,9 @@
 - (void) viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
 	[_locationManager startUpdatingLocation];
+	if ( _track && _session == nil ) {
+		// start up a new session at current track
+	}
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -55,6 +58,12 @@
 	
 	[_locationManager stopUpdatingLocation];
 	[_session endSession];
+	
+	// if session doesn't have any laps remove the session from the track
+	if ( [_session.laps count] == 0 ) {
+		[_track removeSessionInfo:_session.sessionInfo];
+		_session = nil;
+	}
 }
 
 - (void)didReceiveMemoryWarning {
@@ -67,6 +76,7 @@
 	if ( _track == nil ) {
 		// if no track find the track that we are at
 		CLLocation* lastLocation = [locations lastObject];
+		// BUGBUG: there can be multiple tracks at coordinate
 		NSDictionary* trackInfo = [[ZOTrackCollection instance] trackAtCoordinate:lastLocation.coordinate];
 		if ( trackInfo ) {
 			// load track from disk
