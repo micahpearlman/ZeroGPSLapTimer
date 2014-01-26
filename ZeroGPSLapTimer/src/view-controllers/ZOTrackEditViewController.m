@@ -278,7 +278,11 @@ typedef enum {
 - (IBAction)onSave:(id)sender {
 	if ( _isNewTrack ) {
 		// get track name
-		UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Track Name" message:@"Enter Track Name:" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Ok", nil];
+		UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Track Name"
+															message:@"Enter Track Name:"
+														   delegate:self
+												  cancelButtonTitle:@"Cancel"
+												  otherButtonTitles:@"Ok", nil];
 		alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
 		[alertView show];
 	} else {
@@ -289,7 +293,7 @@ typedef enum {
 #pragma mark UIAlertViewDelegate
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
 	
-	if ( buttonIndex == 0 ) {
+	if ( buttonIndex == [alertView cancelButtonIndex] ) {
 		return;	// cancel pressed
 	}
 	
@@ -299,8 +303,12 @@ typedef enum {
 	_track.trackInfo = [[ZOTrackCollection instance] createTrackInfoNamed:_track.name withBoundingMapRect:_track.boundingMapRect];
 	[_track archive];
 	
+	if ( self.navigationController ) {
+		[self.navigationController popViewControllerAnimated:YES];
+	} else {
+		[self dismissViewControllerAnimated:YES completion:nil];
+	}
 	
-	[self.navigationController popViewControllerAnimated:YES];
 	
 }
 

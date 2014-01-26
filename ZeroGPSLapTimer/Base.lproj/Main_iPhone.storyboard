@@ -52,6 +52,9 @@
                                 <state key="disabled" title="Waiting To Cross Start/Finish">
                                     <color key="titleColor" name="disabledControlTextColor" catalog="System" colorSpace="catalog"/>
                                 </state>
+                                <connections>
+                                    <action selector="onStartStopSession:" destination="CZ4-MO-1fc" eventType="touchUpInside" id="5dN-5u-EsM"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -80,6 +83,7 @@
                         <outlet property="tableView" destination="8Yc-pd-if8" id="PE1-bC-fU7"/>
                         <outlet property="trackName" destination="FAM-sq-zTh" id="tVK-LL-oJF"/>
                         <outlet property="view" destination="2VE-Yg-loa" id="G8M-XW-wba"/>
+                        <segue destination="wbZ-JI-JGu" kind="modal" identifier="edit-track-segue" id="hku-6L-WnI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qh2-T1-AhA" sceneMemberID="firstResponder"/>
@@ -406,7 +410,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="RKu-dE-wTw"/>
         <segue reference="bko-Q7-wl5"/>
+        <segue reference="hku-6L-WnI"/>
     </inferredMetricsTieBreakers>
 </document>

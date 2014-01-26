@@ -10,6 +10,7 @@
 #import "ZOTrackCollection.h"
 #import "ZOSession.h"
 #import "ZOLap.h"
+#import "UIAlertView+Blocks.h"
 #import <MapKit/MapKit.h>
 
 @interface ZOLapTimeViewController () <CLLocationManagerDelegate, ZOSessionStateDelegate, ZOTrackObjectDelegate> {
@@ -41,13 +42,18 @@
 	[_locationManager setDelegate:self];
 	[_locationManager setDistanceFilter:kCLDistanceFilterNone];
 	[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
-	[_locationManager startUpdatingLocation];
 	
+}
+
+- (void) viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	[_locationManager startUpdatingLocation];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
 	[super viewWillDisappear:animated];
 	
+	[_locationManager stopUpdatingLocation];
 	[_session endSession];
 }
 
@@ -59,6 +65,7 @@
 #pragma mark CLLocationManagerDelegate
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 	if ( _track == nil ) {
+		// if no track find the track that we are at
 		CLLocation* lastLocation = [locations lastObject];
 		NSDictionary* trackInfo = [[ZOTrackCollection instance] trackAtCoordinate:lastLocation.coordinate];
 		if ( trackInfo ) {
@@ -72,7 +79,33 @@
 			
 			// set the track name label
 			self.trackName.text = _track.name;
+		} else {
+			static BOOL isAlertView = NO;
+			if ( isAlertView == NO ) {
+				[manager stopUpdatingLocation];
+				UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Track Not Found"
+																	message:@"Create a new track at current location?"
+																   delegate:nil cancelButtonTitle:@"Cancel"
+														  otherButtonTitles:@"Ok", nil];
+				
+				[alertView showWithHandler:^(UIAlertView *alertView, NSInteger buttonIndex) {
+					if ( buttonIndex == [alertView cancelButtonIndex] ) {
+						[self.tabBarController setSelectedIndex:0];	// got track table view
+					} else {	// OK button pressed
+						// go create a new track
+						[self performSegueWithIdentifier:@"edit-track-segue" sender:self];
+					}
+					isAlertView = NO;
+				}];
+				
+				isAlertView = YES;
+				
+			}
+
 		}
+	} else {	// we have a track so update the session
+		NSArray* waypoints = [ZOWaypoint ZOLocationArrayFromCLLocationArray:locations];
+		[_session addWaypoints:waypoints];
 	}
 }
 
@@ -92,12 +125,10 @@
 		
 		// set the stop button
 		self.startStopSession.enabled = YES;
-//		self.startStopSession.titleLabel.text = @"STOP";
 		
 		// TODO: make the lap table dirty
 	} else if ( to == ZOSessionState_EndSession ) {
 		self.startStopSession.enabled = NO;
-//		self.startStopSession.titleLabel.text = @"WAIT";
 	}
 
 }
