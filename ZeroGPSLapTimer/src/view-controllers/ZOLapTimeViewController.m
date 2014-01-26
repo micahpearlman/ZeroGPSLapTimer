@@ -89,12 +89,7 @@
 														  otherButtonTitles:@"Ok", nil];
 				
 				[alertView showWithHandler:^(UIAlertView *alertView, NSInteger buttonIndex) {
-					if ( buttonIndex == [alertView cancelButtonIndex] ) {
-						[self.tabBarController setSelectedIndex:0];	// got track table view
-					} else {	// OK button pressed
-						// go create a new track
-						[self performSegueWithIdentifier:@"edit-track-segue" sender:self];
-					}
+					[self.tabBarController setSelectedIndex:0];	// goto track table view
 					isAlertView = NO;
 				}];
 				
