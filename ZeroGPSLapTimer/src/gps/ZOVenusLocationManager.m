@@ -7,7 +7,6 @@
 //
 
 #import "ZOVenusLocationManager.h"
-#import "ZOBluetooth.h"
 #include "ZOVenusCommand.h"
 #include "ZOCircularBuffer.h"
 #include "ZOParseNMEA.h"
@@ -22,7 +21,6 @@
 
 
 @interface ZOVenusLocationManager () <CBCentralManagerDelegate, CBPeripheralDelegate> {
-//	ZOBluetooth*			_bluetooth;
 	CBCentralManager*		_centralManager;
 	CBPeripheral*			_peripheral;
 	CBService*				_service;
@@ -36,7 +34,6 @@
 }
 
 @property (nonatomic) ZOCircularBuffer circularBuffer;
-@property (nonatomic,retain) ZOBluetooth* bluetooth;
 
 
 @end
@@ -45,8 +42,10 @@
 
 void vc_writeFunction( ZOVenusCommandContext ctx, const uint8_t* data, const uint16_t length ) {
 	ZOVenusLocationManager* locationManager = (__bridge ZOVenusLocationManager*)zoVenusCommandGetUserData( ctx );
-	[locationManager.bluetooth write:[NSData dataWithBytes:data length:length] ];
+	assert( false );	// TODO: bluetooth write below
+//	[locationManager.bluetooth write:[NSData dataWithBytes:data length:length] ];
 }
+
 uint16_t vc_readFunction( ZOVenusCommandContext ctx, uint8_t* buffer, const uint16_t length ) {
 	ZOVenusLocationManager* locationManager = (__bridge ZOVenusLocationManager*)zoVenusCommandGetUserData( ctx );
 	uint32_t cbLength = zoCircularBufferGetSize( locationManager.circularBuffer );
@@ -107,21 +106,9 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
 @synthesize circularBuffer	= _circularBuffer;
 @synthesize bluetooth		= _bluetooth;
 
-//+ (ZOGPSExternalVenus*)instance {
-//	static ZOGPSExternalVenus* instance = nil;
-//	@synchronized(self) {
-//		if ( instance == nil ) {
-//			instance = [[self alloc] init];
-//		}
-//	}
-//	
-//	return instance;
-//}
 
 - (id) init {
 	if ( self = [super init]) {
-//		_bluetooth = [[ZOBluetooth alloc] init];
-//		_bluetooth.delegate = self;
 		
 		_isUpdating = NO;
 		// setup bluetooth connection
@@ -205,6 +192,7 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
     
 	// this starts up didUpdateValueForCharacteristic below
     [peripheral setNotifyValue:YES forCharacteristic:_rx];
+	[peripheral setNotifyValue:YES forCharacteristic:_tx];
 		
 }
 
@@ -217,19 +205,16 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
 ///### NOTE: this is where incoming data
 - (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
 	
-//	if ( [self.delegate respondsToSelector:@selector(zoBluetoothDidReceiveData:length:)] ) {
-//		[self.delegate zoBluetoothDidReceiveData:(uint8_t*)[characteristic.value bytes]
-//										  length:(uint32_t)[characteristic.value length]];
-//	}
-	
-	//[_incomingData appendData:characteristic.value];
-	//	const uint8_t* bytes = [characteristic.value bytes];
-	//	zoCircularBufferWrite( _circularBuffer, bytes, (uint32_t)[characteristic.value length] );
-	//	zoVenusCommandUpdate( _venusCmdCtx );
-	//
-	//	NSData* value = characteristic.value;
-	//	NSString *newString = [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding];
-	//    NSLog(@"Receive -> %@",newString);
+
+	uint32_t writeLength = (uint32_t)[characteristic.value length];
+	const uint8_t* data = [characteristic.value bytes];
+	zoCircularBufferWrite( _circularBuffer, data, &writeLength );
+	assert( writeLength == [characteristic.value length] );	// BUGBUG: we have recieved more data then we can write, so we need to increase the size of the circular buffer
+	zoParseNMEAUpdate( _nmeaParser );
+
+//	NSData* value = characteristic.value;
+//	NSString *newString = [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding];
+//    NSLog(@"Receive -> %@",newString);
 }
 
 
@@ -322,24 +307,6 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
     previousState = [_centralManager state];
 }
 
-
-//-(void) zoBluetoothDidConnect:(ZOBluetooth*)ble {
-//	// test get version
-//	//zoVenusCommandGetVersion( _venusCmdCtx, vc_responseCallBack );
-//}
-//
-//-(void) zoBluetoothDidDisconnect:(ZOBluetooth*)ble {
-//	
-//}
-//
-//-(void) zoBluetoothDidReceiveData:(uint8_t*)data length:(uint32_t)length {
-//	uint32_t writeLength = length;
-//	zoCircularBufferWrite( _circularBuffer, data, &writeLength );
-//	assert( writeLength == length );	// BUGBUG: we have recieved more data then we can write, so we need to increase the size of the circular buffer
-//	//zoVenusCommandUpdate( _venusCmdCtx );
-//	zoParseNMEAUpdate( _nmeaParser );
-//
-//}
 
 
 
