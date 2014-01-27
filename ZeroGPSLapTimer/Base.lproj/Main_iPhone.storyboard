@@ -16,16 +16,16 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00.00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vd8-7Y-v7y">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="00:00.00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vd8-7Y-v7y">
                                 <rect key="frame" x="19" y="87" width="280" height="83"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="70"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mTi-gr-3Bt">
-                                <rect key="frame" x="228" y="57" width="71" height="22"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="00:00.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mTi-gr-3Bt">
+                                <rect key="frame" x="189" y="57" width="110" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="18"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="27"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Track Not Found" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FAM-sq-zTh">
@@ -66,14 +66,12 @@
                             <constraint firstItem="mTi-gr-3Bt" firstAttribute="top" secondItem="FAM-sq-zTh" secondAttribute="bottom" constant="20" id="FzS-Rn-O98"/>
                             <constraint firstAttribute="trailing" secondItem="mTi-gr-3Bt" secondAttribute="trailing" constant="21" id="Gi9-dj-xHK"/>
                             <constraint firstItem="vd8-7Y-v7y" firstAttribute="top" secondItem="mTi-gr-3Bt" secondAttribute="bottom" constant="8" id="eWq-1d-RJc"/>
-                            <constraint firstItem="8Yc-pd-if8" firstAttribute="top" secondItem="vd8-7Y-v7y" secondAttribute="bottom" constant="8" id="ekA-6i-zea"/>
                             <constraint firstItem="FAM-sq-zTh" firstAttribute="top" secondItem="wCp-Ds-UJ7" secondAttribute="bottom" id="fRB-NU-hhR"/>
                             <constraint firstItem="FAM-sq-zTh" firstAttribute="leading" secondItem="2VE-Yg-loa" secondAttribute="leading" id="gck-p0-Llp"/>
                             <constraint firstItem="8Yc-pd-if8" firstAttribute="top" secondItem="vd8-7Y-v7y" secondAttribute="bottom" constant="8" id="ivN-Sf-vnO"/>
                             <constraint firstAttribute="trailing" secondItem="vd8-7Y-v7y" secondAttribute="trailing" constant="21" id="kcO-up-QRS"/>
                             <constraint firstAttribute="trailing" secondItem="8Yc-pd-if8" secondAttribute="trailing" id="n5V-vY-7Ee"/>
                             <constraint firstAttribute="trailing" secondItem="FAM-sq-zTh" secondAttribute="trailing" id="pgM-f9-hcC"/>
-                            <constraint firstItem="vd8-7Y-v7y" firstAttribute="top" secondItem="mTi-gr-3Bt" secondAttribute="bottom" constant="8" id="zTa-pJ-voO"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="First" image="stop-watch" id="u1e-5L-l1D"/>
@@ -83,7 +81,6 @@
                         <outlet property="tableView" destination="8Yc-pd-if8" id="PE1-bC-fU7"/>
                         <outlet property="trackName" destination="FAM-sq-zTh" id="tVK-LL-oJF"/>
                         <outlet property="view" destination="2VE-Yg-loa" id="G8M-XW-wba"/>
-                        <segue destination="wbZ-JI-JGu" kind="modal" identifier="edit-track-segue" id="hku-6L-WnI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qh2-T1-AhA" sceneMemberID="firstResponder"/>
@@ -410,7 +407,7 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="RKu-dE-wTw"/>
         <segue reference="bko-Q7-wl5"/>
-        <segue reference="hku-6L-WnI"/>
     </inferredMetricsTieBreakers>
 </document>

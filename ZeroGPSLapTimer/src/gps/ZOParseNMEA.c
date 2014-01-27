@@ -33,16 +33,18 @@ typedef struct {
 	ZOParseNMEAResult*						result;
 	uint8_t									currentSentenceField;
 	char									fieldBuffer[FIELD_BUFFER_SIZE];
+	void*									userData;
 } ZOParseNMEAContextIMPL;
 
 
-ZOParseNMEAContext zoParseNMEACreateContext( ZOCircularBuffer circularBuffer, uint32_t sentenceTypes, ZOParseNMEAOnReceivedSentenceCallback callback ) {
+ZOParseNMEAContext zoParseNMEACreateContext( ZOCircularBuffer circularBuffer, uint32_t sentenceTypes, ZOParseNMEAOnReceivedSentenceCallback callback, void* userData ) {
 	ZOParseNMEAContextIMPL* ctx = (ZOParseNMEAContextIMPL*)malloc( sizeof(ZOParseNMEAContextIMPL) );
 	memset( ctx, 0, sizeof(ZOParseNMEAContextIMPL) );
 	
 	ctx->circularBuffer = circularBuffer;
 	ctx->sentenceTypes = sentenceTypes;
 	ctx->callback = callback;
+	ctx->userData = userData;
 	
 	return (ZOParseNMEAContext)ctx;
 	
@@ -259,6 +261,9 @@ void zoParseNMEAUpdate( ZOParseNMEAContext _ctx ) {
 				break;
 		}
 	}
-	
-	
+}
+
+void* zoParseNMEAGetUserData( ZOParseNMEAContext _ctx ) {
+	ZOParseNMEAContextIMPL* ctx = (ZOParseNMEAContextIMPL*)_ctx;
+	return ctx->userData;
 }

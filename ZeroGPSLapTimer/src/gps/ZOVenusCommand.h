@@ -36,16 +36,17 @@ typedef enum {
 
 typedef void* ZOVenusCommandContext;
 
-typedef void (*ZOVenusCommandWriteFunction)(const uint8_t*, const uint16_t);
-typedef uint16_t (*ZOVenusCommandReadFunction)(uint8_t*, const uint16_t);
-typedef void (*ZOVenusCommandResponseCallBack)(ZOVenusCommandResponse, const uint8_t*, const uint16_t);
+typedef void (*ZOVenusCommandWriteFunction)(ZOVenusCommandContext, const uint8_t*, const uint16_t);
+typedef uint16_t (*ZOVenusCommandReadFunction)(ZOVenusCommandContext, uint8_t*, const uint16_t);
+typedef void (*ZOVenusCommandResponseCallBack)(ZOVenusCommandContext, ZOVenusCommandResponse, const uint8_t*, const uint16_t);
 
-extern ZOVenusCommandContext zoVenusCommandCreateContext( ZOVenusCommandWriteFunction writeFunc, ZOVenusCommandReadFunction readFunc );
+extern ZOVenusCommandContext zoVenusCommandCreateContext( ZOVenusCommandWriteFunction writeFunc, ZOVenusCommandReadFunction readFunc, void* userData );
 extern void zoVenusCommandDestroyContext( ZOVenusCommandContext ctx );
 extern void zoVenusCommandUpdate( ZOVenusCommandContext ctx );
 
 extern void zoVenusCommandSetBaudRate( ZOVenusCommandContext ctx, ZOVenusCommandBaudRate baudRate, ZOVenusCommandSaveTo saveTo, ZOVenusCommandResponseCallBack cb );
 extern void zoVenusCommandGetVersion( ZOVenusCommandContext ctx, ZOVenusCommandResponseCallBack cb );
 
+extern void* zoVenusCommandGetUserData( ZOVenusCommandContext ctx );
 
 #endif

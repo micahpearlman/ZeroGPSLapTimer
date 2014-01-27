@@ -6,9 +6,9 @@
 //  Copyright (c) 2013 Micah Pearlman. All rights reserved.
 //
 
-#import "ZOGPS.h"
+#import "ZOLocationManager.h"
 
-@implementation ZOGPS
+@implementation ZOLocationManager
 
 @synthesize delegate;
 

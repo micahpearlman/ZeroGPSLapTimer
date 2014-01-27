@@ -6,10 +6,10 @@
 //  Copyright (c) 2013 Micah Pearlman. All rights reserved.
 //
 
-#import "ZOGPS.h"
+#import "ZOLocationManager.h"
 
-@interface ZOGPSExternalVenus : ZOGPS
+@interface ZOVenusLocationManager : ZOLocationManager
 
-+ (ZOGPSExternalVenus*) instance;
+- (id) init;
 
 @end

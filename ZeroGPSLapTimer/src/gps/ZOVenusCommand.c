@@ -41,14 +41,16 @@ typedef struct {
 	uint8_t*						payloadData;
 	uint8_t							messageID;
 	uint8_t							commandExpectsResponseAfterACK;
+	void*							userData;
 	
 } venusCommand_ContextIMPL;
 
-ZOVenusCommandContext zoVenusCommandCreateContext(ZOVenusCommandWriteFunction writeFunc, ZOVenusCommandReadFunction readFunc ) {
+ZOVenusCommandContext zoVenusCommandCreateContext(ZOVenusCommandWriteFunction writeFunc, ZOVenusCommandReadFunction readFunc, void* userData ) {
 	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)malloc( sizeof(venusCommand_ContextIMPL) );
 	memset( ctx, 0, sizeof(venusCommand_ContextIMPL) );
 	ctx->write = writeFunc;
 	ctx->read = readFunc;
+	ctx->userData = userData;
 	
 	return (ZOVenusCommandContext)ctx;
 	
@@ -73,7 +75,7 @@ void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 	// if in response state machine the read
 	size_t bytesLeftToRead = 0;
 	if ( ctx->state != kUnknown ) {
-		bytesLeftToRead = ctx->read( ctx->responseBuffer, RESPONSE_BUFFER_SIZE );
+		bytesLeftToRead = ctx->read( ctx, ctx->responseBuffer, RESPONSE_BUFFER_SIZE );
 	}
 	
 	if ( bytesLeftToRead ) {
@@ -125,14 +127,14 @@ void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 					if ( ctx->messageID == ACK ) {
 						
 						if ( ctx->responseCallBack && ctx->commandExpectsResponseAfterACK == 0 ) { // just inform application we have an ack
-							(*ctx->responseCallBack)( ZOVenusCommandResponse_OK, 0, 0 );
+							(*ctx->responseCallBack)( ctx, ZOVenusCommandResponse_OK, 0, 0 );
 							ctx->state = kCleanup;	// done
 						} else if ( ctx->responseCallBack ) {	// expecting further response so start over looking for it in buffer
 							ctx->state = kSoS1;	//
 						}
 					} else if (ctx->messageID == NACK ) {
 						if ( ctx->responseCallBack ) {
-							(*ctx->responseCallBack)( ZOVenusCommandResponse_Error, 0, 0 );
+							(*ctx->responseCallBack)( ctx, ZOVenusCommandResponse_Error, 0, 0 );
 							ctx->state = kCleanup;	// done
 						}
 						
@@ -159,7 +161,7 @@ void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 					
 					if ( ctx->state == kCleanup ) {	// all done notify the app
 						// BUGBUG: should be doing Check Sum on the data before passing it to application
-						(*ctx->responseCallBack)( ZOVenusCommandResponse_Error, ctx->payloadData, ctx->payloadLength );
+						(*ctx->responseCallBack)( ctx, ZOVenusCommandResponse_OK, ctx->payloadData, ctx->payloadLength );
 					}
 					break;
 				case kCleanup:	// quit
@@ -179,6 +181,10 @@ void zoVenusCommandUpdate( ZOVenusCommandContext _ctx ) {
 	
 }
 
+extern void* zoVenusCommandGetUserData( ZOVenusCommandContext _ctx ) {
+	venusCommand_ContextIMPL* ctx = (venusCommand_ContextIMPL*)_ctx;
+	return ctx->userData;
+}
 
 
 void zoVenusCommandSetBaudRate( ZOVenusCommandContext _ctx, ZOVenusCommandBaudRate baudRate, ZOVenusCommandSaveTo saveTo, ZOVenusCommandResponseCallBack cb ) {
@@ -198,7 +204,7 @@ void zoVenusCommandSetBaudRate( ZOVenusCommandContext _ctx, ZOVenusCommandBaudRa
 	command[ 4 + payloadLength ] = venusCommand_calculateCheckSum( &command[4], payloadLength );
 
 	ctx->responseCallBack = cb;
-	ctx->write( command, sizeof(command) );
+	ctx->write( ctx, command, sizeof(command) );
 	ctx->state = kCommandSent;
 	ctx->commandExpectsResponseAfterACK = 0;
 	
@@ -223,3 +229,4 @@ void zoVenusCommandGetVersion( ZOVenusCommandContext _ctx, ZOVenusCommandRespons
 	ctx->commandExpectsResponseAfterACK = 1;
 	
 }
+

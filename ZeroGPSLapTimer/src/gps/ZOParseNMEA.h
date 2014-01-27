@@ -55,9 +55,9 @@ typedef void* ZOParseNMEAContext;
 
 typedef void (*ZOParseNMEAOnReceivedSentenceCallback)( ZOParseNMEAContext, ZOParseNMEAResult* );
 
-ZOParseNMEAContext zoParseNMEACreateContext( ZOCircularBuffer circularBuffer, uint32_t sentenceTypes, ZOParseNMEAOnReceivedSentenceCallback callback );
-void zoParseNMEADestroyContext( ZOParseNMEAContext ctx );
-void zoParseNMEAUpdate( ZOParseNMEAContext ctx );
-
+extern ZOParseNMEAContext zoParseNMEACreateContext( ZOCircularBuffer circularBuffer, uint32_t sentenceTypes, ZOParseNMEAOnReceivedSentenceCallback callback, void* userData );
+extern void zoParseNMEADestroyContext( ZOParseNMEAContext ctx );
+extern void zoParseNMEAUpdate( ZOParseNMEAContext ctx );
+extern void* zoParseNMEAGetUserData( ZOParseNMEAContext ctx );
 
 #endif

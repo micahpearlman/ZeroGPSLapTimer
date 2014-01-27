@@ -7,11 +7,11 @@
 //
 
 #import "ZOMapViewController.h"
-#import "ZOGPSExternalVenus.h"
+#import "ZOVenusLocationManager.h"
 #import <CoreLocation/CoreLocation.h>
 
 
-@interface ZOMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate, ZOGPSDelegate> {
+@interface ZOMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate, ZOLocationManagerDelegate> {
 	MKMapView*				_mapView;
 	UILabel*				_currentCoordinateLabel;
 	CLLocationManager*		_locationManager;
@@ -20,7 +20,7 @@
 	NSMutableArray*			_locations;	// CLLocation
 	
 	
-	ZOGPS*					_gps;
+	ZOLocationManager*					_gps;
 	
 	NSDictionary*			_geoJSON;
 	MKPolyline*				_geoJSONPolyLine;
@@ -57,9 +57,9 @@
 	
 	
 	// init gps
-	_gps = [ZOGPSExternalVenus instance];
+	_gps = [[ZOVenusLocationManager alloc] init];
 	_gps.delegate = self;
-	[_gps connect];
+//	[_gps connect];
 	
 	// init geoJSON
 	NSString* geoJSONFilePath = [[NSBundle mainBundle] pathForResource:@"example-linestring" ofType:@"json" inDirectory:@"assets"];
@@ -155,7 +155,7 @@
 
 #pragma mark GPS delegate
 
--(void) zoGPS:(ZOGPS*)gps didUpdateLocations:(NSArray*)locations {
+-(void) zoGPS:(ZOLocationManager*)gps didUpdateLocations:(NSArray*)locations {
 	if ( _locations == nil ) {
 		_locations = [[NSMutableArray alloc] init];
 		[_locations addObjectsFromArray:locations];

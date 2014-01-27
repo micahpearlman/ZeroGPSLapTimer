@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Micah Pearlman. All rights reserved.
 //
 
-#import "ZOGPSExternalVenus.h"
+#import "ZOVenusLocationManager.h"
 #import "ZOBluetooth.h"
 #include "ZOVenusCommand.h"
 #include "ZOCircularBuffer.h"
@@ -14,9 +14,7 @@
 #import <CoreLocation/CoreLocation.h>
 
 
-
-
-@interface ZOGPSExternalVenus () <ZOBluetoothDelegate> {
+@interface ZOVenusLocationManager () <ZOBluetoothDelegate> {
 	ZOBluetooth*			_bluetooth;
 	ZOVenusCommandContext	_venusCmdCtx;
 	ZOCircularBuffer		_circularBuffer;
@@ -30,28 +28,32 @@
 @end
 
 
-void vc_writeFunction( const uint8_t* data, const uint16_t length ) {
-	[[ZOGPSExternalVenus instance].bluetooth write:[NSData dataWithBytes:data length:length] ];
-}
-uint16_t vc_readFunction( uint8_t* buffer, const uint16_t length ) {
 
-	uint32_t cbLength = zoCircularBufferGetSize( [ZOGPSExternalVenus instance].circularBuffer );
+void vc_writeFunction( ZOVenusCommandContext ctx, const uint8_t* data, const uint16_t length ) {
+	ZOVenusLocationManager* locationManager = (__bridge ZOVenusLocationManager*)zoVenusCommandGetUserData( ctx );
+	[locationManager.bluetooth write:[NSData dataWithBytes:data length:length] ];
+}
+uint16_t vc_readFunction( ZOVenusCommandContext ctx, uint8_t* buffer, const uint16_t length ) {
+	ZOVenusLocationManager* locationManager = (__bridge ZOVenusLocationManager*)zoVenusCommandGetUserData( ctx );
+	uint32_t cbLength = zoCircularBufferGetSize( locationManager.circularBuffer );
 	uint32_t finalReadLength = length > cbLength ? cbLength : length;	// read either requested read length or the total length of whats in the circular buffer
-	zoCircularBufferRead( [ZOGPSExternalVenus instance].circularBuffer, buffer, &finalReadLength );
+	zoCircularBufferRead( locationManager.circularBuffer, buffer, &finalReadLength );
 	return finalReadLength;
 	
 }
-void vc_responseCallBack( ZOVenusCommandResponse response, const uint8_t* data, const uint16_t length ) {
+void vc_responseCallBack( ZOVenusCommandContext ctx, ZOVenusCommandResponse response, const uint8_t* data, const uint16_t length ) {
+	ZOVenusLocationManager* locationManager = (__bridge ZOVenusLocationManager*)zoVenusCommandGetUserData( ctx );
 	NSLog(@"vc_responseCallBack");
 }
 
 void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
+	ZOVenusLocationManager* locationManager = (__bridge ZOVenusLocationManager*)zoParseNMEAGetUserData( ctx );
 	//NSLog(@"parseNMEACallback");
 	if ( result->type == ZOParseNMEAResultType_GPGAA ) {
 		ZOParseNMEAResultGPGAA* GPGAA = (ZOParseNMEAResultGPGAA*)result;
 		//NSLog( @"lattitude = %f longitude = %f altitude = %f", GPGAA->lattitude, GPGAA->longitude, GPGAA->altitude );
 		
-		if ( [[ZOGPSExternalVenus instance].delegate respondsToSelector:@selector(zoGPS:didUpdateLocations:)] ) {
+		if ( [locationManager.delegate respondsToSelector:@selector(locationManager:didUpdateLocations:)] ) {
 			CLLocationCoordinate2D coordinate;
 			coordinate.latitude = GPGAA->lattitude;
 			coordinate.longitude = GPGAA->longitude;
@@ -75,8 +77,9 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
 														 verticalAccuracy:GPGAA->horizontalPrecision
 																timestamp:date];
 			NSArray* locationArray = [[NSArray alloc] initWithObjects:location, nil];
-			[[ZOGPSExternalVenus instance].delegate zoGPS:[ZOGPSExternalVenus instance]
-									   didUpdateLocations:locationArray];
+			
+			[locationManager.delegate locationManager:locationManager
+								   didUpdateLocations:locationArray];
 
 		}
 	}
@@ -84,21 +87,22 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
 
 
 
-@implementation ZOGPSExternalVenus
+
+@implementation ZOVenusLocationManager
 
 @synthesize circularBuffer	= _circularBuffer;
 @synthesize bluetooth		= _bluetooth;
 
-+ (ZOGPSExternalVenus*)instance {
-	static ZOGPSExternalVenus* instance = nil;
-	@synchronized(self) {
-		if ( instance == nil ) {
-			instance = [[self alloc] init];
-		}
-	}
-	
-	return instance;
-}
+//+ (ZOGPSExternalVenus*)instance {
+//	static ZOGPSExternalVenus* instance = nil;
+//	@synchronized(self) {
+//		if ( instance == nil ) {
+//			instance = [[self alloc] init];
+//		}
+//	}
+//	
+//	return instance;
+//}
 
 - (id) init {
 	if ( self = [super init]) {
@@ -109,10 +113,10 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
 		_circularBuffer = zoCircularBufferInit( 256 );
 		
 		// setup venus command context
-		_venusCmdCtx = zoVenusCommandCreateContext( vc_writeFunction, vc_readFunction );
+		_venusCmdCtx = zoVenusCommandCreateContext( vc_writeFunction, vc_readFunction, (__bridge void *)(self) );
 		
 		// setup nmea parser
-		_nmeaParser = zoParseNMEACreateContext( _circularBuffer, ZOParseNMEAResultType_GPGAA, parseNMEACallback );
+		_nmeaParser = zoParseNMEACreateContext( _circularBuffer, ZOParseNMEAResultType_GPGAA, parseNMEACallback, (__bridge void *)(self) );
 		
 	}
 	return self;

@@ -28,8 +28,8 @@
 		FAADF4381864D38C00F301B7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4301864D38C00F301B7 /* main.m */; };
 		FAADF4391864D38C00F301B7 /* ZOMapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4331864D38C00F301B7 /* ZOMapViewController.m */; };
 		FAADF43B1864D38C00F301B7 /* ZOAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4371864D38C00F301B7 /* ZOAppDelegate.m */; };
-		FAADF44E18692EEA00F301B7 /* ZOGPS.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF44D18692EEA00F301B7 /* ZOGPS.m */; };
-		FAADF4571869375500F301B7 /* ZOGPSExternalVenus.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4561869375500F301B7 /* ZOGPSExternalVenus.m */; };
+		FAADF44E18692EEA00F301B7 /* ZOLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF44D18692EEA00F301B7 /* ZOLocationManager.m */; };
+		FAADF4571869375500F301B7 /* ZOVenusLocationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = FAADF4561869375500F301B7 /* ZOVenusLocationManager.m */; };
 		FAB03EF81881F486007BD08D /* ZOTrackCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB03EF71881F486007BD08D /* ZOTrackCollection.m */; };
 		FAB03EFB18823895007BD08D /* ZOSessionSelectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB03EFA18823895007BD08D /* ZOSessionSelectViewController.m */; };
 		FAB03F04188242E8007BD08D /* NSCoder+MapKit.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB03EFD188242E8007BD08D /* NSCoder+MapKit.m */; };
@@ -98,10 +98,10 @@
 		FAADF4331864D38C00F301B7 /* ZOMapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOMapViewController.m; sourceTree = "<group>"; };
 		FAADF4361864D38C00F301B7 /* ZOAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOAppDelegate.h; sourceTree = "<group>"; };
 		FAADF4371864D38C00F301B7 /* ZOAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOAppDelegate.m; sourceTree = "<group>"; };
-		FAADF44C18692EEA00F301B7 /* ZOGPS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOGPS.h; sourceTree = "<group>"; };
-		FAADF44D18692EEA00F301B7 /* ZOGPS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOGPS.m; sourceTree = "<group>"; };
-		FAADF4551869375500F301B7 /* ZOGPSExternalVenus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOGPSExternalVenus.h; sourceTree = "<group>"; };
-		FAADF4561869375500F301B7 /* ZOGPSExternalVenus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOGPSExternalVenus.m; sourceTree = "<group>"; };
+		FAADF44C18692EEA00F301B7 /* ZOLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOLocationManager.h; sourceTree = "<group>"; };
+		FAADF44D18692EEA00F301B7 /* ZOLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOLocationManager.m; sourceTree = "<group>"; };
+		FAADF4551869375500F301B7 /* ZOVenusLocationManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOVenusLocationManager.h; sourceTree = "<group>"; };
+		FAADF4561869375500F301B7 /* ZOVenusLocationManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOVenusLocationManager.m; sourceTree = "<group>"; };
 		FAB03EF61881F486007BD08D /* ZOTrackCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOTrackCollection.h; sourceTree = "<group>"; };
 		FAB03EF71881F486007BD08D /* ZOTrackCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZOTrackCollection.m; sourceTree = "<group>"; };
 		FAB03EF918823895007BD08D /* ZOSessionSelectViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZOSessionSelectViewController.h; sourceTree = "<group>"; };
@@ -329,10 +329,10 @@
 		FAADF44A18692C6800F301B7 /* gps */ = {
 			isa = PBXGroup;
 			children = (
-				FAADF44C18692EEA00F301B7 /* ZOGPS.h */,
-				FAADF44D18692EEA00F301B7 /* ZOGPS.m */,
-				FAADF4551869375500F301B7 /* ZOGPSExternalVenus.h */,
-				FAADF4561869375500F301B7 /* ZOGPSExternalVenus.m */,
+				FAADF44C18692EEA00F301B7 /* ZOLocationManager.h */,
+				FAADF44D18692EEA00F301B7 /* ZOLocationManager.m */,
+				FAADF4551869375500F301B7 /* ZOVenusLocationManager.h */,
+				FAADF4561869375500F301B7 /* ZOVenusLocationManager.m */,
 				FA097509186A3D5E005C9B05 /* ZOVenusCommand.h */,
 				FA097507186A37F4005C9B05 /* ZOVenusCommand.c */,
 				FAA68D5918720763007DD016 /* ZOParseNMEA.h */,
@@ -492,11 +492,11 @@
 				FABCD7BB1878B76700EFB248 /* ZOTrackEditViewController.m in Sources */,
 				FAC39BF51888D0720053689E /* CLLocationDeadReckoning.m in Sources */,
 				FAADF4381864D38C00F301B7 /* main.m in Sources */,
-				FAADF44E18692EEA00F301B7 /* ZOGPS.m in Sources */,
+				FAADF44E18692EEA00F301B7 /* ZOLocationManager.m in Sources */,
 				FAC39BFC188B25810053689E /* ZOWaypointRenderer.m in Sources */,
 				FAADF43B1864D38C00F301B7 /* ZOAppDelegate.m in Sources */,
 				FACF91B21884E5DB00EDE2A2 /* ZOWaypoint.m in Sources */,
-				FAADF4571869375500F301B7 /* ZOGPSExternalVenus.m in Sources */,
+				FAADF4571869375500F301B7 /* ZOVenusLocationManager.m in Sources */,
 				FAB1112E1891B45A00100467 /* ZOLapsViewController.m in Sources */,
 				FA097508186A37F4005C9B05 /* ZOVenusCommand.c in Sources */,
 				FAC39BF41888D0720053689E /* CLLocation+routeInfo.m in Sources */,
