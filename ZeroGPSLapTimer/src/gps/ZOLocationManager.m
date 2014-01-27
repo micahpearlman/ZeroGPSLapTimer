@@ -12,8 +12,11 @@
 
 @synthesize delegate;
 
-- (void) connect {
-	NSAssert( false, @"Not implemented in base class ZOGPS" );
+- (void) startUpdatingLocation {
+	
+}
+- (void) stopUpdatingLocaion {
+	
 }
 
 @end

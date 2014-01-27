@@ -224,7 +224,7 @@ void zoVenusCommandGetVersion( ZOVenusCommandContext _ctx, ZOVenusCommandRespons
 	command[ 4 + payloadLength ] = venusCommand_calculateCheckSum( &command[4], payloadLength );
 	
 	ctx->responseCallBack = cb;
-	ctx->write( command, sizeof(command) );
+	ctx->write( ctx, command, sizeof(command) );
 	ctx->state = kCommandSent;
 	ctx->commandExpectsResponseAfterACK = 1;
 	

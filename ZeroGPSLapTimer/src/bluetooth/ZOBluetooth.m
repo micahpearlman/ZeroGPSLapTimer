@@ -7,7 +7,7 @@
 //
 
 #import "ZOBluetooth.h"
-#import <CoreBluetooth/CoreBluetooth.h>
+
 
 // RBL Service: see: http://redbearlab.com/blemini/ or https://github.com/RedBearLab
 #define RBL_SERVICE_UUID                         "713D0000-503E-4C75-BA94-3148F18D941E"
@@ -274,6 +274,7 @@
 	
 	[_peripherals addObject:peripheral];
 	
+	//BUGBUG: have the application do this or just get rid of zobluetooth?
 	[_centralManager connectPeripheral:peripheral options:nil];
 	
 }
@@ -322,6 +323,14 @@
     
     previousState = [_centralManager state];
 }
+
+- (void) connectPeripheral:(CBPeripheral*)peripheral {
+	[_centralManager connectPeripheral:peripheral options:nil];
+}
+- (void) disconnectPeripheral:(CBPeripheral*)peripheral {
+	[_centralManager cancelPeripheralConnection:peripheral];
+}
+
 
 
 @end

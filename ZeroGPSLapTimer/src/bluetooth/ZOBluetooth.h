@@ -7,13 +7,18 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <CoreBluetooth/CoreBluetooth.h> 
 
 @protocol ZOBluetoothDelegate;
 @interface ZOBluetooth : NSObject
 
 @property (nonatomic,assign) id<ZOBluetoothDelegate> delegate;
+@property (nonatomic,readonly) NSArray* peripherals;
 
 -(void) write:(NSData *)d;
+
+- (void) connectPeripheral:(CBPeripheral*)peripheral;
+- (void) disconnectPeripheral:(CBPeripheral*)peripheral;
 
 @end
 

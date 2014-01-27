@@ -11,6 +11,7 @@
 #import "ZOSession.h"
 #import "ZOLap.h"
 #import "UIAlertView+Blocks.h"
+#import "ZOVenusLocationManager.h"
 #import <MapKit/MapKit.h>
 
 @interface ZOLapTimeViewController () <CLLocationManagerDelegate, ZOSessionStateDelegate, ZOTrackObjectDelegate> {

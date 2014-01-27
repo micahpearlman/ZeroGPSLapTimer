@@ -110,6 +110,9 @@ static uint8_t zoGetGPGGAFields( ZOParseNMEAContextIMPL* ctx ) {
 	ZOParseNMEAResultGPGAA* result = (ZOParseNMEAResultGPGAA*)ctx->result;
 	switch ( ctx->currentSentenceField ) {
 		case 1:		// UTC of Position
+//TODO: https://joinup.ec.europa.eu/svn/gvsig-mobile/libLocation/trunk/libLocation/src/org/gvsig/location/nmea/NmeaSentenceDecoder.java
+// see: parseUtcTime
+// TODO: convert to unix time
 			if ( zoGetField( ctx ) ) {
 				strcpy( result->utcString, ctx->fieldBuffer );
 				unsigned long utcTime = 0;
@@ -213,7 +216,7 @@ void zoParseNMEAUpdate( ZOParseNMEAContext _ctx ) {
 		ctx->parseState = kSearchForSentenceType;
 	}
 	
-	uint32_t tryLater = 0;
+	uint32_t tryLater = 0;	// don't have enough data so try later
 	
 	while ( zoCircularBufferGetSize(ctx->circularBuffer)
 		   && ctx->parseState != kUnknown

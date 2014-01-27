@@ -122,10 +122,31 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
 	return self;
 }
 
-#pragma mark ZOGPS overrides
-- (void)connect {
-    
+- (void) dealloc {
+	zoCircularBufferDestroy( _circularBuffer );
+	zoVenusCommandDestroyContext( _venusCmdCtx );
+	zoParseNMEADestroyContext( _nmeaParser );
 }
+
+- (void) startUpdatingLocation {
+	// BUGBUG should just get rid of ZOBluetooth and implement here
+	// the last peripheral is not really guaranteed to be the peripheral we want
+	if ( [self.bluetooth.peripherals count] ) {
+		[self.bluetooth connectPeripheral:[self.bluetooth.peripherals lastObject]];
+	}
+	
+}
+- (void) stopUpdatingLocaion {
+	// BUGBUG should just get rid of ZOBluetooth and implement here
+	// the last peripheral is not really guaranteed to be the peripheral we want
+
+	if ( [self.bluetooth.peripherals count] ) {
+		[self.bluetooth disconnectPeripheral:[self.bluetooth.peripherals lastObject]];
+	}
+	
+}
+
+
 
 #pragma mark ZOBLuetoothDelegate
 -(void) zoBluetoothDidConnect:(ZOBluetooth*)ble {
@@ -145,6 +166,8 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
 	zoParseNMEAUpdate( _nmeaParser );
 
 }
+
+
 
 
 

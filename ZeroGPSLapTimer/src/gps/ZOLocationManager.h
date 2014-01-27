@@ -13,11 +13,15 @@
 @protocol ZOLocationManagerDelegate <NSObject>
 @optional
 - (void)locationManager:(ZOLocationManager *)manager didUpdateLocations:(NSArray *)locations;
+// TODO: connection management
 @end
 
 @interface ZOLocationManager : NSObject 
 
 @property (nonatomic, assign) id<ZOLocationManagerDelegate>	delegate;
+
+- (void) startUpdatingLocation;
+- (void) stopUpdatingLocaion;
 
 
 @end
