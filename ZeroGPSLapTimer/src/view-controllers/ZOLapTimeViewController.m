@@ -40,10 +40,9 @@
     [super viewDidLoad];
 	
 	// setup location manager
-	_locationManager = [[ZOInternalLocationManager alloc] init];
+	//_locationManager = [[ZOInternalLocationManager alloc] init];
+	_locationManager = [[ZOVenusLocationManager alloc] init];
 	[_locationManager setDelegate:self];
-//	[_locationManager setDistanceFilter:kCLDistanceFilterNone];
-//	[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
 	
 }
 

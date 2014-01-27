@@ -12,10 +12,24 @@
 #include "ZOCircularBuffer.h"
 #include "ZOParseNMEA.h"
 #import <CoreLocation/CoreLocation.h>
+#import <CoreBluetooth/CoreBluetooth.h>
+
+// RBL Service: see: http://redbearlab.com/blemini/ or https://github.com/RedBearLab
+#define RBL_SERVICE_UUID                         "713D0000-503E-4C75-BA94-3148F18D941E"
+#define RBL_CHAR_TX_UUID                         "713D0002-503E-4C75-BA94-3148F18D941E"
+#define RBL_CHAR_RX_UUID                         "713D0003-503E-4C75-BA94-3148F18D941E"
+#define RBL_BLE_FRAMEWORK_VER                    0x0200
 
 
-@interface ZOVenusLocationManager () <ZOBluetoothDelegate> {
-	ZOBluetooth*			_bluetooth;
+@interface ZOVenusLocationManager () <CBCentralManagerDelegate, CBPeripheralDelegate> {
+//	ZOBluetooth*			_bluetooth;
+	CBCentralManager*		_centralManager;
+	CBPeripheral*			_peripheral;
+	CBService*				_service;
+	CBCharacteristic*		_tx;
+	CBCharacteristic*		_rx;
+	BOOL					_isUpdating;
+	
 	ZOVenusCommandContext	_venusCmdCtx;
 	ZOCircularBuffer		_circularBuffer;
 	ZOParseNMEAContext		_nmeaParser;
@@ -106,8 +120,14 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
 
 - (id) init {
 	if ( self = [super init]) {
-		_bluetooth = [[ZOBluetooth alloc] init];
-		_bluetooth.delegate = self;
+//		_bluetooth = [[ZOBluetooth alloc] init];
+//		_bluetooth.delegate = self;
+		
+		_isUpdating = NO;
+		// setup bluetooth connection
+		_centralManager = [[CBCentralManager alloc] initWithDelegate:self
+															   queue:dispatch_get_main_queue()];
+
 		
 		// setup circular buffer
 		_circularBuffer = zoCircularBufferInit( 256 );
@@ -129,43 +149,197 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
 }
 
 - (void) startUpdatingLocation {
-	// BUGBUG should just get rid of ZOBluetooth and implement here
-	// the last peripheral is not really guaranteed to be the peripheral we want
-	if ( [self.bluetooth.peripherals count] ) {
-		[self.bluetooth connectPeripheral:[self.bluetooth.peripherals lastObject]];
+	if ( _peripheral ) {
+		[_centralManager connectPeripheral:_peripheral options:nil];
 	}
+	_isUpdating = YES;
+
 	
 }
 - (void) stopUpdatingLocaion {
-	// BUGBUG should just get rid of ZOBluetooth and implement here
-	// the last peripheral is not really guaranteed to be the peripheral we want
+	if ( _peripheral ) {
+		[_centralManager cancelPeripheralConnection:_peripheral];
+	}
+	_isUpdating = NO;
+}
 
-	if ( [self.bluetooth.peripherals count] ) {
-		[self.bluetooth disconnectPeripheral:[self.bluetooth.peripherals lastObject]];
+
+
+#pragma mark CBPeripheralDelegate
+
+
+
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error {
+	NSLog(@"didDiscoverServices");
+	
+	// now search for characteristics
+	for ( CBService* service in peripheral.services ) {
+		NSArray* characteristics = [NSArray arrayWithObjects:[CBUUID UUIDWithString:@RBL_CHAR_TX_UUID],
+									[CBUUID UUIDWithString:@RBL_CHAR_RX_UUID],
+									nil];
+		[peripheral discoverCharacteristics:characteristics forService:service];
+	}
+}
+
+
+
+///### NOTE: this is the final part of the BlueToth initialization.  Can now start reading and writing...
+- (void)peripheral:(CBPeripheral *)peripheral didDiscoverCharacteristicsForService:(CBService *)service error:(NSError *)error {
+	
+	
+	// enable read notifications
+	CBUUID* tx_characteristic = [CBUUID UUIDWithString:@RBL_CHAR_TX_UUID];
+	CBUUID* rx_characteristic = [CBUUID UUIDWithString:@RBL_CHAR_RX_UUID];
+
+	for ( CBCharacteristic* characteristic in service.characteristics) {
+		if ( [tx_characteristic isEqual:characteristic.UUID] ) {
+			_tx = characteristic;
+		}
+		
+		if ( [rx_characteristic isEqual:characteristic.UUID] ) {
+			_rx = characteristic;
+		}
+
 	}
 	
+    
+	// this starts up didUpdateValueForCharacteristic below
+    [peripheral setNotifyValue:YES forCharacteristic:_rx];
+		
 }
 
 
-
-#pragma mark ZOBLuetoothDelegate
--(void) zoBluetoothDidConnect:(ZOBluetooth*)ble {
-	// test get version
-	//zoVenusCommandGetVersion( _venusCmdCtx, vc_responseCallBack );
-}
-
--(void) zoBluetoothDidDisconnect:(ZOBluetooth*)ble {
+-(void)peripheral:(CBPeripheral *)peripheral didUpdateNotificationStateForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
+	NSLog(@"didUpdateNotificationStateForCharacteristic");
 	
 }
 
--(void) zoBluetoothDidReceiveData:(uint8_t*)data length:(uint32_t)length {
-	uint32_t writeLength = length;
-	zoCircularBufferWrite( _circularBuffer, data, &writeLength );
-	assert( writeLength == length );	// BUGBUG: we have recieved more data then we can write, so we need to increase the size of the circular buffer
-	//zoVenusCommandUpdate( _venusCmdCtx );
-	zoParseNMEAUpdate( _nmeaParser );
-
+///### NOTE: this is where incoming data
+- (void)peripheral:(CBPeripheral *)peripheral didUpdateValueForCharacteristic:(CBCharacteristic *)characteristic error:(NSError *)error {
+	
+//	if ( [self.delegate respondsToSelector:@selector(zoBluetoothDidReceiveData:length:)] ) {
+//		[self.delegate zoBluetoothDidReceiveData:(uint8_t*)[characteristic.value bytes]
+//										  length:(uint32_t)[characteristic.value length]];
+//	}
+	
+	//[_incomingData appendData:characteristic.value];
+	//	const uint8_t* bytes = [characteristic.value bytes];
+	//	zoCircularBufferWrite( _circularBuffer, bytes, (uint32_t)[characteristic.value length] );
+	//	zoVenusCommandUpdate( _venusCmdCtx );
+	//
+	//	NSData* value = characteristic.value;
+	//	NSString *newString = [[NSString alloc] initWithData:value encoding:NSUTF8StringEncoding];
+	//    NSLog(@"Receive -> %@",newString);
 }
+
+
+#pragma mark CBCentralManagerDelegate
+
+- (void)centralManager:(CBCentralManager *)central didConnectPeripheral:(CBPeripheral *)peripheral {
+	
+	NSArray* services = [NSArray arrayWithObject:[CBUUID UUIDWithString:@RBL_SERVICE_UUID]];
+	[_peripheral discoverServices:services];
+	
+	NSLog(@"didConnectPeripheral");
+}
+
+- (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+	NSLog(@"didDisconnectPeripheral");
+	_peripheral = nil;
+}
+
+- (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error {
+	NSLog(@"didFailToConnectPeripheral");
+}
+
+- (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI {
+	
+	NSLog(@"------------------------------------");
+	NSLog(@"Peripheral Info :");
+	
+	if (peripheral.identifier != NULL)
+		NSLog(@"UUID : %@", peripheral.identifier.UUIDString);
+	else
+		NSLog(@"UUID : NULL");
+	
+	NSLog(@"Name : %@", peripheral.name);
+	NSLog(@"-------------------------------------");
+	
+	_peripheral = peripheral;
+	_peripheral.delegate = self;
+	
+//	//BUGBUG: have the application do this or just get rid of zobluetooth?
+	if ( _isUpdating == YES ) {
+		[_centralManager connectPeripheral:peripheral options:nil];
+	}
+
+	
+}
+
+- (void) centralManagerDidUpdateState:(CBCentralManager *)central {
+    static CBCentralManagerState previousState = -1;
+    
+    switch ([_centralManager state]) {
+        case CBCentralManagerStatePoweredOff:
+        {
+            break;
+        }
+            
+        case CBCentralManagerStateUnauthorized:
+        {
+            /* Tell user the app is not allowed. */
+            break;
+        }
+            
+        case CBCentralManagerStateUnknown:
+        {
+            /* Bad news, let's wait for another event. */
+            break;
+        }
+            
+        case CBCentralManagerStatePoweredOn:
+        {
+			// only get peripherals with the service we are interested in
+			NSArray* services = [NSArray arrayWithObject:[CBUUID UUIDWithString:@RBL_SERVICE_UUID]];
+            [_centralManager scanForPeripheralsWithServices:services
+													options:@{CBCentralManagerScanOptionAllowDuplicatesKey : @NO }];
+			
+			
+            break;
+        }
+            
+        case CBCentralManagerStateResetting:
+        {
+            break;
+        }
+			
+		case CBCentralManagerStateUnsupported:
+		{
+			break;
+		}
+    }
+    
+    previousState = [_centralManager state];
+}
+
+
+//-(void) zoBluetoothDidConnect:(ZOBluetooth*)ble {
+//	// test get version
+//	//zoVenusCommandGetVersion( _venusCmdCtx, vc_responseCallBack );
+//}
+//
+//-(void) zoBluetoothDidDisconnect:(ZOBluetooth*)ble {
+//	
+//}
+//
+//-(void) zoBluetoothDidReceiveData:(uint8_t*)data length:(uint32_t)length {
+//	uint32_t writeLength = length;
+//	zoCircularBufferWrite( _circularBuffer, data, &writeLength );
+//	assert( writeLength == length );	// BUGBUG: we have recieved more data then we can write, so we need to increase the size of the circular buffer
+//	//zoVenusCommandUpdate( _venusCmdCtx );
+//	zoParseNMEAUpdate( _nmeaParser );
+//
+//}
 
 
 
