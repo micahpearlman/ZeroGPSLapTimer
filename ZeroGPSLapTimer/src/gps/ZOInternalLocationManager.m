@@ -30,7 +30,7 @@
 - (void) startUpdatingLocation {
 	[_locationManager startUpdatingLocation];
 }
-- (void) stopUpdatingLocaion {
+- (void) stopUpdatingLocation {
 	[_locationManager stopUpdatingLocation];
 }
 

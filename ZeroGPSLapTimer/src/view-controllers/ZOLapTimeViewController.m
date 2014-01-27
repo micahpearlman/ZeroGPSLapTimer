@@ -12,10 +12,11 @@
 #import "ZOLap.h"
 #import "UIAlertView+Blocks.h"
 #import "ZOVenusLocationManager.h"
+#import "ZOInternalLocationManager.h"
 #import <MapKit/MapKit.h>
 
-@interface ZOLapTimeViewController () <CLLocationManagerDelegate, ZOSessionStateDelegate, ZOTrackObjectDelegate> {
-	CLLocationManager*		_locationManager;
+@interface ZOLapTimeViewController () <ZOLocationManagerDelegate, ZOSessionStateDelegate, ZOTrackObjectDelegate> {
+	ZOLocationManager*		_locationManager;
 	ZOTrack*				_track;
 	ZOSession*				_session;
 	ZOLap*					_currentLap;
@@ -39,10 +40,10 @@
     [super viewDidLoad];
 	
 	// setup location manager
-	_locationManager = [[CLLocationManager alloc] init];
+	_locationManager = [[ZOInternalLocationManager alloc] init];
 	[_locationManager setDelegate:self];
-	[_locationManager setDistanceFilter:kCLDistanceFilterNone];
-	[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
+//	[_locationManager setDistanceFilter:kCLDistanceFilterNone];
+//	[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
 	
 }
 
@@ -72,8 +73,8 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark CLLocationManagerDelegate
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+#pragma mark ZOLocationManagerDelegate
+- (void)locationManager:(ZOLocationManager *)manager didUpdateLocations:(NSArray *)locations {
 	if ( _track == nil ) {
 		// if no track find the track that we are at
 		CLLocation* lastLocation = [locations lastObject];

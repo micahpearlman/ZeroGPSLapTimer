@@ -21,7 +21,7 @@
 @property (nonatomic, assign) id<ZOLocationManagerDelegate>	delegate;
 
 - (void) startUpdatingLocation;
-- (void) stopUpdatingLocaion;
+- (void) stopUpdatingLocation;
 
 
 @end

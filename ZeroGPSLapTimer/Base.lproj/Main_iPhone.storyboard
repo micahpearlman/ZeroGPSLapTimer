@@ -61,7 +61,6 @@
                         <constraints>
                             <constraint firstItem="8Yc-pd-if8" firstAttribute="leading" secondItem="2VE-Yg-loa" secondAttribute="leading" id="1Fn-wy-mfX"/>
                             <constraint firstItem="T81-0N-xMl" firstAttribute="top" secondItem="8Yc-pd-if8" secondAttribute="bottom" constant="1" id="7TR-sk-atD"/>
-                            <constraint firstItem="mTi-gr-3Bt" firstAttribute="leading" secondItem="2VE-Yg-loa" secondAttribute="leading" constant="228" id="8W0-da-kP9"/>
                             <constraint firstItem="vd8-7Y-v7y" firstAttribute="leading" secondItem="2VE-Yg-loa" secondAttribute="leading" constant="19" id="BIt-n8-G6S"/>
                             <constraint firstItem="mTi-gr-3Bt" firstAttribute="top" secondItem="FAM-sq-zTh" secondAttribute="bottom" constant="20" id="FzS-Rn-O98"/>
                             <constraint firstAttribute="trailing" secondItem="mTi-gr-3Bt" secondAttribute="trailing" constant="21" id="Gi9-dj-xHK"/>

@@ -15,7 +15,7 @@
 - (void) startUpdatingLocation {
 	
 }
-- (void) stopUpdatingLocaion {
+- (void) stopUpdatingLocation {
 	
 }
 
