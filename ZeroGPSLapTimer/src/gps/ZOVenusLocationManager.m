@@ -104,7 +104,7 @@ void parseNMEACallback( ZOParseNMEAContext ctx, ZOParseNMEAResult* result ) {
 @implementation ZOVenusLocationManager
 
 @synthesize circularBuffer	= _circularBuffer;
-@synthesize bluetooth		= _bluetooth;
+//@synthesize bluetooth		= _bluetooth;
 
 
 - (id) init {

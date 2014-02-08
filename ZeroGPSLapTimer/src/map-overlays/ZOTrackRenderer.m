@@ -47,11 +47,11 @@
 				
 		
 		CGContextSetFillColorWithColor( context, [UIColor grayColor].CGColor );
-		CGContextSetAlpha( context, 0.1 );
+		CGContextSetAlpha( context, 0.2 );
 		CGContextFillRect( context, [self rectForMapRect:track.boundingMapRect] );
 		
-		CGContextSetLineWidth( context, 12 );
-		CGContextSetAlpha( context, 0.5 );
+		CGContextSetLineWidth( context, 24 );
+		CGContextSetAlpha( context, 0.9 );
 		CGContextSetStrokeColorWithColor( context, [UIColor redColor].CGColor );
 		CGContextStrokeRect( context, [self rectForMapRect:track.boundingMapRect] );
 		
@@ -71,5 +71,8 @@
 	[self setNeedsDisplay];
 }
 
+- (void) zoTrackObject:(id<ZOTrackObject>)trackObject isDirty:(BOOL)isDirty {
+	[self setNeedsDisplay];
+}
 
 @end

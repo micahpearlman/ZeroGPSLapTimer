@@ -73,10 +73,11 @@
                             <constraint firstAttribute="trailing" secondItem="FAM-sq-zTh" secondAttribute="trailing" id="pgM-f9-hcC"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="First" image="stop-watch" id="u1e-5L-l1D"/>
+                    <tabBarItem key="tabBarItem" title="Start Session" image="stop-watch" id="u1e-5L-l1D"/>
                     <connections>
                         <outlet property="currentLapTime" destination="vd8-7Y-v7y" id="K4l-Mf-Wmq"/>
                         <outlet property="previousLapTime" destination="mTi-gr-3Bt" id="fik-DC-t4p"/>
+                        <outlet property="startStopSession" destination="atG-o8-PaE" id="euY-a1-vQD"/>
                         <outlet property="tableView" destination="8Yc-pd-if8" id="PE1-bC-fU7"/>
                         <outlet property="trackName" destination="FAM-sq-zTh" id="tVK-LL-oJF"/>
                         <outlet property="view" destination="2VE-Yg-loa" id="G8M-XW-wba"/>
@@ -311,7 +312,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="hybrid" rotateEnabled="NO" pitchEnabled="NO" showsUserLocation="YES" translatesAutoresizingMaskIntoConstraints="NO" id="00C-37-DGm">
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="hybrid" rotateEnabled="NO" pitchEnabled="NO" translatesAutoresizingMaskIntoConstraints="NO" id="00C-37-DGm">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <gestureRecognizers/>
@@ -319,47 +320,76 @@
                                     <outlet property="delegate" destination="wbZ-JI-JGu" id="dAr-hQ-WN5"/>
                                 </connections>
                             </mapView>
-                            <view opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ajr-7m-nrv">
-                                <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Hpe-us-ii0" userLabel="Finish Line">
-                                        <rect key="frame" x="6" y="10" width="47" height="24"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="8"/>
-                                        <state key="normal" title="Start/Finish" image="checkered-flags">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="selected" title="Start/Finish" image="checkered-flags-selected"/>
-                                        <connections>
-                                            <action selector="onStartFinishSelected:" destination="wbZ-JI-JGu" eventType="touchUpInside" id="bwX-qJ-RVW"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" reversesTitleShadowWhenHighlighted="YES" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ede-Wt-Aj9" userLabel="Save">
-                                        <rect key="frame" x="270" y="10" width="30" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="8"/>
-                                        <state key="normal" title="Save" image="save">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <state key="selected" title="Start/Finish" image="checkered-flags-selected"/>
-                                        <connections>
-                                            <action selector="onSave:" destination="wbZ-JI-JGu" eventType="touchUpInside" id="xCe-Ma-Obp"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                            </view>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" alpha="0.90000000000000013" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nh4-ix-C3S">
+                                <rect key="frame" x="0.0" y="524" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <items>
+                                    <barButtonItem id="PMb-HT-v60">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="x8E-3O-2Pj">
+                                            <rect key="frame" x="16" y="2" width="40" height="40"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
+                                            <inset key="titleEdgeInsets" minX="-48" minY="0.0" maxX="0.0" maxY="-27"/>
+                                            <inset key="imageEdgeInsets" minX="-8" minY="-12" maxX="0.0" maxY="0.0"/>
+                                            <state key="normal" title="Start/Finish" image="checkered-flags-small">
+                                                <color key="titleColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="onCreateStartFinish:" destination="wbZ-JI-JGu" eventType="touchUpInside" id="vN1-XW-R7W"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="A4A-49-xjo"/>
+                                    <barButtonItem id="6yx-78-Edg">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" id="9rd-7x-NqH">
+                                            <rect key="frame" x="108" y="2" width="40" height="40"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                            <state key="normal">
+                                                <attributedString key="attributedTitle">
+                                                    <fragment content="Set Track Area">
+                                                        <attributes>
+                                                            <color key="NSColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                            <font key="NSFont" size="12" name="HelveticaNeue"/>
+                                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" hyphenationFactor="0.08999999612569809"/>
+                                                        </attributes>
+                                                    </fragment>
+                                                </attributedString>
+                                            </state>
+                                            <connections>
+                                                <action selector="onSetTrackArea:" destination="wbZ-JI-JGu" eventType="touchUpInside" id="B2b-lG-eYV"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="RK6-5Y-SqJ"/>
+                                    <barButtonItem style="plain" id="dQb-oQ-BBv">
+                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fEp-BL-fvN">
+                                            <rect key="frame" x="200" y="2" width="40" height="40"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
+                                            <inset key="titleEdgeInsets" minX="-39" minY="0.0" maxX="0.0" maxY="-27"/>
+                                            <inset key="imageEdgeInsets" minX="0.0" minY="-12" maxX="0.0" maxY="0.0"/>
+                                            <state key="normal" title="Save" image="save">
+                                                <color key="titleColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                            </state>
+                                            <connections>
+                                                <action selector="onSave:" destination="wbZ-JI-JGu" eventType="touchUpInside" id="I9e-yI-Q9W"/>
+                                            </connections>
+                                        </button>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="PhU-25-Qqr" firstAttribute="top" secondItem="00C-37-DGm" secondAttribute="bottom" id="2Sm-wC-n3h"/>
                             <constraint firstItem="00C-37-DGm" firstAttribute="leading" secondItem="lsP-LH-hz5" secondAttribute="leading" id="6Gm-xi-IT3"/>
-                            <constraint firstItem="ajr-7m-nrv" firstAttribute="leading" secondItem="lsP-LH-hz5" secondAttribute="leading" id="6Zs-BU-9ie"/>
-                            <constraint firstAttribute="trailing" secondItem="ajr-7m-nrv" secondAttribute="trailing" id="XMz-TT-Cly"/>
-                            <constraint firstAttribute="bottom" secondItem="ajr-7m-nrv" secondAttribute="bottom" id="bxB-Tq-tNC"/>
+                            <constraint firstAttribute="trailing" secondItem="nh4-ix-C3S" secondAttribute="trailing" id="L2H-mG-xef"/>
                             <constraint firstItem="00C-37-DGm" firstAttribute="top" secondItem="lsP-LH-hz5" secondAttribute="top" id="gzl-24-8Lo"/>
+                            <constraint firstItem="PhU-25-Qqr" firstAttribute="top" secondItem="nh4-ix-C3S" secondAttribute="bottom" id="oNg-2e-Ugb"/>
                             <constraint firstAttribute="trailing" secondItem="00C-37-DGm" secondAttribute="trailing" id="tTw-BM-c6r"/>
+                            <constraint firstItem="nh4-ix-C3S" firstAttribute="leading" secondItem="lsP-LH-hz5" secondAttribute="leading" id="yqc-F9-kuW"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="6gf-n4-brr"/>
@@ -390,14 +420,13 @@
         </scene>
     </scenes>
     <resources>
-        <image name="checkered-flags" width="73" height="30"/>
-        <image name="checkered-flags-selected" width="73" height="30"/>
+        <image name="checkered-flags-small" width="30" height="12"/>
         <image name="fast-forward" width="35" height="35"/>
         <image name="first" width="48" height="20"/>
         <image name="play" width="35" height="35"/>
         <image name="record" width="35" height="35"/>
         <image name="rewind" width="35" height="35"/>
-        <image name="save" width="60" height="60"/>
+        <image name="save" width="30" height="30"/>
         <image name="stop-watch" width="35" height="35"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

@@ -21,7 +21,7 @@ typedef enum {
 
 @interface ZOTrackEditViewController () <MKMapViewDelegate, CLLocationManagerDelegate, UIGestureRecognizerDelegate, UIAlertViewDelegate> {
 	MKMapView*						_mapView;
-	CLLocationManager*				_locationManager;
+//	CLLocationManager*				_locationManager;
 	ZOTrackEditViewControllerState	_state;
 	id<ZOTrackObject>				_selectedTrackObject;
 	ZOTrack*						_track;
@@ -29,11 +29,14 @@ typedef enum {
 	BOOL							_isNewTrack;
 }
 
+@property (nonatomic, retain) ZOTrack* track;
+
 @end
 
 @implementation ZOTrackEditViewController
 
 @synthesize mapView					= _mapView;
+@dynamic track;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -56,22 +59,22 @@ typedef enum {
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
-	/// setup location manager
-	if ( [ZOTrackCollection instance].currentTrackInfo ) {
-		_track = [ZOTrack unarchiveFromTrackInfo:[ZOTrackCollection instance].currentTrackInfo];
-		[self.mapView addOverlay:_track];
-		[self.mapView addOverlays:_track.trackObjects];
-		self.title = _track.name;
+	
+	if ( [ZOTrackCollection instance].currentTrackInfo ) {	// editing the current track
+		self.track = [ZOTrack unarchiveFromTrackInfo:[ZOTrackCollection instance].currentTrackInfo];
+		[self.mapView addOverlay:self.track];
+		[self.mapView addOverlays:self.track.trackObjects];
+		self.title = self.track.name;
 		_isNewTrack = NO;
 	} else {
 		// creating a new track so start off where the user is
 		// TODO: add search
 		_isNewTrack = YES;
-		_locationManager = [[CLLocationManager alloc] init];
-		[_locationManager setDelegate:self];
-		[_locationManager setDistanceFilter:kCLDistanceFilterNone];
-		[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
-		[_locationManager startUpdatingLocation];
+//		_locationManager = [[CLLocationManager alloc] init];
+//		[_locationManager setDelegate:self];
+//		[_locationManager setDistanceFilter:kCLDistanceFilterNone];
+//		[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
+//		[_locationManager startUpdatingLocation];
 	}
 	
 	/// setup gesture recognizers
@@ -160,8 +163,9 @@ typedef enum {
 		return;
 	}
 	
-	if ( _state == ZOTrackEditViewControllerState_None || _state == ZOTrackEditViewControllerState_EditTrackObject ) {
-		NSArray* selectedTrackObjects = [_track trackObjectsAtCoordinate:geoCoordinatesTapped];
+	
+	if ( _track != nil && (_state == ZOTrackEditViewControllerState_None || _state == ZOTrackEditViewControllerState_EditTrackObject) ) {
+		NSArray* selectedTrackObjects = [self.track trackObjectsAtCoordinate:geoCoordinatesTapped];
 		[self selectTrackObject:[selectedTrackObjects lastObject]];
 		
 	}
@@ -229,16 +233,16 @@ typedef enum {
 - (void)mapView:(MKMapView *)mapView didAddAnnotationViews:(NSArray *)views {
 	for ( MKAnnotationView* annotationView in views ) {
 		id<MKAnnotation> mp = [annotationView annotation];
-		if ( [mp class] == [MKUserLocation class]) {
-			MKCoordinateRegion adjustedRegion = MKCoordinateRegionMakeWithDistance([mp coordinate], 0.0001, 0.0001);
-			[mapView setRegion:adjustedRegion animated:NO];
-			// if no track created create a default track
-			if ( _track == nil ) {
-				_track = [[ZOTrack alloc] initWithCoordinate:[mp coordinate] boundingMapRect:_mapView.visibleMapRect];
-				[_mapView addOverlay:_track];
-			}
-			
-		}
+//		if ( [mp class] == [MKUserLocation class]) {
+//			MKCoordinateRegion adjustedRegion = MKCoordinateRegionMakeWithDistance([mp coordinate], 0.0001, 0.0001);
+//			[mapView setRegion:adjustedRegion animated:NO];
+//			// if no track created create a default track
+//			if ( _track == nil ) {
+//				_track = [[ZOTrack alloc] initWithCoordinate:[mp coordinate] boundingMapRect:_mapView.visibleMapRect];
+//				[_mapView addOverlay:_track];
+//			}
+//			
+//		}
 	}
 }
 
@@ -260,23 +264,24 @@ typedef enum {
 	NSLog(@"didDeselectAnnotationView");
 }
 
-#pragma mark Location Manager update
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-}
+//#pragma mark Location Manager update
+//- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+//}
 
 
 
 #pragma mark Actions
 
-- (IBAction) onStartFinishSelected:(id)sender {
+- (IBAction) onCreateStartFinish:(id)sender {
 
-	id<ZOTrackObject> startFinishLine = [_track addStartFinishLineAtCoordinate:[_mapView centerCoordinate]];
+	id<ZOTrackObject> startFinishLine = [self.track addStartFinishLineAtCoordinate:[_mapView centerCoordinate]];
 	[_mapView addOverlay:startFinishLine];
 	
 }
 
 - (IBAction)onSave:(id)sender {
 	if ( _isNewTrack ) {
+		
 		// get track name
 		UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Track Name"
 															message:@"Enter Track Name:"
@@ -286,8 +291,13 @@ typedef enum {
 		alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
 		[alertView show];
 	} else {
-		[_track archive];	// save over existing track
+		[self.track archive];	// save over existing track
 	}
+}
+
+- (IBAction)onSetTrackArea:(id)sender {
+	self.track.boundingMapRect = _mapView.visibleMapRect;
+	self.track.coordinate = _mapView.centerCoordinate;
 }
 
 #pragma mark UIAlertViewDelegate
@@ -298,10 +308,13 @@ typedef enum {
 	}
 	
 	UITextField* textField = [alertView textFieldAtIndex:0];
-	_track.name = textField.text;
+	self.track.name = textField.text;
 	
-	_track.trackInfo = [[ZOTrackCollection instance] createTrackInfoNamed:_track.name withBoundingMapRect:_track.boundingMapRect];
-	[_track archive];
+	self.track.trackInfo = [[ZOTrackCollection instance] createTrackInfoNamed:self.track.name
+														  withBoundingMapRect:self.track.boundingMapRect];
+	
+	// final save
+	[self.track archive];
 	
 	if ( self.navigationController ) {
 		[self.navigationController popViewControllerAnimated:YES];
@@ -314,6 +327,24 @@ typedef enum {
 
 - (void) alertViewCancel:(UIAlertView *)alertView {
 	
+}
+
+#pragma mark Track
+
+- (void) setTrack:(ZOTrack *)track {
+	_track = track;
+}
+
+- (ZOTrack*) track {
+	if ( _track == nil ) {
+		// create a track with the given area and add it to the overlay
+		_track = [[ZOTrack alloc] initWithCoordinate:_mapView.centerCoordinate
+									 boundingMapRect:_mapView.visibleMapRect];
+		[_mapView addOverlay:_track];
+
+	}
+	
+	return _track;
 }
 
 @end

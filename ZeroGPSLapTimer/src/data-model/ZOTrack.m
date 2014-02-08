@@ -15,6 +15,7 @@
 	CLLocationCoordinate2D		_coordinate;
 	NSMutableArray*				_sessionInfos;
 	ZOSession*					_currentSession;
+	MKMapRect					_boundingMapRect;
 }
 
 @end
@@ -22,7 +23,7 @@
 @implementation ZOTrack
 
 @synthesize coordinate = _coordinate;
-@synthesize boundingMapRect;
+@dynamic boundingMapRect;
 @synthesize trackObjects = _trackObjects;
 @synthesize isSelected;
 @synthesize delegate;
@@ -37,7 +38,7 @@
 		_trackObjects = [[NSMutableArray alloc] init];
 		_sessionInfos = [[NSMutableArray alloc] init];
 		self.coordinate = coord;
-		self.boundingMapRect = mapRect;
+		_boundingMapRect = mapRect;
 	}
 	return self;
 }
@@ -47,7 +48,7 @@
 	if ( self ) {
 		self.name = [aDecoder decodeObjectForKey:@"name"];
 		self.coordinate = [aDecoder decodeCLLocationCoordinate2DForKey:@"coordinate"];
-		self.boundingMapRect = [aDecoder decodeMKMapRectForKey:@"boundingMapRect"];
+		_boundingMapRect = [aDecoder decodeMKMapRectForKey:@"boundingMapRect"];
 		_trackObjects = [aDecoder decodeObjectForKey:@"trackObjects"];
 		_sessionInfos = [aDecoder decodeObjectForKey:@"sessions"];
 	}
@@ -82,8 +83,8 @@
 - (NSArray*) trackObjectsAtCoordinate:(CLLocationCoordinate2D)coord {
 	NSMutableArray* trackObjectsAtCoordinate = [[NSMutableArray alloc] init];
 	MKMapPoint mapPoint = MKMapPointForCoordinate( coord );
-	if ( MKMapRectContainsPoint( self.boundingMapRect, mapPoint ) ) {
-		[trackObjectsAtCoordinate addObject:self];
+//	if ( MKMapRectContainsPoint( self.boundingMapRect, mapPoint ) ) {
+//		[trackObjectsAtCoordinate addObject:self];
 		
 		for ( id<ZOTrackObject> trackObject in _trackObjects ) {
 			
@@ -92,7 +93,7 @@
 			}
 		}
 
-	}
+//	}
 	
 	return trackObjectsAtCoordinate;
 	
@@ -169,16 +170,19 @@
 	// TODO: check for error
 }
 
-#pragma mark ZOTrackObjectDelegate
+#pragma mark boundingMapRect
 
-//- (void) zoTrackObject:(id<ZOTrackObject>)trackObject isDirty:(BOOL)isDirty {
-//	ZOSession* session = (ZOSession*)trackObject;
-//	
-//	// check if we have crossed any track barriers
-//	for (id<ZOTrackObject> trackObject in _trackObjects ) {
-//		// TODO:
-//	}
-//}
+- (void) setBoundingMapRect:(MKMapRect)boundingMapRect {
+	_boundingMapRect = boundingMapRect;
+	if ( [self.delegate respondsToSelector:@selector(zoTrackObject:isDirty:)]) {
+		[self.delegate zoTrackObject:self isDirty:YES];
+	}
+}
+
+- (MKMapRect) boundingMapRect {
+	return _boundingMapRect;
+}
+
 
 
 

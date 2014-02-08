@@ -288,6 +288,7 @@
 			[lastLap addWaypoint:waypoint];
 		}
 		
+		// start a new lap
 		ZOLap* lap = [[ZOLap alloc] initWithSession:self];
 		[lap addWaypoint:waypoint];
 		[_laps addObject:lap];
