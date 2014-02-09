@@ -113,6 +113,8 @@
 	} else {	// we have a track so update the session
 		NSArray* waypoints = [ZOWaypoint ZOLocationArrayFromCLLocationArray:locations];
 		[_session addWaypoints:waypoints];
+		ZOWaypoint* lastWayPoint = [waypoints lastObject];
+		self.speedLabel.text = [NSString stringWithFormat:@"%03.2f", lastWayPoint.speed];
 	}
 }
 
@@ -131,11 +133,11 @@
 		}
 		
 		// set the stop button
-		self.startStopSession.enabled = YES;
+		self.endSessionButton.enabled = YES;
 		
 		// TODO: make the lap table dirty
 	} else if ( to == ZOSessionState_EndSession ) {
-		self.startStopSession.enabled = NO;
+		self.endSessionButton.enabled = NO;
 		[_track archive];
 		_track = nil;
 	}

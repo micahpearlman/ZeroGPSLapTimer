@@ -19,6 +19,7 @@
 @property (nonatomic, assign)	id<ZOTrackObjectDelegate> delegate;
 @property (nonatomic, readonly)	NSDate* timestamp;
 @property (nonatomic, readonly) CLLocationDistance altitude;
+@property (nonatomic, readonly)	CLLocationSpeed speed;
 
 
 // make delegate writeonly: http://stackoverflow.com/questions/4266197/write-only-property-in-objective-c

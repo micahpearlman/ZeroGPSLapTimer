@@ -22,6 +22,12 @@
                                 <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="70"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="000.0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p1k-5N-MNh">
+                                <rect key="frame" x="19" y="242" width="280" height="83"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue-Thin" family="Helvetica Neue" pointSize="70"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="00:00.00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mTi-gr-3Bt">
                                 <rect key="frame" x="189" y="57" width="110" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -36,12 +42,7 @@
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="8Yc-pd-if8">
-                                <rect key="frame" x="0.0" y="216" width="320" height="302"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="atG-o8-PaE">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="atG-o8-PaE">
                                 <rect key="frame" x="20" y="178" width="279" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" name="HelveticaNeue-MediumItalic" family="Helvetica Neue" pointSize="17"/>
@@ -60,26 +61,21 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="8Yc-pd-if8" firstAttribute="leading" secondItem="2VE-Yg-loa" secondAttribute="leading" id="1Fn-wy-mfX"/>
-                            <constraint firstItem="T81-0N-xMl" firstAttribute="top" secondItem="8Yc-pd-if8" secondAttribute="bottom" constant="1" id="7TR-sk-atD"/>
                             <constraint firstItem="vd8-7Y-v7y" firstAttribute="leading" secondItem="2VE-Yg-loa" secondAttribute="leading" constant="19" id="BIt-n8-G6S"/>
                             <constraint firstItem="mTi-gr-3Bt" firstAttribute="top" secondItem="FAM-sq-zTh" secondAttribute="bottom" constant="20" id="FzS-Rn-O98"/>
                             <constraint firstAttribute="trailing" secondItem="mTi-gr-3Bt" secondAttribute="trailing" constant="21" id="Gi9-dj-xHK"/>
                             <constraint firstItem="vd8-7Y-v7y" firstAttribute="top" secondItem="mTi-gr-3Bt" secondAttribute="bottom" constant="8" id="eWq-1d-RJc"/>
                             <constraint firstItem="FAM-sq-zTh" firstAttribute="top" secondItem="wCp-Ds-UJ7" secondAttribute="bottom" id="fRB-NU-hhR"/>
                             <constraint firstItem="FAM-sq-zTh" firstAttribute="leading" secondItem="2VE-Yg-loa" secondAttribute="leading" id="gck-p0-Llp"/>
-                            <constraint firstItem="8Yc-pd-if8" firstAttribute="top" secondItem="vd8-7Y-v7y" secondAttribute="bottom" constant="8" id="ivN-Sf-vnO"/>
                             <constraint firstAttribute="trailing" secondItem="vd8-7Y-v7y" secondAttribute="trailing" constant="21" id="kcO-up-QRS"/>
-                            <constraint firstAttribute="trailing" secondItem="8Yc-pd-if8" secondAttribute="trailing" id="n5V-vY-7Ee"/>
                             <constraint firstAttribute="trailing" secondItem="FAM-sq-zTh" secondAttribute="trailing" id="pgM-f9-hcC"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Start Session" image="stop-watch" id="u1e-5L-l1D"/>
                     <connections>
                         <outlet property="currentLapTime" destination="vd8-7Y-v7y" id="K4l-Mf-Wmq"/>
+                        <outlet property="endSessionButton" destination="atG-o8-PaE" id="aQs-AC-1xi"/>
                         <outlet property="previousLapTime" destination="mTi-gr-3Bt" id="fik-DC-t4p"/>
-                        <outlet property="startStopSession" destination="atG-o8-PaE" id="euY-a1-vQD"/>
-                        <outlet property="tableView" destination="8Yc-pd-if8" id="PE1-bC-fU7"/>
                         <outlet property="trackName" destination="FAM-sq-zTh" id="tVK-LL-oJF"/>
                         <outlet property="view" destination="2VE-Yg-loa" id="G8M-XW-wba"/>
                     </connections>
@@ -204,7 +200,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="lap-cell" id="6Sx-xP-aZQ">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" tableViewCell="6Sx-xP-aZQ" id="ODo-St-G3h">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -263,11 +259,6 @@
                                             <action selector="onPlayPause:" destination="bEy-hP-sRe" id="A50-Ye-vLc"/>
                                         </connections>
                                     </barButtonItem>
-                                    <barButtonItem image="record" id="v7z-dR-vaG" userLabel="record">
-                                        <connections>
-                                            <action selector="toggleSessionRecord:" destination="bEy-hP-sRe" id="5D3-qD-usR"/>
-                                        </connections>
-                                    </barButtonItem>
                                     <barButtonItem image="fast-forward" id="zEq-6T-YcY" userLabel="fast-forward"/>
                                 </items>
                             </toolbar>
@@ -304,7 +295,6 @@
                         <outlet property="lapTime" destination="g5E-Vl-Nwa" id="693-V7-MgW"/>
                         <outlet property="mapView" destination="CyR-Ql-NYC" id="Nuw-6e-rUa"/>
                         <outlet property="play" destination="0cW-hO-Nvm" id="iME-kL-Fzd"/>
-                        <outlet property="record" destination="v7z-dR-vaG" id="F2W-lB-Nrq"/>
                         <outlet property="rewind" destination="8Ei-rE-v8p" id="HkC-5q-bBM"/>
                     </connections>
                 </viewController>
@@ -436,7 +426,6 @@
         <image name="fast-forward" width="35" height="35"/>
         <image name="first" width="48" height="20"/>
         <image name="play" width="35" height="35"/>
-        <image name="record" width="35" height="35"/>
         <image name="rewind" width="35" height="35"/>
         <image name="save" width="30" height="30"/>
         <image name="stop-watch" width="35" height="35"/>
@@ -449,7 +438,7 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="RKu-dE-wTw"/>
-        <segue reference="W3c-m8-IFR"/>
+        <segue reference="I6W-Kh-nHW"/>
         <segue reference="bko-Q7-wl5"/>
     </inferredMetricsTieBreakers>
 </document>

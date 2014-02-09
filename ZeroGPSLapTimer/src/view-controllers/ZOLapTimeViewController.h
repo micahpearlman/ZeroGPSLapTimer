@@ -14,8 +14,8 @@
 @property (nonatomic,retain) IBOutlet UILabel* trackName;
 @property (nonatomic,retain) IBOutlet UILabel* currentLapTime;
 @property (nonatomic,retain) IBOutlet UILabel* previousLapTime;
-@property (nonatomic,retain) IBOutlet UITableView* tableView;
-@property (nonatomic,retain) IBOutlet UIButton* startStopSession;
+@property (nonatomic,retain) IBOutlet UILabel* speedLabel;
+@property (nonatomic,retain) IBOutlet UIButton* endSessionButton;
 
 - (IBAction) onStartStopSession:(id)sender;
 

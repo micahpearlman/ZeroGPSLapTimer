@@ -23,12 +23,7 @@ typedef enum  {
 	ZOSessionMapViewController_Paused
 } ZOSessionMapViewControllerState;
 
-@interface ZOSessionMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate, ZOSessionStateDelegate> {
-	CLLocationManager*				_locationManager;
-//	ZOTrack*						_track;
-//	ZOSession*						_session;
-//	NSDictionary*					_sessionInfo;
-//	NSDictionary*					_trackEditInfo;
+@interface ZOSessionMapViewController () <MKMapViewDelegate, ZOSessionStateDelegate> {
 	ZOSessionMapViewControllerState	_state;
 	ZOWaypoint*						_playbackCursor;
 	NSDate*							_startLapTimeStamp;
@@ -57,23 +52,13 @@ typedef enum  {
 	_state = ZOSessionMapViewController_None;
 	
 	/// setup location manager
-//	_track = [ZOTrackCollection instance].currentTrack;
 	[self.mapView addOverlay:self.session.track];
 	[self.mapView addOverlays:self.session.track.trackObjects];
 	
-//	if ( _track.currentSessionInfo ) {
-//		// load existing session
-//		_session = _track.currentSession;
-//	} else {
-//		// create a new session
-//		_session = [[ZOSession alloc] initWithTrack:_track];
-//		[_track addSessionInfo:_session.sessionInfo];
-//		
-//		_locationManager = [[CLLocationManager alloc] init];
-//		[_locationManager setDelegate:self];
-//		[_locationManager setDistanceFilter:kCLDistanceFilterNone];
-//		[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
-//	}
+	MKMapCamera* camera = [MKMapCamera cameraLookingAtCenterCoordinate:self.session.coordinate
+													 fromEyeCoordinate:self.session.coordinate
+														   eyeAltitude:50];
+	[self.mapView setCamera:camera];
 	
 	_session.stateMonitorDelegate = self;
 	
@@ -101,7 +86,6 @@ typedef enum  {
 		case ZOSessionMapViewController_None:
 			if ( _state == ZOSessionMapViewController_Recording ) {
 				self.record.image = [UIImage imageNamed:@"record"];
-				[_locationManager stopUpdatingLocation];
 				[self.mapView setUserTrackingMode:MKUserTrackingModeNone];
 				[_session archive];	// make sure to save session
 				[_session endSession];
@@ -112,7 +96,6 @@ typedef enum  {
 			
 		case ZOSessionMapViewController_Recording:
 			self.record.image = [UIImage imageNamed:@"pause"];
-			[_locationManager startUpdatingLocation];
 			[self.mapView setUserTrackingMode:MKUserTrackingModeFollow];
 			break;
 			
@@ -180,32 +163,16 @@ typedef enum  {
 	return nil;
 }
 
-#pragma mark CLLocationManagerDelegate
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
-	
-	NSArray* zolocations = [ZOWaypoint ZOLocationArrayFromCLLocationArray:locations];
-	// TODO: do other sensor data such as accelerometer
-	[_session addWaypoints:zolocations];
-	
-	// update the map
-//	CLLocation* lastLocation = [locations lastObject];
-//	[self.mapView setCenterCoordinate:lastLocation.coordinate];
-//	MKCoordinateRegion adjustedRegion = MKCoordinateRegionMakeWithDistance(lastLocation.coordinate, 0.0001, 0.0001);
-//	[self.mapView setRegion:adjustedRegion animated:NO];
-
-	
-	
-}
 
 #pragma mark IBActions
 
 - (IBAction) toggleSessionRecord:(id)sender {
 	
-	if ( _state == ZOSessionMapViewController_None ) {
-		[self gotoState:ZOSessionMapViewController_Recording];
-	} else if ( _state == ZOSessionMapViewController_Recording ) {
-		[self gotoState:ZOSessionMapViewController_None];
-	}
+//	if ( _state == ZOSessionMapViewController_None ) {
+//		[self gotoState:ZOSessionMapViewController_Recording];
+//	} else if ( _state == ZOSessionMapViewController_Recording ) {
+//		[self gotoState:ZOSessionMapViewController_None];
+//	}
 }
 
 - (IBAction) onPlayPause:(id)sender {

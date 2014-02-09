@@ -33,6 +33,7 @@ static const float kWayPointDiameter = 5.5f;
 @dynamic timestamp;
 @dynamic altitude;
 @dynamic radius;
+@dynamic speed;
 
 - (id) initWithCLLocation:(CLLocation*)location {
 	
@@ -116,6 +117,10 @@ static const float kWayPointDiameter = 5.5f;
 
 - (CLLocationDistance) radius {
 	return kWayPointDiameter;
+}
+
+- (CLLocationSpeed) speed {
+	return self.location.speed;
 }
 
 - (void) setCoordinate:(CLLocationCoordinate2D)coordinate {
