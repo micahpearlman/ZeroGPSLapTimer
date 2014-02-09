@@ -54,6 +54,7 @@
                                 </state>
                                 <connections>
                                     <action selector="onStartStopSession:" destination="CZ4-MO-1fc" eventType="touchUpInside" id="5dN-5u-EsM"/>
+                                    <segue destination="miB-ku-Rhc" kind="push" identifier="lap-segue" id="I6W-Kh-nHW"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -203,7 +204,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
                             <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="lap-cell" id="6Sx-xP-aZQ">
-                                <rect key="frame" x="0.0" y="86" width="320" height="44"/>
+                                <rect key="frame" x="0.0" y="22" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6Sx-xP-aZQ" id="ODo-St-G3h">
                                     <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -436,6 +437,7 @@
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
         <segue reference="RKu-dE-wTw"/>
+        <segue reference="I6W-Kh-nHW"/>
         <segue reference="bko-Q7-wl5"/>
     </inferredMetricsTieBreakers>
 </document>

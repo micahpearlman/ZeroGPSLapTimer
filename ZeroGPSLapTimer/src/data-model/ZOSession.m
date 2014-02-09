@@ -293,6 +293,10 @@
 		[lap addWaypoint:waypoint];
 		[_laps addObject:lap];
 		
+		// archive laps just in case
+		[self archive];
+		
+		// notify anyone of start of new lap
 		[self.stateMonitorDelegate zoSession:self
 							stateChangedFrom:_state
 										  to:ZOSessionState_StartLap
@@ -311,6 +315,14 @@
 		}
 
 		[self archive];
+		
+		// notify anyone of end of session
+		[self.stateMonitorDelegate zoSession:self
+							stateChangedFrom:ZOSessionState_StartLap
+										  to:ZOSessionState_EndSession
+								  atWaypoint:nil];
+		
+		_state = ZOSessionState_EndSession;
 	}
 }
 

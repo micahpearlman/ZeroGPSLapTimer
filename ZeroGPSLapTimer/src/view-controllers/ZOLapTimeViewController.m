@@ -13,6 +13,7 @@
 #import "UIAlertView+Blocks.h"
 #import "ZOVenusLocationManager.h"
 #import "ZOInternalLocationManager.h"
+#import "ZOLapsViewController.h"
 #import <MapKit/MapKit.h>
 
 @interface ZOLapTimeViewController () <ZOLocationManagerDelegate, ZOSessionStateDelegate, ZOTrackObjectDelegate> {
@@ -135,6 +136,8 @@
 		// TODO: make the lap table dirty
 	} else if ( to == ZOSessionState_EndSession ) {
 		self.startStopSession.enabled = NO;
+		[_track archive];
+		_track = nil;
 	}
 
 }
@@ -157,6 +160,21 @@
 		[_session endSession];
 	}
 }
+
+#pragma mark - Navigation
+
+// In a story board-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+	
+	if ( [segue.identifier isEqualToString:@"lap-segue"] ) {
+		ZOLapsViewController* lapsViewController = (ZOLapsViewController*)segue.destinationViewController;
+		lapsViewController.laps = _session.laps;
+	}
+    // Get the new view controller using [segue destinationViewController].
+	
+}
+
 
 
 
