@@ -8,7 +8,7 @@
 
 #import "ZOSessionSelectViewController.h"
 #import "ZOLapsViewController.h"
-#import "ZOTrackCollection.h"
+#import "ZOSessionMapViewController.h"
 
 @interface ZOSessionSelectViewController () {
 	NSArray*		_sessionInfos;
@@ -36,13 +36,13 @@
  
     // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
-	NSString* name = [ZOTrackCollection instance].currentTrack.name;
+	NSString* name = self.track.name;
 	self.navigationItem.title = [name stringByAppendingString:@" Sessions"];
 }
 
 - (void) viewWillAppear:(BOOL)animated  {
 	[super viewWillAppear:animated];
-	_sessionInfos = [ZOTrackCollection instance].currentTrack.sessionInfos;
+	_sessionInfos = self.track.sessionInfos;
 	[self.tableView reloadData];
 	
 }
@@ -105,8 +105,8 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		NSDictionary* sessionInfo = [_sessionInfos objectAtIndex:[indexPath row]];
-		[[ZOTrackCollection instance].currentTrack removeSessionInfo:sessionInfo];
-		_sessionInfos = [ZOTrackCollection instance].currentTrack.sessionInfos;
+		[self.track removeSessionInfo:sessionInfo];
+		_sessionInfos = self.track.sessionInfos;
 
         // Delete the row from the data source
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -147,23 +147,20 @@
 {
 	NSIndexPath* selectedIndexPath = [self.tableView indexPathForCell:sender];
 	NSInteger row = [selectedIndexPath row];
+	NSDictionary* selectedSessionInfo = [_sessionInfos objectAtIndex:row];
+	ZOSession* session = [ZOSession sessionFromSessionInfo:selectedSessionInfo];
+	session.track = self.track;
 
 	if ( [segue.identifier isEqualToString:@"lap-segue"] ) {
 		// update the track on the currently selected session
-		[ZOTrackCollection instance].currentTrack.currentSessionInfo = [_sessionInfos objectAtIndex:row];
 		
 		ZOLapsViewController* lapsViewController = (ZOLapsViewController*)segue.destinationViewController;
-		lapsViewController.laps = [ZOTrackCollection instance].currentTrack.currentSession.laps;
-	} else {	// show map
-		// Pass the selected object to the new view controller.
-		if ( [selectedIndexPath row] == [_sessionInfos count] ) {	// new session
-			// we are creating a new track so make sure to null out selected track
-			[ZOTrackCollection instance].currentTrack.currentSessionInfo = nil;
-		} else {
-			
-			[ZOTrackCollection instance].currentTrack.currentSessionInfo = [_sessionInfos objectAtIndex:row];
-			
-		}
+		lapsViewController.session = session;
+
+	} else if ( [segue.identifier isEqualToString:@"session-map-segue"] ) {	// show map
+		
+		ZOSessionMapViewController* sessionMapViewController = (ZOSessionMapViewController*)segue.destinationViewController;
+		sessionMapViewController.session = session;
 		
 	}
     // Get the new view controller using [segue destinationViewController].

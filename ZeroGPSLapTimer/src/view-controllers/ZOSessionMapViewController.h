@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
+#import "ZOSession.h"
 
 @interface ZOSessionMapViewController : UIViewController
+
+@property (nonatomic,retain) ZOSession* session;
 
 @property (nonatomic,retain) IBOutlet MKMapView* mapView;
 @property (nonatomic,retain) IBOutlet UIBarButtonItem* rewind;

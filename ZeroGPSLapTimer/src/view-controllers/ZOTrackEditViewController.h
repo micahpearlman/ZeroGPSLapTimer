@@ -12,6 +12,8 @@
 
 @interface ZOTrackEditViewController : UIViewController
 
+@property (nonatomic,retain) ZOTrack* track;
+
 @property (nonatomic,retain) IBOutlet MKMapView* mapView;
 
 - (IBAction)onCreateStartFinish:(id)sender;

@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZOTrack.h"
 
 @interface ZOSessionSelectViewController : UITableViewController
+
+@property (nonatomic,retain) ZOTrack* track;
 
 @end

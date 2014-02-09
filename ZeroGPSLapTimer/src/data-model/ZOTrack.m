@@ -30,7 +30,7 @@
 @synthesize name;
 @synthesize trackInfo;
 @synthesize sessionInfos = _sessionInfos;
-@dynamic currentSession;
+//@dynamic currentSession;
 
 - (id)initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)mapRect {
 	self = [super init];
@@ -130,26 +130,10 @@
 	NSError* error;
 	[[NSFileManager defaultManager] removeItemAtPath:[sessionInfo objectForKey:@"archive-path"] error:&error];
 	[_sessionInfos removeObject:sessionInfo];
-	if ( self.currentSessionInfo == sessionInfo ) {
-		self.currentSessionInfo = nil;
-		self.currentSession = nil;
-	}
 	
 	[self archive];
 }
 
-
-- (ZOSession*) currentSession {
-	if ( self.currentSessionInfo && _currentSession == nil ) {
-		_currentSession = [ZOSession unarchiveFromSessionInfo:self.currentSessionInfo];
-		_currentSession.track = self;
-	}
-	return _currentSession;
-}
-
-- (void) setCurrentSession:(ZOSession *)currentSession {
-	_currentSession = currentSession;
-}
 
 #pragma mark Archiving
 
@@ -157,7 +141,7 @@
 	[NSKeyedArchiver archiveRootObject:self toFile:[self.trackInfo objectForKey:@"archive-path"]];
 }
 
-+ (ZOTrack*) unarchiveFromTrackInfo:(NSDictionary*)trackInfo {
++ (ZOTrack*) trackFromTrackInfo:(NSDictionary*)trackInfo {
 	ZOTrack* track = (ZOTrack*)[NSKeyedUnarchiver unarchiveObjectWithFile:[trackInfo objectForKey:@"archive-path"]];
 	track.trackInfo = trackInfo;
 	return track;

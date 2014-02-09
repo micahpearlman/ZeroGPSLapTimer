@@ -25,10 +25,10 @@ typedef enum  {
 
 @interface ZOSessionMapViewController () <MKMapViewDelegate, CLLocationManagerDelegate, ZOSessionStateDelegate> {
 	CLLocationManager*				_locationManager;
-	ZOTrack*						_track;
-	ZOSession*						_session;
-	NSDictionary*					_sessionInfo;
-	NSDictionary*					_trackEditInfo;
+//	ZOTrack*						_track;
+//	ZOSession*						_session;
+//	NSDictionary*					_sessionInfo;
+//	NSDictionary*					_trackEditInfo;
 	ZOSessionMapViewControllerState	_state;
 	ZOWaypoint*						_playbackCursor;
 	NSDate*							_startLapTimeStamp;
@@ -57,23 +57,23 @@ typedef enum  {
 	_state = ZOSessionMapViewController_None;
 	
 	/// setup location manager
-	_track = [ZOTrackCollection instance].currentTrack;
-	[self.mapView addOverlay:_track];
-	[self.mapView addOverlays:_track.trackObjects];
+//	_track = [ZOTrackCollection instance].currentTrack;
+	[self.mapView addOverlay:self.session.track];
+	[self.mapView addOverlays:self.session.track.trackObjects];
 	
-	if ( _track.currentSessionInfo ) {
-		// load existing session
-		_session = _track.currentSession;
-	} else {
-		// create a new session
-		_session = [[ZOSession alloc] initWithTrack:_track];
-		[_track addSessionInfo:_session.sessionInfo];
-		
-		_locationManager = [[CLLocationManager alloc] init];
-		[_locationManager setDelegate:self];
-		[_locationManager setDistanceFilter:kCLDistanceFilterNone];
-		[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
-	}
+//	if ( _track.currentSessionInfo ) {
+//		// load existing session
+//		_session = _track.currentSession;
+//	} else {
+//		// create a new session
+//		_session = [[ZOSession alloc] initWithTrack:_track];
+//		[_track addSessionInfo:_session.sessionInfo];
+//		
+//		_locationManager = [[CLLocationManager alloc] init];
+//		[_locationManager setDelegate:self];
+//		[_locationManager setDistanceFilter:kCLDistanceFilterNone];
+//		[_locationManager setDesiredAccuracy:kCLLocationAccuracyBestForNavigation];
+//	}
 	
 	_session.stateMonitorDelegate = self;
 	
@@ -123,7 +123,7 @@ typedef enum  {
 			// create a cursor that will track the playback
 			if ( _playbackCursor == nil ) {
 				_playbackCursor = [[_session.waypoints firstObject] copy];
-				_playbackCursor.boundingMapRect = _track.boundingMapRect;	// IMPORTANT: set the bounding maprect to the track bounding map rect
+				_playbackCursor.boundingMapRect = self.session.track.boundingMapRect;	// IMPORTANT: set the bounding maprect to the track bounding map rect
 				[self.mapView addOverlay:_playbackCursor];
 			}
 			[_session startPlaybackAtStartTime:0

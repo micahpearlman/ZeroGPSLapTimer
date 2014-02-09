@@ -7,9 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZOSession.h"
 
 @interface ZOLapsViewController : UITableViewController
 
-@property (nonatomic,retain) NSArray* laps;
+@property (nonatomic,retain) ZOSession* session;
 
 @end

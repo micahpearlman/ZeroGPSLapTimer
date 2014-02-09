@@ -12,6 +12,7 @@
 #import "CLLocation+measuring.h"
 #import "ZOTrack.h"
 #import "ZOLap.h"
+#import "ZOTrackCollection.h"
 
 @interface ZOSession () {
 	NSMutableArray* _waypoints;	// ZOWwaypoint
@@ -211,9 +212,10 @@
 	[NSKeyedArchiver archiveRootObject:self toFile:[self.sessionInfo objectForKey:@"archive-path"]];
 }
 
-+ (ZOSession*) unarchiveFromSessionInfo:(NSDictionary*)sessionInfo {
++ (ZOSession*) sessionFromSessionInfo:(NSDictionary*)sessionInfo {
 	ZOSession* session = (ZOSession*)[NSKeyedUnarchiver unarchiveObjectWithFile:[sessionInfo objectForKey:@"archive-path"]];
 	session.sessionInfo = sessionInfo;
+	
 	return session;	
 }
 

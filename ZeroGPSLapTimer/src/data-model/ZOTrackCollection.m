@@ -11,7 +11,7 @@
 
 @interface ZOTrackCollection () {
 	NSMutableArray* _trackInfos;
-	ZOTrack*		_currentTrack;
+//	ZOTrack*		_currentTrack;
 }
 
 @end
@@ -19,7 +19,7 @@
 @implementation ZOTrackCollection
 
 @dynamic trackInfos;
-@dynamic currentTrack;
+//@dynamic currentTrack;
 
 // singleton. see: http://www.galloway.me.uk/tutorials/singleton-classes/
 + (ZOTrackCollection*)instance {
@@ -92,10 +92,6 @@
 	[[NSFileManager defaultManager] removeItemAtPath:[trackInfo objectForKey:@"archive-path"] error:&error];
 	// TODO: check for error
 	
-	if ( self.currentTrackInfo == trackInfo ) {
-		self.currentTrackInfo = nil;
-		self.currentTrack = nil;
-	}
 
 }
 
@@ -109,17 +105,17 @@
 }
 
 
-- (ZOTrack*) currentTrack {
-	if ( _currentTrack == nil && self.currentTrackInfo != nil ) {
-		// automatically unarchive the current track from the current track info
-		_currentTrack = [ZOTrack unarchiveFromTrackInfo:self.currentTrackInfo];
-	}
-	return _currentTrack;
-}
+//- (ZOTrack*) currentTrack {
+//	if ( _currentTrack == nil && self.currentTrackInfo != nil ) {
+//		// automatically unarchive the current track from the current track info
+//		_currentTrack = [ZOTrack trackFromTrackInfo:self.currentTrackInfo];
+//	}
+//	return _currentTrack;
+//}
 
--(void) setCurrentTrack:(ZOTrack *)currentTrack {
-	_currentTrack = currentTrack;
-}
+//-(void) setCurrentTrack:(ZOTrack *)currentTrack {
+//	_currentTrack = currentTrack;
+//}
 
 - (NSArray*) trackInfos {
 	if ( _trackInfos == nil ) {

@@ -7,8 +7,9 @@
 //
 
 #import "ZOTrackSelectViewController.h"
-#import "ZOMapViewController.h"
 #import "ZOTrackCollection.h"
+#import "ZOTrackEditViewController.h"
+#import "ZOSessionSelectViewController.h"
 
 @interface ZOTrackSelectViewController ()
 
@@ -138,16 +139,28 @@
 
 // In a story board-based application, you will often want to do a little preparation before navigation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
+
+	// get the selected track
 	NSIndexPath* selectedIndexPath = [self.tableView indexPathForSelectedRow];
-	if ( [selectedIndexPath row] == [[ZOTrackCollection instance].trackInfos count] ) {	// new track
-		// we are creating a new track so make sure to null out selected track
-		[ZOTrackCollection instance].currentTrackInfo = nil;
-	} else {
-		NSArray* tracks = [[ZOTrackCollection instance] trackInfos];
-		[ZOTrackCollection instance].currentTrackInfo = [tracks objectAtIndex:[selectedIndexPath row]];
-		
+	NSArray* tracks = [[ZOTrackCollection instance] trackInfos];
+	NSDictionary* selectedTrackInfo = nil;
+	ZOTrack* track = nil;
+
+	if ( [segue.identifier isEqualToString:@"new-track"] == NO ) { // if not a new track get the selection
+		selectedTrackInfo = [tracks objectAtIndex:[selectedIndexPath row]];
+		track = [ZOTrack trackFromTrackInfo:selectedTrackInfo];
 	}
+
+	 if ( [segue.identifier isEqualToString:@"track-sessions"] ) {
+		ZOSessionSelectViewController* sessionsViewController = (ZOSessionSelectViewController*)segue.destinationViewController;
+		sessionsViewController.track = track;
+	} else if ( [segue.identifier isEqualToString:@"edit-track"] ) {
+		ZOTrackEditViewController* trackEditViewController = (ZOTrackEditViewController*)segue.destinationViewController;
+		trackEditViewController.track = track;
+	} else if ( [segue.identifier isEqualToString:@"new-track"]) {
+		// NOTHING
+	}
+
 }
 
 

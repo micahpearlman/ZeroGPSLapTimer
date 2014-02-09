@@ -82,7 +82,7 @@
 		NSDictionary* trackInfo = [[ZOTrackCollection instance] trackAtCoordinate:lastLocation.coordinate];
 		if ( trackInfo ) {
 			// load track from disk
-			_track = [ZOTrack unarchiveFromTrackInfo:trackInfo];
+			_track = [ZOTrack trackFromTrackInfo:trackInfo];
 			
 			// create a new session
 			_session = [[ZOSession alloc] initWithTrack:_track];
@@ -164,15 +164,12 @@
 #pragma mark - Navigation
 
 // In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 	
 	if ( [segue.identifier isEqualToString:@"lap-segue"] ) {
 		ZOLapsViewController* lapsViewController = (ZOLapsViewController*)segue.destinationViewController;
-		lapsViewController.laps = _session.laps;
+		lapsViewController.session = _session;
 	}
-    // Get the new view controller using [segue destinationViewController].
-	
 }
 
 

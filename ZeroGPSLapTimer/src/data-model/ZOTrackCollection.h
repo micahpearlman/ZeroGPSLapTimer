@@ -12,8 +12,8 @@
 @interface ZOTrackCollection : NSObject
 
 @property (nonatomic, readonly) NSArray* trackInfos;	// NSDictionary of trackInfo
-@property (nonatomic, retain) NSDictionary* currentTrackInfo;
-@property (nonatomic, retain) ZOTrack* currentTrack;
+//@property (nonatomic, retain) NSDictionary* currentTrackInfo;
+//@property (nonatomic, retain) ZOTrack* currentTrack;
 
 + (ZOTrackCollection*)instance;
 

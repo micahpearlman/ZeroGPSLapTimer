@@ -61,7 +61,7 @@ typedef enum {
 
 /// archiving
 - (void) archive;
-+ (ZOSession*) unarchiveFromSessionInfo:(NSDictionary*)sessionInfo;
++ (ZOSession*) sessionFromSessionInfo:(NSDictionary*)sessionInfo;
 - (void) deleteFromDisk;
 + (NSDictionary*) newSessionInfoAtDate:(NSDate*)date track:(ZOTrack*)track;
 

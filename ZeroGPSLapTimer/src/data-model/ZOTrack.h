@@ -23,8 +23,8 @@
 @property (nonatomic, assign)	id<ZOTrackObjectDelegate> delegate;
 @property (nonatomic, copy)		NSString* name;
 @property (nonatomic, retain)	NSDictionary* trackInfo;
-@property (nonatomic, retain)	NSDictionary* currentSessionInfo;
-@property (nonatomic, retain)	ZOSession* currentSession;
+//@property (nonatomic, retain)	NSDictionary* currentSessionInfo;
+//@property (nonatomic, retain)	ZOSession* currentSession;
 
 - (id) initWithCoordinate:(CLLocationCoordinate2D)coord boundingMapRect:(MKMapRect)boundingMapRect;
 
@@ -43,7 +43,7 @@
 
 /// archiving
 - (void) archive;
-+ (ZOTrack*) unarchiveFromTrackInfo:(NSDictionary*)trackInfo;
++ (ZOTrack*) trackFromTrackInfo:(NSDictionary*)trackInfo;
 - (void) deleteFromDisk;
 
 @end

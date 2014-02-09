@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ZOSession.h"
 
 @interface ZOLapTimeViewController : UIViewController
 
