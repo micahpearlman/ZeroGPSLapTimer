@@ -76,6 +76,7 @@
                         <outlet property="currentLapTime" destination="vd8-7Y-v7y" id="K4l-Mf-Wmq"/>
                         <outlet property="endSessionButton" destination="atG-o8-PaE" id="aQs-AC-1xi"/>
                         <outlet property="previousLapTime" destination="mTi-gr-3Bt" id="fik-DC-t4p"/>
+                        <outlet property="speedLabel" destination="p1k-5N-MNh" id="bm1-bR-mfh"/>
                         <outlet property="trackName" destination="FAM-sq-zTh" id="tVK-LL-oJF"/>
                         <outlet property="view" destination="2VE-Yg-loa" id="G8M-XW-wba"/>
                     </connections>
