@@ -343,32 +343,9 @@
                                             </connections>
                                         </button>
                                     </barButtonItem>
-                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="A4A-49-xjo"/>
-                                    <barButtonItem id="6yx-78-Edg">
-                                        <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" hasAttributedTitle="YES" id="9rd-7x-NqH">
-                                            <rect key="frame" x="108" y="2" width="40" height="40"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
-                                            <state key="normal">
-                                                <attributedString key="attributedTitle">
-                                                    <fragment content="Set Track Area">
-                                                        <attributes>
-                                                            <color key="NSColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                            <font key="NSFont" size="12" name="HelveticaNeue"/>
-                                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" hyphenationFactor="0.08999999612569809"/>
-                                                        </attributes>
-                                                    </fragment>
-                                                </attributedString>
-                                            </state>
-                                            <connections>
-                                                <action selector="onSetTrackArea:" destination="wbZ-JI-JGu" eventType="touchUpInside" id="B2b-lG-eYV"/>
-                                            </connections>
-                                        </button>
-                                    </barButtonItem>
-                                    <barButtonItem width="42" style="plain" systemItem="fixedSpace" id="RK6-5Y-SqJ"/>
                                     <barButtonItem style="plain" id="dQb-oQ-BBv">
                                         <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="fEp-BL-fvN">
-                                            <rect key="frame" x="200" y="2" width="40" height="40"/>
+                                            <rect key="frame" x="66" y="2" width="40" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="10"/>
                                             <inset key="titleEdgeInsets" minX="-39" minY="0.0" maxX="0.0" maxY="-27"/>

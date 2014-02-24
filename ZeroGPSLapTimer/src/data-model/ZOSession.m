@@ -84,31 +84,21 @@
 		_lastWaypoint = waypoint;
 	}
 	
-	// check if location is off track
-	if ( MKMapRectContainsPoint( self.track.boundingMapRect, MKMapPointForCoordinate(waypoint.coordinate))) {
 		
-		// check if we crossed finish line or track entrance/exit
-		ZOWaypoint* intersect = [self checkWaypointsIntersectTrackObjects:_lastWaypoint
-																	  end:waypoint];
-		
-		if ( intersect ) {
-			[self startLapAtWaypoint:intersect];
-		} else if ( _state == ZOSessionState_StartLap ) {	// only add waypoint if we are in a lap
-			ZOLap* currentLap = [_laps lastObject];
-			[currentLap addWaypoint:waypoint];
-		}
-			
-		// make waypoints invalid
-		_waypoints = nil;
-		
-	} else {	// off track
-		[self.stateMonitorDelegate zoSession:self
-							stateChangedFrom:_state
-										  to:ZOSessionState_Offtrack
-								  atWaypoint:waypoint];
-		_state = ZOSessionState_Offtrack;
-
+	// check if we crossed finish line or track entrance/exit
+	ZOWaypoint* intersect = [self checkWaypointsIntersectTrackObjects:_lastWaypoint
+																  end:waypoint];
+	
+	if ( intersect ) {
+		[self startLapAtWaypoint:intersect];
+	} else if ( _state == ZOSessionState_StartLap ) {	// only add waypoint if we are in a lap
+		ZOLap* currentLap = [_laps lastObject];
+		[currentLap addWaypoint:waypoint];
 	}
+		
+	// make waypoints invalid
+	_waypoints = nil;
+
 	
 	_lastWaypoint = waypoint;
 	

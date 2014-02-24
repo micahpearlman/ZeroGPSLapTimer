@@ -24,19 +24,15 @@ typedef enum {
 	CLLocationManager*				_locationManager;
 	ZOTrackEditViewControllerState	_state;
 	id<ZOTrackObject>				_selectedTrackObject;
-//	ZOTrack*						_track;
-//	NSDictionary*					_trackEditInfo;
 	BOOL							_isNewTrack;
 }
 
-//@property (nonatomic, retain) ZOTrack* track;
 
 @end
 
 @implementation ZOTrackEditViewController
 
 @synthesize mapView					= _mapView;
-//@dynamic track;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -65,6 +61,13 @@ typedef enum {
 		[self.mapView addOverlays:self.track.trackObjects];
 		self.title = self.track.name;
 		_isNewTrack = NO;
+		
+		// zoom to the track
+		MKMapCamera* camera = [MKMapCamera cameraLookingAtCenterCoordinate:self.track.coordinate
+														 fromEyeCoordinate:self.track.coordinate
+															   eyeAltitude:50];
+		[self.mapView setCamera:camera];
+
 	} else {
 		// creating a new track so start off where the user is
 		// TODO: add search
@@ -280,6 +283,8 @@ typedef enum {
 	
 }
 
+#define ZO_TRACK_NAME_ALERT		5
+#define ZO_SAVE_CONFIRM_ALERT	6
 - (IBAction)onSave:(id)sender {
 	if ( _isNewTrack ) {
 		
@@ -289,17 +294,25 @@ typedef enum {
 														   delegate:self
 												  cancelButtonTitle:@"Cancel"
 												  otherButtonTitles:@"Ok", nil];
+		
 		alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+		alertView.tag = ZO_TRACK_NAME_ALERT;
 		[alertView show];
 	} else {
-		[self.track archive];	// save over existing track
+
+		UIAlertView* alertView = [[UIAlertView alloc] initWithTitle:@"Save"
+															message:@"Confirm Save?"
+														   delegate:self
+												  cancelButtonTitle:@"Cancel"
+												  otherButtonTitles:@"Ok", nil];
+		
+		alertView.alertViewStyle = UIAlertViewStyleDefault;
+		alertView.tag = ZO_SAVE_CONFIRM_ALERT;
+		[alertView show];
+		
 	}
 }
 
-- (IBAction)onSetTrackArea:(id)sender {
-	self.track.boundingMapRect = _mapView.visibleMapRect;
-	self.track.coordinate = _mapView.centerCoordinate;
-}
 
 #pragma mark UIAlertViewDelegate
 - (void) alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
@@ -308,20 +321,26 @@ typedef enum {
 		return;	// cancel pressed
 	}
 	
-	UITextField* textField = [alertView textFieldAtIndex:0];
-	self.track.name = textField.text;
-	
-	self.track.trackInfo = [[ZOTrackCollection instance] createTrackInfoNamed:self.track.name
-														  withBoundingMapRect:self.track.boundingMapRect];
-	
-	// final save
-	[self.track archive];
-	
-	if ( self.navigationController ) {
-		[self.navigationController popViewControllerAnimated:YES];
-	} else {
-		[self dismissViewControllerAnimated:YES completion:nil];
+	if ( alertView.tag == ZO_TRACK_NAME_ALERT ) {
+		UITextField* textField = [alertView textFieldAtIndex:0];
+		self.track.name = textField.text;
+		
+		self.track.trackInfo = [[ZOTrackCollection instance] createTrackInfoNamed:self.track.name
+															  withBoundingMapRect:self.track.boundingMapRect];
+		
+		// final save
+		[self.track archive];
+		
+		if ( self.navigationController ) {
+			[self.navigationController popViewControllerAnimated:YES];
+		} else {
+			[self dismissViewControllerAnimated:YES completion:nil];
+		}
+		
+	} else if ( alertView.tag == ZO_SAVE_CONFIRM_ALERT ) {
+		[self.track archive];
 	}
+	
 	
 	
 }
@@ -330,22 +349,5 @@ typedef enum {
 	
 }
 
-//#pragma mark Track
-//
-//- (void) setTrack:(ZOTrack *)track {
-//	_track = track;
-//}
-//
-//- (ZOTrack*) track {
-//	if ( _track == nil ) {
-//		// create a track with the given area and add it to the overlay
-//		_track = [[ZOTrack alloc] initWithCoordinate:_mapView.centerCoordinate
-//									 boundingMapRect:_mapView.visibleMapRect];
-//		[_mapView addOverlay:_track];
-//
-//	}
-//	
-//	return _track;
-//}
 
 @end

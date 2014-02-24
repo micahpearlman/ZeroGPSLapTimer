@@ -83,17 +83,13 @@
 - (NSArray*) trackObjectsAtCoordinate:(CLLocationCoordinate2D)coord {
 	NSMutableArray* trackObjectsAtCoordinate = [[NSMutableArray alloc] init];
 	MKMapPoint mapPoint = MKMapPointForCoordinate( coord );
-//	if ( MKMapRectContainsPoint( self.boundingMapRect, mapPoint ) ) {
-//		[trackObjectsAtCoordinate addObject:self];
 		
-		for ( id<ZOTrackObject> trackObject in _trackObjects ) {
-			
-			if ( MKMapRectContainsPoint( trackObject.boundingMapRect, mapPoint ) ) {
-				[trackObjectsAtCoordinate addObject:trackObject];
-			}
+	for ( id<ZOTrackObject> trackObject in _trackObjects ) {
+		if ( MKMapRectContainsPoint( trackObject.boundingMapRect, mapPoint ) ) {
+			[trackObjectsAtCoordinate addObject:trackObject];
 		}
+	}
 
-//	}
 	
 	return trackObjectsAtCoordinate;
 	

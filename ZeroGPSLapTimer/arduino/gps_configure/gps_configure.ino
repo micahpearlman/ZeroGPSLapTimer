@@ -69,7 +69,6 @@ bool venusCommand_response() {
 }
 
 
-
 uint8_t venusCommand_calculateCheckSum( uint8_t* start, int16_t length ) {
   uint8_t cs = 0;
 

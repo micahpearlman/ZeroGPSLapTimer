@@ -105,18 +105,6 @@
 }
 
 
-//- (ZOTrack*) currentTrack {
-//	if ( _currentTrack == nil && self.currentTrackInfo != nil ) {
-//		// automatically unarchive the current track from the current track info
-//		_currentTrack = [ZOTrack trackFromTrackInfo:self.currentTrackInfo];
-//	}
-//	return _currentTrack;
-//}
-
-//-(void) setCurrentTrack:(ZOTrack *)currentTrack {
-//	_currentTrack = currentTrack;
-//}
-
 - (NSArray*) trackInfos {
 	if ( _trackInfos == nil ) {
 		[self load];
@@ -124,6 +112,7 @@
 	return _trackInfos;
 }
 
+// TODO: get closest tracks
 - (NSDictionary*) trackAtCoordinate:(CLLocationCoordinate2D)coordinate {
 	MKMapPoint mapPoint = MKMapPointForCoordinate( coordinate );
 	for ( NSDictionary* trackInfo in _trackInfos ) {

@@ -17,7 +17,6 @@
 @property (nonatomic,retain) IBOutlet MKMapView* mapView;
 
 - (IBAction)onCreateStartFinish:(id)sender;
-- (IBAction)onSetTrackArea:(id)sender;
 - (IBAction)onSave:(id)sender;
 
 @end

@@ -50,10 +50,10 @@
 		CGContextSetAlpha( context, 0.2 );
 		CGContextFillRect( context, [self rectForMapRect:track.boundingMapRect] );
 		
-		CGContextSetLineWidth( context, 24 );
-		CGContextSetAlpha( context, 0.9 );
-		CGContextSetStrokeColorWithColor( context, [UIColor redColor].CGColor );
-		CGContextStrokeRect( context, [self rectForMapRect:track.boundingMapRect] );
+//		CGContextSetLineWidth( context, 24 );
+//		CGContextSetAlpha( context, 0.9 );
+//		CGContextSetStrokeColorWithColor( context, [UIColor redColor].CGColor );
+//		CGContextStrokeRect( context, [self rectForMapRect:track.boundingMapRect] );
 		
 	} UIGraphicsPopContext();
 	

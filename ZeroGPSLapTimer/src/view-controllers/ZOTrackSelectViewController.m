@@ -141,24 +141,26 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 
 	// get the selected track
-	NSIndexPath* selectedIndexPath = [self.tableView indexPathForSelectedRow];
+	//NSIndexPath* selectedIndexPath = [self.tableView indexPathForSelectedRow];
+	NSIndexPath* selectedIndexPath = [self.tableView indexPathForCell:sender];
 	NSArray* tracks = [[ZOTrackCollection instance] trackInfos];
 	NSDictionary* selectedTrackInfo = nil;
 	ZOTrack* track = nil;
 
-	if ( [segue.identifier isEqualToString:@"new-track"] == NO ) { // if not a new track get the selection
-		selectedTrackInfo = [tracks objectAtIndex:[selectedIndexPath row]];
-		track = [ZOTrack trackFromTrackInfo:selectedTrackInfo];
+	if ( [segue.identifier isEqualToString:@"new-track"]  ) { // if not a new track get the selection
+		return;	// do nothing
 	}
+	
+	selectedTrackInfo = [tracks objectAtIndex:[selectedIndexPath row]];
+	track = [ZOTrack trackFromTrackInfo:selectedTrackInfo];
 
-	 if ( [segue.identifier isEqualToString:@"track-sessions"] ) {
+
+	if ( [segue.identifier isEqualToString:@"track-sessions"] ) {
 		ZOSessionSelectViewController* sessionsViewController = (ZOSessionSelectViewController*)segue.destinationViewController;
 		sessionsViewController.track = track;
 	} else if ( [segue.identifier isEqualToString:@"edit-track"] ) {
 		ZOTrackEditViewController* trackEditViewController = (ZOTrackEditViewController*)segue.destinationViewController;
 		trackEditViewController.track = track;
-	} else if ( [segue.identifier isEqualToString:@"new-track"]) {
-		// NOTHING
 	}
 
 }
